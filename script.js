@@ -1,320 +1,515 @@
 /*
-================================================================
-JAS — CINEMATIC PROPOSAL WEBSITE
-JAVASCRIPT
-================================================================
-
-This file controls:
-
-1. Page navigation
-2. Page transition animations
-3. Page counter
-4. Progress bar
-5. Reason card 3D flipping
-6. Cursor-following glow
-7. Floating stars
-8. Canvas particles
-9. Button glow
-10. Final cinematic effects
+============================================================
+JAS WEBSITE JAVASCRIPT
+============================================================
 
 IMPORTANT:
 
-- Mouse wheel DOES NOT change pages.
-- Touch scrolling DOES NOT change pages.
-- Only the main button changes pages.
+- Page navigation ONLY happens through the button.
+- Scrolling never changes the page.
 - There is NO back button.
-================================================================
+- Cards flip when clicked.
+- Music automatically changes between pages.
+- Music is intentionally quiet.
+- No template literals are used anywhere.
+============================================================
 */
 
 
-/* ==============================================================
-   GET IMPORTANT HTML ELEMENTS
-   ============================================================== */
+/* ============================================================
+   ELEMENTS
+   ============================================================ */
 
-var pages = document.querySelectorAll(".page");
+var pages =
+    document.querySelectorAll(".page");
 
 var nextButton =
-    document.getElementById("next-button");
+    document.getElementById("nextButton");
 
-var currentPage =
-    document.getElementById("current-page");
+var pageNumber =
+    document.getElementById("pageNumber");
 
-var totalPages =
-    document.getElementById("total-pages");
+var pageTotal =
+    document.getElementById("pageTotal");
 
 var progressBar =
-    document.getElementById("progress-bar");
+    document.getElementById("progressBar");
+
+var musicPlayer =
+    document.getElementById("musicPlayer");
+
+var musicButton =
+    document.getElementById("musicButton");
 
 var cursorGlow =
-    document.getElementById("cursor-glow");
+    document.getElementById("cursorGlow");
 
-var starsContainer =
+var stars =
     document.getElementById("stars");
 
 var canvas =
-    document.getElementById("particles");
+    document.getElementById("particleCanvas");
 
-var context =
+var ctx =
     canvas.getContext("2d");
 
 
-/* ==============================================================
-   PAGE STATE
-   ============================================================== */
+/* ============================================================
+   PAGE SETTINGS
+   ============================================================ */
 
-var currentIndex = 0;
+var currentPageIndex = 0;
 
-var isChangingPage = false;
+var totalPages = pages.length;
 
-var pageCount = pages.length;
+var changingPage = false;
 
-
-/* Display total number of pages */
-
-totalPages.textContent =
-    String(pageCount).padStart(2, "0");
+var musicStarted = false;
 
 
-/* ==============================================================
-   UPDATE PAGE COUNTER
-   ============================================================== */
+/* ============================================================
+   SONG SETTINGS
+   ============================================================
 
-function updatePageInfo() {
+   Put these files inside:
 
-    currentPage.textContent =
-        String(currentIndex + 1).padStart(2, "0");
+   songs/song1.mp3
+   songs/song2.mp3
+   songs/song3.mp3
+   songs/song4.mp3
+
+   etc.
+
+   You can add more later.
+   ============================================================ */
+
+var songs = [
+
+    "songs/song1.mp3",
+
+    "songs/song2.mp3",
+
+    "songs/song3.mp3",
+
+    "songs/song4.mp3"
+
+];
+
+
+/*
+    Each page gets a song.
+
+    Pages 1-4 -> song1
+    Pages 5-6 -> song2
+    Pages 7-8 -> song3
+    Page 9    -> song4
+*/
+
+
+/* ============================================================
+   BUTTON TEXT
+   ============================================================ */
+
+var buttonTexts = [
+
+    "Begin →",
+
+    "Continue →",
+
+    "There is more →",
+
+    "Reasons →",
+
+    "Keep going →",
+
+    "A little more →",
+
+    "Almost there →",
+
+    "The honest part →",
+
+    "Finish →"
+
+];
+
+
+/* ============================================================
+   UPDATE COUNTER
+   ============================================================ */
+
+function updateCounter() {
+
+    var current =
+        String(currentPageIndex + 1);
+
+    if (current.length === 1) {
+        current = "0" + current;
+    }
+
+
+    var total =
+        String(totalPages);
+
+    if (total.length === 1) {
+        total = "0" + total;
+    }
+
+
+    pageNumber.textContent =
+        current;
+
+    pageTotal.textContent =
+        total;
 
 
     var percentage =
-        ((currentIndex + 1) / pageCount) * 100;
+        ((currentPageIndex + 1) /
+        totalPages) * 100;
 
 
     progressBar.style.width =
         percentage + "%";
 
+
+    nextButton.textContent =
+        buttonTexts[currentPageIndex]
+        || "Continue →";
+
 }
 
 
-/* ==============================================================
-   CHANGE PAGE
-   ============================================================== */
+/* ============================================================
+   CHANGE MUSIC
+   ============================================================ */
 
-function goToNextPage() {
+function changeMusic() {
 
     /*
-        Prevent multiple clicks during animation.
+        Determine which song should play.
     */
 
-    if (isChangingPage) {
+    var songIndex = 0;
+
+
+    if (currentPageIndex >= 4) {
+        songIndex = 1;
+    }
+
+
+    if (currentPageIndex >= 6) {
+        songIndex = 2;
+    }
+
+
+    if (currentPageIndex >= 8) {
+        songIndex = 3;
+    }
+
+
+    /*
+        If that song doesn't exist,
+        safely use the first one.
+    */
+
+    if (!songs[songIndex]) {
+        songIndex = 0;
+    }
+
+
+    /*
+        Don't restart the same song
+        when moving between pages.
+    */
+
+    if (
+        musicPlayer.getAttribute("data-song")
+        === songs[songIndex]
+    ) {
+        return;
+    }
+
+
+    musicPlayer.setAttribute(
+        "data-song",
+        songs[songIndex]
+    );
+
+
+    musicPlayer.src =
+        songs[songIndex];
+
+
+    /*
+        VERY LOW VOLUME.
+    */
+
+    musicPlayer.volume =
+        0.14;
+
+
+    /*
+        Try to play.
+
+        Browser autoplay rules may block this
+        until the user clicks the first button.
+    */
+
+    var playPromise =
+        musicPlayer.play();
+
+
+    if (playPromise !== undefined) {
+
+        playPromise.catch(
+            function() {
+
+                /*
+                    The first button click will
+                    start the music.
+                */
+
+            }
+        );
+
+    }
+
+}
+
+
+/* ============================================================
+   START MUSIC AFTER USER INTERACTION
+   ============================================================ */
+
+function startMusic() {
+
+    if (!musicStarted) {
+
+        musicStarted = true;
+
+        changeMusic();
+
+    }
+
+}
+
+
+/* ============================================================
+   NEXT PAGE
+   ============================================================ */
+
+function nextPage() {
+
+    /*
+        Prevent accidental double-clicks.
+    */
+
+    if (changingPage) {
         return;
     }
 
 
     /*
-        If we are already on the last page,
-        do nothing.
+        Last page means we stay there.
     */
 
-    if (currentIndex >= pageCount - 1) {
+    if (
+        currentPageIndex >=
+        totalPages - 1
+    ) {
+
+        nextButton.textContent =
+            "♡";
+
         return;
+
     }
 
 
-    isChangingPage = true;
+    changingPage = true;
 
 
     /*
-        Remove active class from current page.
+        Start music after real user interaction.
     */
 
-    pages[currentIndex]
+    startMusic();
+
+
+    /*
+        Hide current page.
+    */
+
+    pages[currentPageIndex]
         .classList
         .remove("active");
 
 
     /*
-        Move to next page.
+        Move forward.
     */
 
-    currentIndex++;
+    currentPageIndex++;
 
 
     /*
-        Wait a little before showing
-        the next page.
+        Small delay makes the transition
+        feel more cinematic.
     */
 
-    setTimeout(function() {
+    setTimeout(
+        function() {
 
-        pages[currentIndex]
-            .scrollTop = 0;
+            /*
+                Reset scroll position of
+                the new page.
 
+                IMPORTANT:
+                This does NOT navigate through scroll.
+            */
 
-        pages[currentIndex]
-            .classList
-            .add("active");
-
-
-        updatePageInfo();
-
-
-        /*
-            Change button text depending
-            on current page.
-        */
-
-        updateButtonText();
+            pages[currentPageIndex]
+                .scrollTop = 0;
 
 
-    }, 250);
+            pages[currentPageIndex]
+                .classList
+                .add("active");
+
+
+            updateCounter();
+
+
+            /*
+                Change song if necessary.
+            */
+
+            changeMusic();
+
+        },
+        180
+    );
 
 
     /*
-        Unlock after transition.
+        Unlock after animation.
     */
 
-    setTimeout(function() {
+    setTimeout(
+        function() {
 
-        isChangingPage = false;
+            changingPage = false;
 
-    }, 1050);
+        },
+        950
+    );
 
 }
 
 
-/* ==============================================================
-   BUTTON TEXT
-   ============================================================== */
-
-function updateButtonText() {
-
-    var buttonTexts = [
-
-        "Begin →",
-
-        "Continue →",
-
-        "The tiny ones →",
-
-        "There is more →",
-
-        "One more thing →",
-
-        "Keep reading →",
-
-        "You changed something →",
-
-        "Beyond words →",
-
-        "The truth →",
-
-        "One last thing →"
-
-    ];
-
-
-    if (currentIndex <
-        buttonTexts.length) {
-
-        nextButton.textContent =
-            buttonTexts[currentIndex];
-
-    }
-
-}
-
-
-/* ==============================================================
-   MAIN BUTTON CLICK
-   ============================================================== */
+/* ============================================================
+   NEXT BUTTON EVENT
+   ============================================================ */
 
 nextButton.addEventListener(
     "click",
     function() {
 
-        /*
-            Last page opens the proposal.
-        */
-
-        if (currentIndex === pageCount - 1) {
-
-            showProposal();
-
-            return;
-
-        }
-
-
-        /*
-            Otherwise go forward.
-        */
-
-        goToNextPage();
+        nextPage();
 
     }
 );
 
 
-/* ==============================================================
-   INITIAL PAGE
-   ============================================================== */
+/* ============================================================
+   MUSIC BUTTON
+   ============================================================ */
 
-updatePageInfo();
-
-updateButtonText();
-
-
-/* ==============================================================
-   DISABLE PAGE CHANGING BY MOUSE WHEEL
-   ==============================================================
-
-   We DO NOT call preventDefault here because the page
-   itself still needs to scroll when it contains long content.
-
-   Wheel movement is simply ignored by our page navigation system.
-   ============================================================== */
-
-
-/* ==============================================================
-   REASON CARD FLIP
-   ============================================================== */
-
-/*
-    Event delegation is used so every card works
-    without needing separate event listeners.
-*/
-
-document.addEventListener(
+musicButton.addEventListener(
     "click",
-    function(event) {
-
-        var card =
-            event.target.closest(".reason-card");
-
+    function() {
 
         /*
-            If click was not on a card,
-            do nothing.
+            If music has not started yet,
+            start it.
         */
 
-        if (!card) {
+        if (!musicStarted) {
+
+            startMusic();
+
+            musicPlayer.play()
+                .catch(
+                    function() {}
+                );
+
+            musicButton.textContent =
+                "♫";
+
             return;
+
         }
 
 
         /*
-            Flip the selected card.
+            Toggle pause/play.
         */
 
-        card.classList.toggle("flipped");
+        if (musicPlayer.paused) {
+
+            musicPlayer.play()
+                .catch(
+                    function() {}
+                );
+
+            musicButton.textContent =
+                "♫";
+
+        } else {
+
+            musicPlayer.pause();
+
+            musicButton.textContent =
+                "×";
+
+        }
 
     }
 );
 
 
-/* ==============================================================
-   CURSOR GLOW
-   ============================================================== */
+/* ============================================================
+   FLIP CARDS
+   ============================================================ */
+
+var reasonCards =
+    document.querySelectorAll(
+        ".reason-card"
+    );
+
+
+for (
+    var i = 0;
+    i < reasonCards.length;
+    i++
+) {
+
+    reasonCards[i].addEventListener(
+        "click",
+        function() {
+
+            this.classList.toggle(
+                "flipped"
+            );
+
+        }
+    );
+
+}
+
+
+/* ============================================================
+   CURSOR FOLLOW
+   ============================================================ */
 
 var mouseX =
     window.innerWidth / 2;
@@ -322,14 +517,12 @@ var mouseX =
 var mouseY =
     window.innerHeight / 2;
 
-var glowX = mouseX;
+var glowX =
+    mouseX;
 
-var glowY = mouseY;
+var glowY =
+    mouseY;
 
-
-/*
-    Update target cursor position.
-*/
 
 window.addEventListener(
     "pointermove",
@@ -345,11 +538,7 @@ window.addEventListener(
 );
 
 
-/*
-    Smoothly move the glow.
-*/
-
-function animateCursor() {
+function animateGlow() {
 
     glowX +=
         (mouseX - glowX) * 0.12;
@@ -366,75 +555,29 @@ function animateCursor() {
 
 
     requestAnimationFrame(
-        animateCursor
+        animateGlow
     );
 
 }
 
 
-animateCursor();
+animateGlow();
 
 
-/* ==============================================================
-   BUTTON MOUSE GLOW
-   ============================================================== */
-
-document.addEventListener(
-    "pointermove",
-    function(event) {
-
-        var button =
-            event.target.closest(".next");
-
-
-        if (!button) {
-            return;
-        }
-
-
-        var rectangle =
-            button.getBoundingClientRect();
-
-
-        var x =
-            event.clientX -
-            rectangle.left;
-
-
-        var y =
-            event.clientY -
-            rectangle.top;
-
-
-        button.style.setProperty(
-            "--mouse-x",
-            x + "px"
-        );
-
-
-        button.style.setProperty(
-            "--mouse-y",
-            y + "px"
-        );
-
-    }
-);
-
-
-/* ==============================================================
-   FLOATING STARS
-   ============================================================== */
+/* ============================================================
+   CREATE STARS
+   ============================================================ */
 
 var starCount =
     window.innerWidth < 600
-        ? 80
-        : 140;
+        ? 70
+        : 130;
 
 
 for (
-    var i = 0;
-    i < starCount;
-    i++
+    var s = 0;
+    s < starCount;
+    s++
 ) {
 
     var star =
@@ -454,36 +597,21 @@ for (
 
 
     star.style.animationDuration =
-        5 + Math.random() * 18 + "s";
+        5 + Math.random() * 16 + "s";
 
 
     star.style.animationDelay =
-        -Math.random() * 18 + "s";
+        -Math.random() * 16 + "s";
 
 
-    /*
-        Make a few stars larger.
-    */
-
-    if (Math.random() > 0.90) {
-
-        star.style.width =
-            "3px";
-
-        star.style.height =
-            "3px";
-
-    }
-
-
-    starsContainer.appendChild(star);
+    stars.appendChild(star);
 
 }
 
 
-/* ==============================================================
-   CANVAS PARTICLES
-   ============================================================== */
+/* ============================================================
+   PARTICLE CANVAS
+   ============================================================ */
 
 var canvasWidth =
     window.innerWidth;
@@ -491,10 +619,6 @@ var canvasWidth =
 var canvasHeight =
     window.innerHeight;
 
-
-/*
-    Resize canvas for high DPI screens.
-*/
 
 function resizeCanvas() {
 
@@ -515,7 +639,6 @@ function resizeCanvas() {
     canvas.width =
         canvasWidth * ratio;
 
-
     canvas.height =
         canvasHeight * ratio;
 
@@ -523,12 +646,11 @@ function resizeCanvas() {
     canvas.style.width =
         canvasWidth + "px";
 
-
     canvas.style.height =
         canvasHeight + "px";
 
 
-    context.setTransform(
+    ctx.setTransform(
         ratio,
         0,
         0,
@@ -549,16 +671,16 @@ window.addEventListener(
 );
 
 
-/* ==============================================================
-   CREATE PARTICLES
-   ============================================================== */
+/* ============================================================
+   PARTICLES
+   ============================================================ */
 
 var particles = [];
 
 var particleCount =
     window.innerWidth < 600
-        ? 55
-        : 100;
+        ? 45
+        : 90;
 
 
 for (
@@ -586,11 +708,11 @@ for (
             * 0.18,
 
         size:
-            Math.random() * 1.7
+            Math.random() * 1.5
             + 0.3,
 
-        alpha:
-            Math.random() * 0.4
+        opacity:
+            Math.random() * 0.35
             + 0.05
 
     });
@@ -598,13 +720,13 @@ for (
 }
 
 
-/* ==============================================================
+/* ============================================================
    ANIMATE PARTICLES
-   ============================================================== */
+   ============================================================ */
 
 function animateParticles() {
 
-    context.clearRect(
+    ctx.clearRect(
         0,
         0,
         canvasWidth,
@@ -625,53 +747,48 @@ function animateParticles() {
         particle.x +=
             particle.vx;
 
-
         particle.y +=
             particle.vy;
 
 
         /*
-            Wrap particles around screen.
+            Wrap around screen.
         */
 
-        if (particle.x < 0) {
-
+        if (
+            particle.x < 0
+        ) {
             particle.x =
                 canvasWidth;
-
         }
 
 
-        if (particle.x > canvasWidth) {
-
+        if (
+            particle.x > canvasWidth
+        ) {
             particle.x = 0;
-
         }
 
 
-        if (particle.y < 0) {
-
+        if (
+            particle.y < 0
+        ) {
             particle.y =
                 canvasHeight;
-
         }
 
 
-        if (particle.y > canvasHeight) {
-
+        if (
+            particle.y > canvasHeight
+        ) {
             particle.y = 0;
-
         }
 
 
-        /*
-            Draw particle.
-        */
-
-        context.beginPath();
+        ctx.beginPath();
 
 
-        context.arc(
+        ctx.arc(
             particle.x,
             particle.y,
             particle.size,
@@ -680,13 +797,13 @@ function animateParticles() {
         );
 
 
-        context.fillStyle =
+        ctx.fillStyle =
             "rgba(255,255,255," +
-            particle.alpha +
+            particle.opacity +
             ")";
 
 
-        context.fill();
+        ctx.fill();
 
     }
 
@@ -701,434 +818,27 @@ function animateParticles() {
 animateParticles();
 
 
-/* ==============================================================
-   FINAL PROPOSAL
-   ============================================================== */
+/* ============================================================
+   INITIALIZE
+   ============================================================ */
 
-function showProposal() {
+updateCounter();
 
-    /*
-        Hide the navigation button.
-    */
 
-    nextButton.style.display =
-        "none";
+/*
+    Set first song as source but DO NOT autoplay.
 
+    Browser policies normally require user interaction
+    before audio can play.
+*/
 
-    /*
-        Hide all existing pages.
-    */
+musicPlayer.src =
+    songs[0];
 
-    for (
-        var i = 0;
-        i < pages.length;
-        i++
-    ) {
+musicPlayer.volume =
+    0.14;
 
-        pages[i]
-            .classList
-            .remove("active");
-
-    }
-
-
-    /*
-        Create final proposal page.
-    */
-
-    var proposalPage =
-        document.createElement("section");
-
-
-    proposalPage.className =
-        "page active";
-
-
-    /*
-        We use normal string concatenation here.
-        No template literals / backticks.
-    */
-
-    proposalPage.innerHTML =
-
-        '<div class="content">' +
-
-            '<div class="final-glow"></div>' +
-
-            '<span class="heart">♡</span>' +
-
-            '<div class="eyebrow">' +
-                'the question' +
-            '</div>' +
-
-            '<h2 class="title title-small">' +
-                'Jas, will you be ' +
-                '<em>mine?</em>' +
-            '</h2>' +
-
-            '<p class="lead">' +
-                'You already know how I feel.' +
-                '<br>' +
-                'I just wanted to finally ask you properly.' +
-            '</p>' +
-
-            '<div class="proposal-actions">' +
-
-                '<button ' +
-                    'class="next proposal-yes" ' +
-                    'id="yes-button">' +
-                    'YES ♡' +
-                '</button>' +
-
-                '<button ' +
-                    'class="next proposal-think" ' +
-                    'id="think-button">' +
-                    'I need a moment 🥹' +
-                '</button>' +
-
-            '</div>' +
-
-        '</div>';
-
-
-    /*
-        Add page to website.
-    */
-
-    document
-        .getElementById("app")
-        .appendChild(proposalPage);
-
-
-    /*
-        Reset scroll.
-    */
-
-    proposalPage.scrollTop = 0;
-
-
-    /*
-        Update counter.
-    */
-
-    currentPage.textContent =
-        "♡";
-
-
-    totalPages.textContent =
-        "♡";
-
-
-    progressBar.style.width =
-        "100%";
-
-
-    /*
-        Get proposal buttons.
-    */
-
-    var yesButton =
-        document.getElementById(
-            "yes-button"
-        );
-
-
-    var thinkButton =
-        document.getElementById(
-            "think-button"
-        );
-
-
-    /*
-        YES button.
-    */
-
-    yesButton.addEventListener(
-        "click",
-        function() {
-
-            celebrate();
-
-        }
-    );
-
-
-    /*
-        "I need a moment" button.
-    */
-
-    thinkButton.addEventListener(
-        "click",
-        function() {
-
-            thinkButton.textContent =
-                "Take your time ♡";
-
-
-            setTimeout(
-                function() {
-
-                    thinkButton.textContent =
-                        "I'm ready →";
-
-                    thinkButton.onclick =
-                        celebrate;
-
-                },
-                1200
-            );
-
-        }
-    );
-
-}
-
-
-/* ==============================================================
-   CELEBRATION
-   ============================================================== */
-
-function celebrate() {
-
-    /*
-        Remove existing pages.
-    */
-
-    var oldPages =
-        document.querySelectorAll(".page");
-
-
-    for (
-        var i = 0;
-        i < oldPages.length;
-        i++
-    ) {
-
-        oldPages[i]
-            .classList
-            .remove("active");
-
-    }
-
-
-    /*
-        Create final page.
-    */
-
-    var finalPage =
-        document.createElement("section");
-
-
-    finalPage.className =
-        "page active";
-
-
-    finalPage.innerHTML =
-
-        '<div class="content">' +
-
-            '<div class="final-glow"></div>' +
-
-            '<span ' +
-                'class="heart" ' +
-                'style="font-size:80px">' +
-                '♥' +
-            '</span>' +
-
-            '<div class="eyebrow">' +
-                'and just like that...' +
-            '</div>' +
-
-            '<h1 class="title">' +
-                'You said ' +
-                '<em>yes.</em>' +
-            '</h1>' +
-
-            '<p class="lead">' +
-                'I think I am going to remember ' +
-                'this moment for a very long time.' +
-            '</p>' +
-
-            '<p class="lead">' +
-                'Thank you for choosing me, Jas.' +
-            '</p>' +
-
-            '<p class="quote">' +
-                'It was always you.' +
-            '</p>' +
-
-            '<p class="small">' +
-                'You and only you.' +
-                '<br><br>' +
-                '— I' +
-            '</p>' +
-
-        '</div>';
-
-
-    document
-        .getElementById("app")
-        .appendChild(finalPage);
-
-
-    /*
-        Celebration particles.
-    */
-
-    createHeartBurst();
-
-}
-
-
-/* ==============================================================
-   HEART / STAR BURST
-   ============================================================== */
-
-function createHeartBurst() {
-
-    var symbols = [
-        "♥",
-        "♡",
-        "✦",
-        "✧",
-        "★",
-        "·"
-    ];
-
-
-    for (
-        var i = 0;
-        i < 150;
-        i++
-    ) {
-
-        var particle =
-            document.createElement("span");
-
-
-        particle.className =
-            "burst";
-
-
-        particle.textContent =
-            symbols[
-                Math.floor(
-                    Math.random() *
-                    symbols.length
-                )
-            ];
-
-
-        particle.style.position =
-            "fixed";
-
-
-        particle.style.left =
-            "50%";
-
-
-        particle.style.top =
-            "50%";
-
-
-        particle.style.zIndex =
-            "99999";
-
-
-        particle.style.pointerEvents =
-            "none";
-
-
-        particle.style.color =
-            "white";
-
-
-        particle.style.fontSize =
-            10 +
-            Math.random() * 20 +
-            "px";
-
-
-        document.body
-            .appendChild(particle);
-
-
-        var angle =
-            Math.random() *
-            Math.PI *
-            2;
-
-
-        var distance =
-            100 +
-            Math.random() * 600;
-
-
-        var x =
-            Math.cos(angle) *
-            distance;
-
-
-        var y =
-            Math.sin(angle) *
-            distance;
-
-
-        var animation =
-            particle.animate(
-
-                [
-
-                    {
-                        transform:
-                            "translate(-50%, -50%) " +
-                            "scale(0)",
-
-                        opacity: 1
-
-                    },
-
-                    {
-
-                        transform:
-                            "translate(" +
-                            x +
-                            "px, " +
-                            y +
-                            "px) " +
-                            "rotate(" +
-                            Math.random() * 720 +
-                            "deg) " +
-                            "scale(1.4)",
-
-                        opacity: 0
-
-                    }
-
-                ],
-
-                {
-
-                    duration:
-                        1000 +
-                        Math.random() *
-                        1800,
-
-                    easing:
-                        "cubic-bezier(.1,.8,.2,1)"
-
-                }
-
-            );
-
-
-        animation.onfinish =
-            function() {
-
-                particle.remove();
-
-            };
-
-    }
-
-}
+musicPlayer.setAttribute(
+    "data-song",
+    songs[0]
+);
