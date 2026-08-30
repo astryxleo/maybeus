@@ -1,64 +1,45 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-
-  <meta
-    name="viewport"
-    content="width=device-width, initial-scale=1.0, viewport-fit=cover"
-  >
-
-  <meta name="theme-color" content="#030207">
-
-  <title>For Jas ♡</title>
-
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-
-  <link
-    href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&family=Playfair+Display:ital,wght@400;500;600&display=swap"
-    rel="stylesheet"
-  >
-
-  <link rel="stylesheet" href="style.css">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#030208">
+<title>For Jas ♡</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&family=Playfair+Display:ital,wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
 </head>
 
 <body>
 
-  <!-- Background -->
-  <div class="aurora aurora-a"></div>
-  <div class="aurora aurora-b"></div>
-  <div class="aurora aurora-c"></div>
+<div class="aurora aurora1"></div>
+<div class="aurora aurora2"></div>
+<div class="aurora aurora3"></div>
 
-  <div id="stars"></div>
-  <canvas id="particles"></canvas>
+<div id="stars"></div>
+<canvas id="particles"></canvas>
 
-  <!-- Cursor follower -->
-  <div id="cursorGlow">
-    <div class="cursor-core"></div>
-  </div>
+<div id="cursorGlow">
+    <div class="cursorStar">✦</div>
+</div>
 
-  <!-- Top indicator -->
-  <div class="top-ui">
+<header>
     <div class="brand">FOR JAS</div>
-
     <div class="counter">
-      <span id="current">01</span>
-      <span>/</span>
-      <span id="total">10</span>
+        <span id="current">01</span>
+        <span>/</span>
+        <span id="total">10</span>
     </div>
-  </div>
+</header>
 
-  <!-- Story -->
-  <main id="app"></main>
+<main id="app"></main>
 
-  <!-- Bottom progress -->
-  <div class="progress">
+<div class="progress">
     <div id="progressBar"></div>
-  </div>
+</div>
 
-  <script src="script.js"></script>
+<script src="script.js"></script>
 
 </body>
 </html>
