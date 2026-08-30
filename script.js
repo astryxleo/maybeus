@@ -1,7 +1,8 @@
+```javascript
 /* ============================================================
    MAYBE US
    Leo × Judy
-   ============================================================ */
+============================================================ */
 
 
 /* ============================================================
@@ -12,9 +13,8 @@ const pages = Array.from(
     document.querySelectorAll(".page")
 );
 
-const nextButtons = document.querySelectorAll(
-    "[data-next]"
-);
+const nextButtons =
+    document.querySelectorAll("[data-next]");
 
 const currentPageElement =
     document.getElementById("currentPage");
@@ -62,9 +62,9 @@ function initialize() {
     updatePageIndicator();
 
     setupFlipCards();
-
     setupMouseGlow();
-
+    setupButtonRipple();
+    setupCardTilt();
 }
 
 
@@ -82,7 +82,8 @@ function updatePageIndicator() {
         String(currentPage + 1)
             .padStart(2, "0");
 
-    currentPageElement.textContent = number;
+    currentPageElement.textContent =
+        number;
 }
 
 
@@ -109,12 +110,17 @@ function goToPage(targetIndex) {
 
     isTransitioning = true;
 
-    const oldPage = pages[currentPage];
-    const newPage = pages[targetIndex];
+    const oldPage =
+        pages[currentPage];
+
+    const newPage =
+        pages[targetIndex];
 
     oldPage.classList.add("exit");
 
-    transitionLayer.classList.add("show");
+    if (transitionLayer) {
+        transitionLayer.classList.add("show");
+    }
 
     setTimeout(() => {
 
@@ -125,7 +131,8 @@ function goToPage(targetIndex) {
 
         newPage.classList.add("active");
 
-        currentPage = targetIndex;
+        currentPage =
+            targetIndex;
 
         updatePageIndicator();
 
@@ -133,7 +140,9 @@ function goToPage(targetIndex) {
 
         setTimeout(() => {
 
-            transitionLayer.classList.remove("show");
+            if (transitionLayer) {
+                transitionLayer.classList.remove("show");
+            }
 
             setTimeout(() => {
 
@@ -161,11 +170,8 @@ function resetPageScroll(page) {
         page.querySelector(".scroll-page");
 
     if (scrollContainer) {
-
         scrollContainer.scrollTop = 0;
-
     }
-
 }
 
 
@@ -175,11 +181,16 @@ function resetPageScroll(page) {
 
 nextButtons.forEach(button => {
 
-    button.addEventListener("click", () => {
+    button.addEventListener(
+        "click",
+        () => {
 
-        goToPage(currentPage + 1);
+            goToPage(
+                currentPage + 1
+            );
 
-    });
+        }
+    );
 
 });
 
@@ -191,18 +202,24 @@ nextButtons.forEach(button => {
 function setupFlipCards() {
 
     const cards =
-        document.querySelectorAll(".flip-card");
+        document.querySelectorAll(
+            ".flip-card"
+        );
 
     cards.forEach(card => {
 
-        card.addEventListener("click", () => {
+        card.addEventListener(
+            "click",
+            () => {
 
-            card.classList.toggle("flipped");
+                card.classList.toggle(
+                    "flipped"
+                );
 
-        });
+            }
+        );
 
     });
-
 }
 
 
@@ -212,17 +229,20 @@ function setupFlipCards() {
 
 if (yesButton) {
 
-    yesButton.addEventListener("click", () => {
+    yesButton.addEventListener(
+        "click",
+        () => {
 
-        createConfetti();
+            createConfetti();
 
-        setTimeout(() => {
+            setTimeout(() => {
 
-            goToPage(8);
+                goToPage(8);
 
-        }, 500);
+            }, 500);
 
-    });
+        }
+    );
 
 }
 
@@ -233,11 +253,14 @@ if (yesButton) {
 
 if (thinkButton) {
 
-    thinkButton.addEventListener("click", () => {
+    thinkButton.addEventListener(
+        "click",
+        () => {
 
-        goToPage(9);
+            goToPage(9);
 
-    });
+        }
+    );
 
 }
 
@@ -263,24 +286,33 @@ function createConfetti() {
 
     const total = 70;
 
-    for (let i = 0; i < total; i++) {
+    for (
+        let i = 0;
+        i < total;
+        i++
+    ) {
 
         const piece =
-            document.createElement("span");
+            document.createElement(
+                "span"
+            );
 
-        piece.className = "confetti";
+        piece.className =
+            "confetti";
 
         const left =
             Math.random() * 100;
 
         const duration =
-            2.5 + Math.random() * 3;
+            2.5 +
+            Math.random() * 3;
 
         const delay =
             Math.random() * 0.8;
 
         const drift =
-            (Math.random() - 0.5) * 300;
+            (Math.random() - 0.5) *
+            300;
 
         const rotation =
             Math.random() * 360;
@@ -288,7 +320,8 @@ function createConfetti() {
         piece.textContent =
             symbols[
                 Math.floor(
-                    Math.random() * symbols.length
+                    Math.random() *
+                    symbols.length
                 )
             ];
 
@@ -314,16 +347,17 @@ function createConfetti() {
         piece.style.fontSize =
             `${8 + Math.random() * 10}px`;
 
-        confettiContainer.appendChild(piece);
-
+        confettiContainer.appendChild(
+            piece
+        );
     }
 
     setTimeout(() => {
 
-        confettiContainer.innerHTML = "";
+        confettiContainer.innerHTML =
+            "";
 
     }, 6500);
-
 }
 
 
@@ -360,11 +394,15 @@ function setupMouseGlow() {
             pointerEvents: "none",
             zIndex: "-1",
             opacity: "0",
+
             background:
                 "radial-gradient(circle, rgba(220,180,255,.08), transparent 65%)",
+
             filter: "blur(10px)",
+
             transform:
                 "translate(-50%, -50%)",
+
             transition:
                 "opacity .4s ease"
         }
@@ -380,25 +418,30 @@ function setupMouseGlow() {
             glow.style.top =
                 `${event.clientY}px`;
 
-            glow.style.opacity = "1";
+            glow.style.opacity =
+                "1";
 
         }
     );
-
 }
 
 
 /* ============================================================
-   KEYBOARD NAVIGATION
-   ============================================================ */
+   KEYBOARD
+   RIGHT ARROW = NEXT PAGE
+============================================================ */
 
 document.addEventListener(
     "keydown",
     event => {
 
-        if (event.key === "ArrowRight") {
+        if (
+            event.key === "ArrowRight"
+        ) {
 
-            goToPage(currentPage + 1);
+            goToPage(
+                currentPage + 1
+            );
 
         }
 
@@ -407,98 +450,46 @@ document.addEventListener(
 
 
 /* ============================================================
-   PREVENT ACCIDENTAL MAIN PAGE SCROLL
+   IMPORTANT MOBILE FIX
 ============================================================ */
 
-document.addEventListener(
-    "wheel",
-    event => {
+/*
+    THERE IS INTENTIONALLY NO:
 
-        const activePage =
-            pages[currentPage];
+    wheel event
+    touchstart event
+    touchmove event
+    touchend event
+    swipe navigation
 
-        const scrollContainer =
-            activePage.querySelector(
-                ".scroll-page"
-            );
+    This means:
 
-        if (!scrollContainer) {
+    Finger scrolling
+        ↓
+    ONLY scrolls .scroll-page
 
-            event.preventDefault();
+    It NEVER calls goToPage().
 
-        }
-
-    },
-    {
-        passive: false
-    }
-);
-
-
-/* ============================================================
-   TOUCH SWIPE
-   NOTE:
-   Swipe does NOT navigate pages.
-   It only allows internal section scrolling.
-============================================================ */
-
-let touchStartY = 0;
-
-document.addEventListener(
-    "touchstart",
-    event => {
-
-        if (!event.touches.length) {
-            return;
-        }
-
-        touchStartY =
-            event.touches[0].clientY;
-
-    },
-    {
-        passive: true
-    }
-);
-
-
-document.addEventListener(
-    "touchmove",
-    event => {
-
-        const activePage =
-            pages[currentPage];
-
-        const scrollContainer =
-            activePage.querySelector(
-                ".scroll-page"
-            );
-
-        if (!scrollContainer) {
-            return;
-        }
-
-        /*
-         * Let the browser handle natural
-         * internal scrolling.
-         */
-
-    },
-    {
-        passive: true
-    }
-);
+    Page changes happen only when:
+        1. Next button is clicked
+        2. HAAA button is clicked
+        3. Let me think is clicked
+        4. ArrowRight is pressed
+*/
 
 
 /* ============================================================
    BUTTON RIPPLE
 ============================================================ */
 
-document
-    .querySelectorAll(
-        ".next-btn, .answer-btn"
-    )
-    .forEach(button => {
+function setupButtonRipple() {
+
+    const buttons =
+        document.querySelectorAll(
+            ".next-btn, .answer-btn"
+        );
+
+    buttons.forEach(button => {
 
         button.addEventListener(
             "click",
@@ -516,18 +507,26 @@ document
                     ripple.style,
                     {
                         position: "absolute",
+
                         left:
                             `${event.clientX - rect.left}px`,
+
                         top:
                             `${event.clientY - rect.top}px`,
+
                         width: "10px",
                         height: "10px",
+
                         borderRadius: "50%",
+
                         background:
                             "rgba(255,255,255,.25)",
+
                         transform:
                             "translate(-50%,-50%) scale(0)",
+
                         pointerEvents: "none",
+
                         animation:
                             "buttonRipple .6s ease-out forwards"
                     }
@@ -536,7 +535,9 @@ document
                 button.style.position =
                     "relative";
 
-                button.appendChild(ripple);
+                button.appendChild(
+                    ripple
+                );
 
                 setTimeout(() => {
 
@@ -550,36 +551,37 @@ document
     });
 
 
-/* ============================================================
-   RIPPLE KEYFRAMES
-============================================================ */
+    const rippleStyle =
+        document.createElement("style");
 
-const rippleStyle =
-    document.createElement("style");
+    rippleStyle.textContent = `
 
-rippleStyle.textContent = `
+        @keyframes buttonRipple {
 
-@keyframes buttonRipple {
+            0% {
+                transform:
+                    translate(-50%, -50%)
+                    scale(0);
 
-    0% {
-        transform:
-            translate(-50%, -50%)
-            scale(0);
-        opacity: 1;
-    }
+                opacity: 1;
+            }
 
-    100% {
-        transform:
-            translate(-50%, -50%)
-            scale(35);
-        opacity: 0;
-    }
+            100% {
+                transform:
+                    translate(-50%, -50%)
+                    scale(35);
 
+                opacity: 0;
+            }
+
+        }
+
+    `;
+
+    document.head.appendChild(
+        rippleStyle
+    );
 }
-
-`;
-
-document.head.appendChild(rippleStyle);
 
 
 /* ============================================================
@@ -634,20 +636,21 @@ function setupCardTilt() {
                     rect.height / 2;
 
                 const rotateX =
-                    ((y - centerY) /
-                        centerY) *
-                    -4;
+                    (
+                        (y - centerY) /
+                        centerY
+                    ) * -4;
 
                 const rotateY =
-                    ((x - centerX) /
-                        centerX) *
-                    4;
+                    (
+                        (x - centerX) /
+                        centerX
+                    ) * 4;
 
                 card.style.transform =
                     `rotateX(${rotateX}deg)
                      rotateY(${rotateY}deg)
                      translateY(-4px)`;
-
             }
         );
 
@@ -662,14 +665,11 @@ function setupCardTilt() {
         );
 
     });
-
 }
-
-setupCardTilt();
 
 
 /* ============================================================
-   ACTIVE PAGE CARD ANIMATION
+   CARD ANIMATION
 ============================================================ */
 
 function animateVisibleCards() {
@@ -694,7 +694,6 @@ function animateVisibleCards() {
 
         }
     );
-
 }
 
 
@@ -725,15 +724,16 @@ pages.forEach(page => {
 
 
 /* ============================================================
-   INIT
+   INITIAL START
 ============================================================ */
 
 initialize();
+
 animateVisibleCards();
 
 
 /* ============================================================
-   FINAL CONSOLE MESSAGE
+   CONSOLE
 ============================================================ */
 
 console.log(
@@ -752,3 +752,4 @@ console.log(
         color:#aaa;
     `
 );
+```
