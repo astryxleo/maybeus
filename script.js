@@ -1,4 +1,3 @@
-```javascript
 /* ==========================================================
    JUDY × LEO
    CINEMATIC INTERACTION ENGINE
@@ -895,4 +894,3 @@ if (
     initializeWebsite();
 
 }
-```
