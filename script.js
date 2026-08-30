@@ -1,24 +1,25 @@
-/*
-============================================================
-JAS WEBSITE JAVASCRIPT
-============================================================
+/* ==========================================================
+   JAS WEBSITE
+   ----------------------------------------------------------
+   Page navigation:
+   - Button ONLY
+   - No back button
+   - Scrolling only scrolls content inside a page
+   - Page itself never changes from scrolling
 
-IMPORTANT:
+   Music:
+   - song1.mp3
+   - song2.mp3
+   - song3.mp3
+   - song4.mp3
 
-- Page navigation ONLY happens through the button.
-- Scrolling never changes the page.
-- There is NO back button.
-- Cards flip when clicked.
-- Music automatically changes between pages.
-- Music is intentionally quiet.
-- No template literals are used anywhere.
-============================================================
-*/
+   No template literals are used.
+   ========================================================== */
 
 
-/* ============================================================
+/* ==========================================================
    ELEMENTS
-   ============================================================ */
+   ========================================================== */
 
 var pages =
     document.querySelectorAll(".page");
@@ -26,11 +27,11 @@ var pages =
 var nextButton =
     document.getElementById("nextButton");
 
-var pageNumber =
-    document.getElementById("pageNumber");
+var currentNumber =
+    document.getElementById("currentNumber");
 
-var pageTotal =
-    document.getElementById("pageTotal");
+var totalNumber =
+    document.getElementById("totalNumber");
 
 var progressBar =
     document.getElementById("progressBar");
@@ -40,6 +41,27 @@ var musicPlayer =
 
 var musicButton =
     document.getElementById("musicButton");
+
+var musicIcon =
+    document.getElementById("musicIcon");
+
+var musicPanel =
+    document.getElementById("musicPanel");
+
+var songName =
+    document.getElementById("songName");
+
+var playPause =
+    document.getElementById("playPause");
+
+var previousSong =
+    document.getElementById("previousSong");
+
+var nextSong =
+    document.getElementById("nextSong");
+
+var volumeSlider =
+    document.getElementById("volumeSlider");
 
 var cursorGlow =
     document.getElementById("cursorGlow");
@@ -54,93 +76,67 @@ var ctx =
     canvas.getContext("2d");
 
 
-/* ============================================================
-   PAGE SETTINGS
-   ============================================================ */
+/* ==========================================================
+   PAGE VARIABLES
+   ========================================================== */
 
-var currentPageIndex = 0;
+var currentPage = 0;
 
 var totalPages = pages.length;
 
-var changingPage = false;
+var isChangingPage = false;
+
+
+/* ==========================================================
+   MUSIC
+   ========================================================== */
+
+var songs = [
+    "songs/song1.mp3",
+    "songs/song2.mp3",
+    "songs/song3.mp3",
+    "songs/song4.mp3"
+];
+
+
+var songNames = [
+    "Song 1",
+    "Song 2",
+    "Song 3",
+    "Song 4"
+];
+
+
+var currentSong = 0;
 
 var musicStarted = false;
 
 
-/* ============================================================
-   SONG SETTINGS
-   ============================================================
+/* ==========================================================
+   BUTTON LABELS
+   ========================================================== */
 
-   Put these files inside:
-
-   songs/song1.mp3
-   songs/song2.mp3
-   songs/song3.mp3
-   songs/song4.mp3
-
-   etc.
-
-   You can add more later.
-   ============================================================ */
-
-var songs = [
-
-    "songs/song1.mp3",
-
-    "songs/song2.mp3",
-
-    "songs/song3.mp3",
-
-    "songs/song4.mp3"
-
-];
-
-
-/*
-    Each page gets a song.
-
-    Pages 1-4 -> song1
-    Pages 5-6 -> song2
-    Pages 7-8 -> song3
-    Page 9    -> song4
-*/
-
-
-/* ============================================================
-   BUTTON TEXT
-   ============================================================ */
-
-var buttonTexts = [
-
+var buttonLabels = [
     "Begin →",
-
     "Continue →",
-
-    "There is more →",
-
+    "The little things →",
     "Reasons →",
-
     "Keep going →",
-
     "A little more →",
-
     "Almost there →",
-
     "The honest part →",
-
     "Finish →"
-
 ];
 
 
-/* ============================================================
-   UPDATE COUNTER
-   ============================================================ */
+/* ==========================================================
+   PAGE COUNTER
+   ========================================================== */
 
-function updateCounter() {
+function updatePageInfo() {
 
     var current =
-        String(currentPageIndex + 1);
+        String(currentPage + 1);
 
     if (current.length === 1) {
         current = "0" + current;
@@ -155,130 +151,92 @@ function updateCounter() {
     }
 
 
-    pageNumber.textContent =
+    currentNumber.textContent =
         current;
 
-    pageTotal.textContent =
+    totalNumber.textContent =
         total;
 
 
-    var percentage =
-        ((currentPageIndex + 1) /
+    var progress =
+        ((currentPage + 1) /
         totalPages) * 100;
 
 
     progressBar.style.width =
-        percentage + "%";
+        progress + "%";
 
 
     nextButton.textContent =
-        buttonTexts[currentPageIndex]
+        buttonLabels[currentPage]
         || "Continue →";
 
 }
 
 
-/* ============================================================
-   CHANGE MUSIC
-   ============================================================ */
+/* ==========================================================
+   MUSIC LOAD
+   ========================================================== */
 
-function changeMusic() {
+function loadSong(index, autoPlay) {
 
-    /*
-        Determine which song should play.
-    */
-
-    var songIndex = 0;
-
-
-    if (currentPageIndex >= 4) {
-        songIndex = 1;
+    if (index < 0) {
+        index = songs.length - 1;
     }
 
 
-    if (currentPageIndex >= 6) {
-        songIndex = 2;
+    if (index >= songs.length) {
+        index = 0;
     }
 
 
-    if (currentPageIndex >= 8) {
-        songIndex = 3;
-    }
-
-
-    /*
-        If that song doesn't exist,
-        safely use the first one.
-    */
-
-    if (!songs[songIndex]) {
-        songIndex = 0;
-    }
-
-
-    /*
-        Don't restart the same song
-        when moving between pages.
-    */
-
-    if (
-        musicPlayer.getAttribute("data-song")
-        === songs[songIndex]
-    ) {
-        return;
-    }
-
-
-    musicPlayer.setAttribute(
-        "data-song",
-        songs[songIndex]
-    );
+    currentSong = index;
 
 
     musicPlayer.src =
-        songs[songIndex];
+        songs[currentSong];
 
-
-    /*
-        VERY LOW VOLUME.
-    */
 
     musicPlayer.volume =
-        0.14;
-
-
-    /*
-        Try to play.
-
-        Browser autoplay rules may block this
-        until the user clicks the first button.
-    */
-
-    var playPromise =
-        musicPlayer.play();
-
-
-    if (playPromise !== undefined) {
-
-        playPromise.catch(
-            function() {
-
-                /*
-                    The first button click will
-                    start the music.
-                */
-
-            }
+        parseFloat(
+            volumeSlider.value
         );
 
+
+    songName.textContent =
+        songNames[currentSong];
+
+
+    if (autoPlay) {
+
+        var playPromise =
+            musicPlayer.play();
+
+
+        if (
+            playPromise !== undefined
+        ) {
+
+            playPromise.catch(
+                function() {
+                    musicStarted = false;
+                    updateMusicButton();
+                }
+            );
+
+        }
+
     }
+
+
+    updateMusicButton();
 
 }
 
 
-/* ============================================================
-   START MUSIC AFTER USER INTERACTION
-   ============================================================ */
+/* ==========================================================
+   START MUSIC
+   ========================================================== */
 
 function startMusic() {
 
@@ -286,34 +244,245 @@ function startMusic() {
 
         musicStarted = true;
 
-        changeMusic();
+        var playPromise =
+            musicPlayer.play();
+
+
+        if (
+            playPromise !== undefined
+        ) {
+
+            playPromise.catch(
+                function() {
+
+                    musicStarted =
+                        false;
+
+                }
+            );
+
+        }
 
     }
 
 }
 
 
-/* ============================================================
+/* ==========================================================
+   MUSIC BUTTON ICON
+   ========================================================== */
+
+function updateMusicButton() {
+
+    if (musicPlayer.paused) {
+
+        musicIcon.textContent =
+            "▶";
+
+        playPause.textContent =
+            "▶";
+
+    } else {
+
+        musicIcon.textContent =
+            "♫";
+
+        playPause.textContent =
+            "Ⅱ";
+
+    }
+
+}
+
+
+/* ==========================================================
+   MUSIC PANEL
+   ========================================================== */
+
+musicButton.addEventListener(
+    "click",
+    function() {
+
+        musicPanel.classList.toggle(
+            "show"
+        );
+
+    }
+);
+
+
+/* ==========================================================
+   PLAY / PAUSE
+   ========================================================== */
+
+playPause.addEventListener(
+    "click",
+    function() {
+
+        if (musicPlayer.paused) {
+
+            musicPlayer.play()
+                .then(
+                    function() {
+
+                        musicStarted =
+                            true;
+
+                        updateMusicButton();
+
+                    }
+                )
+                .catch(
+                    function() {}
+                );
+
+        } else {
+
+            musicPlayer.pause();
+
+            updateMusicButton();
+
+        }
+
+    }
+);
+
+
+/* ==========================================================
+   PREVIOUS SONG
+   ========================================================== */
+
+previousSong.addEventListener(
+    "click",
+    function() {
+
+        var wasPlaying =
+            !musicPlayer.paused;
+
+        currentSong--;
+
+        if (currentSong < 0) {
+            currentSong =
+                songs.length - 1;
+        }
+
+
+        loadSong(
+            currentSong,
+            wasPlaying
+        );
+
+    }
+);
+
+
+/* ==========================================================
+   NEXT SONG
+   ========================================================== */
+
+nextSong.addEventListener(
+    "click",
+    function() {
+
+        var wasPlaying =
+            !musicPlayer.paused;
+
+        currentSong++;
+
+        if (
+            currentSong >=
+            songs.length
+        ) {
+            currentSong = 0;
+        }
+
+
+        loadSong(
+            currentSong,
+            wasPlaying
+        );
+
+    }
+);
+
+
+/* ==========================================================
+   VOLUME
+   ========================================================== */
+
+volumeSlider.addEventListener(
+    "input",
+    function() {
+
+        musicPlayer.volume =
+            parseFloat(
+                this.value
+            );
+
+    }
+);
+
+
+/* ==========================================================
+   AUTOMATIC SONG CHANGE BY SECTION
+   ==========================================================
+
+   Page 1-3  -> Song 1
+   Page 4-5  -> Song 2
+   Page 6-7  -> Song 3
+   Page 8-9  -> Song 4
+   ========================================================== */
+
+function updateSongForPage() {
+
+    var desiredSong = 0;
+
+
+    if (currentPage >= 3) {
+        desiredSong = 1;
+    }
+
+
+    if (currentPage >= 5) {
+        desiredSong = 2;
+    }
+
+
+    if (currentPage >= 7) {
+        desiredSong = 3;
+    }
+
+
+    if (
+        desiredSong !== currentSong
+    ) {
+
+        var wasPlaying =
+            !musicPlayer.paused;
+
+        loadSong(
+            desiredSong,
+            wasPlaying
+        );
+
+    }
+
+}
+
+
+/* ==========================================================
    NEXT PAGE
-   ============================================================ */
+   ========================================================== */
 
-function nextPage() {
+function goNext() {
 
-    /*
-        Prevent accidental double-clicks.
-    */
-
-    if (changingPage) {
+    if (isChangingPage) {
         return;
     }
 
 
-    /*
-        Last page means we stay there.
-    */
-
     if (
-        currentPageIndex >=
+        currentPage >=
         totalPages - 1
     ) {
 
@@ -325,21 +494,40 @@ function nextPage() {
     }
 
 
-    changingPage = true;
+    isChangingPage = true;
 
 
     /*
-        Start music after real user interaction.
+        User clicked the button,
+        so browser allows audio playback.
     */
 
-    startMusic();
+    if (!musicStarted) {
+
+        musicStarted = true;
+
+        var firstPlay =
+            musicPlayer.play();
+
+
+        if (
+            firstPlay !== undefined
+        ) {
+
+            firstPlay.catch(
+                function() {}
+            );
+
+        }
+
+    }
 
 
     /*
-        Hide current page.
+        Remove old page.
     */
 
-    pages[currentPageIndex]
+    pages[currentPage]
         .classList
         .remove("active");
 
@@ -348,140 +536,73 @@ function nextPage() {
         Move forward.
     */
 
-    currentPageIndex++;
+    currentPage++;
 
 
     /*
-        Small delay makes the transition
-        feel more cinematic.
+        Make sure the new page starts
+        at the top if it was previously
+        visited.
     */
+
+    pages[currentPage].scrollTop =
+        0;
+
 
     setTimeout(
         function() {
 
-            /*
-                Reset scroll position of
-                the new page.
-
-                IMPORTANT:
-                This does NOT navigate through scroll.
-            */
-
-            pages[currentPageIndex]
-                .scrollTop = 0;
-
-
-            pages[currentPageIndex]
+            pages[currentPage]
                 .classList
                 .add("active");
 
 
-            updateCounter();
+            updatePageInfo();
 
-
-            /*
-                Change song if necessary.
-            */
-
-            changeMusic();
+            updateSongForPage();
 
         },
-        180
+        120
     );
 
 
     /*
-        Unlock after animation.
+        Wait for transition before
+        allowing another click.
     */
 
     setTimeout(
         function() {
 
-            changingPage = false;
+            isChangingPage =
+                false;
 
         },
-        950
+        900
     );
 
 }
 
 
-/* ============================================================
-   NEXT BUTTON EVENT
-   ============================================================ */
+/* ==========================================================
+   NEXT BUTTON
+   ========================================================== */
 
 nextButton.addEventListener(
     "click",
     function() {
 
-        nextPage();
+        goNext();
 
     }
 );
 
 
-/* ============================================================
-   MUSIC BUTTON
-   ============================================================ */
-
-musicButton.addEventListener(
-    "click",
-    function() {
-
-        /*
-            If music has not started yet,
-            start it.
-        */
-
-        if (!musicStarted) {
-
-            startMusic();
-
-            musicPlayer.play()
-                .catch(
-                    function() {}
-                );
-
-            musicButton.textContent =
-                "♫";
-
-            return;
-
-        }
-
-
-        /*
-            Toggle pause/play.
-        */
-
-        if (musicPlayer.paused) {
-
-            musicPlayer.play()
-                .catch(
-                    function() {}
-                );
-
-            musicButton.textContent =
-                "♫";
-
-        } else {
-
-            musicPlayer.pause();
-
-            musicButton.textContent =
-                "×";
-
-        }
-
-    }
-);
-
-
-/* ============================================================
+/* ==========================================================
    FLIP CARDS
-   ============================================================ */
+   ========================================================== */
 
-var reasonCards =
+var cards =
     document.querySelectorAll(
         ".reason-card"
     );
@@ -489,11 +610,11 @@ var reasonCards =
 
 for (
     var i = 0;
-    i < reasonCards.length;
+    i < cards.length;
     i++
 ) {
 
-    reasonCards[i].addEventListener(
+    cards[i].addEventListener(
         "click",
         function() {
 
@@ -507,9 +628,9 @@ for (
 }
 
 
-/* ============================================================
-   CURSOR FOLLOW
-   ============================================================ */
+/* ==========================================================
+   CURSOR GLOW
+   ========================================================== */
 
 var mouseX =
     window.innerWidth / 2;
@@ -538,7 +659,7 @@ window.addEventListener(
 );
 
 
-function animateGlow() {
+function animateCursor() {
 
     glowX +=
         (mouseX - glowX) * 0.12;
@@ -555,23 +676,23 @@ function animateGlow() {
 
 
     requestAnimationFrame(
-        animateGlow
+        animateCursor
     );
 
 }
 
 
-animateGlow();
+animateCursor();
 
 
-/* ============================================================
+/* ==========================================================
    CREATE STARS
-   ============================================================ */
+   ========================================================== */
 
 var starCount =
     window.innerWidth < 600
-        ? 70
-        : 130;
+        ? 65
+        : 125;
 
 
 for (
@@ -581,7 +702,9 @@ for (
 ) {
 
     var star =
-        document.createElement("span");
+        document.createElement(
+            "span"
+        );
 
 
     star.className =
@@ -597,11 +720,16 @@ for (
 
 
     star.style.animationDuration =
-        5 + Math.random() * 16 + "s";
+        (
+            5 +
+            Math.random() * 16
+        ) + "s";
 
 
     star.style.animationDelay =
-        -Math.random() * 16 + "s";
+        (
+            -Math.random() * 16
+        ) + "s";
 
 
     stars.appendChild(star);
@@ -609,9 +737,9 @@ for (
 }
 
 
-/* ============================================================
+/* ==========================================================
    PARTICLE CANVAS
-   ============================================================ */
+   ========================================================== */
 
 var canvasWidth =
     window.innerWidth;
@@ -671,16 +799,16 @@ window.addEventListener(
 );
 
 
-/* ============================================================
+/* ==========================================================
    PARTICLES
-   ============================================================ */
+   ========================================================== */
 
 var particles = [];
 
 var particleCount =
     window.innerWidth < 600
-        ? 45
-        : 90;
+        ? 40
+        : 85;
 
 
 for (
@@ -708,21 +836,23 @@ for (
             * 0.18,
 
         size:
-            Math.random() * 1.5
-            + 0.3,
+            Math.random() *
+            1.4 +
+            0.3,
 
         opacity:
-            Math.random() * 0.35
-            + 0.05
+            Math.random() *
+            0.32 +
+            0.04
 
     });
 
 }
 
 
-/* ============================================================
-   ANIMATE PARTICLES
-   ============================================================ */
+/* ==========================================================
+   PARTICLE ANIMATION
+   ========================================================== */
 
 function animateParticles() {
 
@@ -751,37 +881,43 @@ function animateParticles() {
             particle.vy;
 
 
-        /*
-            Wrap around screen.
-        */
-
         if (
             particle.x < 0
         ) {
+
             particle.x =
                 canvasWidth;
+
         }
 
 
         if (
-            particle.x > canvasWidth
+            particle.x >
+            canvasWidth
         ) {
+
             particle.x = 0;
+
         }
 
 
         if (
             particle.y < 0
         ) {
+
             particle.y =
                 canvasHeight;
+
         }
 
 
         if (
-            particle.y > canvasHeight
+            particle.y >
+            canvasHeight
         ) {
+
             particle.y = 0;
+
         }
 
 
@@ -818,27 +954,70 @@ function animateParticles() {
 animateParticles();
 
 
-/* ============================================================
-   INITIALIZE
-   ============================================================ */
-
-updateCounter();
-
-
-/*
-    Set first song as source but DO NOT autoplay.
-
-    Browser policies normally require user interaction
-    before audio can play.
-*/
-
-musicPlayer.src =
-    songs[0];
+/* ==========================================================
+   INITIAL MUSIC
+   ========================================================== */
 
 musicPlayer.volume =
     0.14;
 
-musicPlayer.setAttribute(
-    "data-song",
-    songs[0]
+loadSong(
+    0,
+    false
+);
+
+
+/* ==========================================================
+   INITIAL PAGE
+   ========================================================== */
+
+updatePageInfo();
+
+
+/* ==========================================================
+   EXTRA SAFETY
+   ----------------------------------------------------------
+   Prevent mouse wheel from changing pages.
+   It can still scroll inside the current page.
+   ========================================================== */
+
+window.addEventListener(
+    "wheel",
+    function() {
+
+        /*
+            Intentionally empty.
+
+            Page navigation is controlled
+            ONLY by the Next button.
+        */
+
+    },
+    {
+        passive: true
+    }
+);
+
+
+/* ==========================================================
+   KEYBOARD
+   ----------------------------------------------------------
+   ArrowRight can also advance.
+   No previous/back navigation is provided.
+   ========================================================== */
+
+document.addEventListener(
+    "keydown",
+    function(event) {
+
+        if (
+            event.key === "ArrowRight" ||
+            event.key === "Enter"
+        ) {
+
+            goNext();
+
+        }
+
+    }
 );
