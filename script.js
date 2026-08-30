@@ -1,199 +1,254 @@
-/* =========================================
+```javascript
+/* =========================================================
    JAS — CINEMATIC PROPOSAL
-   Written completely from I → You
-========================================= */
+   JAVASCRIPT
 
-const app = document.getElementById("app");
+   IMPORTANT:
+   - Button navigation ONLY
+   - No scrolling
+   - No swipe
+   - No previous/back button
+========================================================= */
+
+
+/* =========================================================
+   ELEMENTS
+========================================================= */
+
+const story =
+  document.getElementById("story");
+
+const pageNumber =
+  document.getElementById("pageNumber");
+
+const totalPages =
+  document.getElementById("totalPages");
+
+const progressBar =
+  document.getElementById("progressBar");
+
+
+/* =========================================================
+   STORY PAGES
+========================================================= */
 
 const pages = [
 
-/* =========================
-   PAGE 01
-========================= */
+/* ---------------------------------------------------------
+   PAGE 01 — OPENING
+--------------------------------------------------------- */
 
 `
 <section class="page active">
 
   <div class="content">
 
-    <div class="eyebrow reveal d1">
+    <div class="eyebrow">
       a little something for you
     </div>
 
-    <h1 class="title reveal d2">
+    <h1 class="title">
       Jas<span>.</span>
     </h1>
 
-    <p class="lead reveal d3">
-      I made something I couldn't really say in one message.
+    <p class="lead">
+      I made something I couldn't really
+      say in one message.
     </p>
 
-    <button class="btn reveal d4" data-next>
-      Begin →
-    </button>
+    <div class="next-wrap">
 
-    <p class="small reveal d5">
-      take your time.
-    </p>
+      <button
+        class="next"
+        data-next
+      >
+        Begin →
+      </button>
+
+    </div>
 
   </div>
 
 </section>
 `,
 
-/* =========================
-   PAGE 02
-========================= */
+
+/* ---------------------------------------------------------
+   PAGE 02 — DRAWING
+--------------------------------------------------------- */
 
 `
 <section class="page">
 
   <div class="content">
 
-    <div class="eyebrow reveal d1">
+    <div class="eyebrow">
       chapter one
     </div>
 
-    <h2 class="title reveal d2">
+    <h2 class="title">
       It started with
       <em>a drawing.</em>
     </h2>
 
-    <p class="lead reveal d3">
+    <p class="lead">
       I saw your drawing on your highlights
-      and all I did was compliment it.
+      and I just complimented it.
     </p>
 
-    <p class="small reveal d4">
+    <p class="small">
       “Your drawings are amazing.”
     </p>
 
-    <p class="lead reveal d5">
-      I had absolutely no idea where that
-      little compliment would take me.
+    <p
+      class="lead"
+      style="margin-top:20px"
+    >
+      I had absolutely no idea where
+      that little moment would take me.
     </p>
+
+    <div class="next-wrap">
+
+      <button
+        class="next"
+        data-next
+      >
+        Keep going →
+      </button>
+
+    </div>
 
   </div>
 
 </section>
 `,
 
-/* =========================
-   PAGE 03
-========================= */
+
+/* ---------------------------------------------------------
+   PAGE 03 — IMPORTANT
+--------------------------------------------------------- */
 
 `
 <section class="page">
 
   <div class="content">
 
-    <div class="eyebrow reveal d1">
+    <div class="eyebrow">
       somewhere along the way
     </div>
 
-    <div class="glass reveal d2">
+    <div class="glass">
 
       <p class="quote">
         You became one of the most important
         people in my life.
       </p>
 
-      <p class="small reveal d3">
+      <p class="small">
         Not because of one huge moment.
         Because of all the little things.
       </p>
 
     </div>
 
+    <div class="next-wrap">
+
+      <button
+        class="next"
+        data-next
+      >
+        The little things →
+      </button>
+
+    </div>
+
   </div>
 
 </section>
 `,
 
-/* =========================
-   PAGE 04
-========================= */
+
+/* ---------------------------------------------------------
+   PAGE 04 — THINGS
+--------------------------------------------------------- */
 
 `
 <section class="page">
 
   <div class="content">
 
-    <div class="eyebrow reveal d1">
+    <div class="eyebrow">
       things I notice
     </div>
 
     <h2
-      class="title reveal d2"
-      style="font-size:clamp(40px,11vw,70px)"
+      class="title"
+      style="
+        font-size:
+        clamp(42px,11vw,70px);
+      "
     >
       About <em>you.</em>
     </h2>
 
-    <div class="memory-stack">
+    <div class="memories">
 
       <div class="memory">
-        <span class="memory-number">01</span>
-        <span class="memory-text">
-          You're beautiful.
-        </span>
+        <span class="number">01</span>
+        You're beautiful.
       </div>
 
       <div class="memory">
-        <span class="memory-number">02</span>
-        <span class="memory-text">
-          You care about me.
-        </span>
+        <span class="number">02</span>
+        You care about me.
       </div>
 
       <div class="memory">
-        <span class="memory-number">03</span>
-        <span class="memory-text">
-          You notice my efforts.
-        </span>
+        <span class="number">03</span>
+        You notice my efforts.
       </div>
 
       <div class="memory">
-        <span class="memory-number">04</span>
-        <span class="memory-text">
-          You don't ignore me.
-        </span>
+        <span class="number">04</span>
+        You don't ignore me.
       </div>
 
       <div class="memory">
-        <span class="memory-number">05</span>
-        <span class="memory-text">
-          You share things with me.
-        </span>
+        <span class="number">05</span>
+        You share things with me.
       </div>
 
       <div class="memory">
-        <span class="memory-number">06</span>
-        <span class="memory-text">
-          You make me feel important.
-        </span>
+        <span class="number">06</span>
+        You make me feel important.
       </div>
 
       <div class="memory">
-        <span class="memory-number">07</span>
-        <span class="memory-text">
-          You trust me.
-        </span>
+        <span class="number">07</span>
+        You trust me.
       </div>
 
       <div class="memory">
-        <span class="memory-number">08</span>
-        <span class="memory-text">
-          You're kind.
-        </span>
+        <span class="number">08</span>
+        You're kind.
       </div>
 
       <div class="memory">
-        <span class="memory-number">09</span>
-        <span class="memory-text">
-          You're genuinely yourself with me.
-        </span>
+        <span class="number">09</span>
+        You're genuinely yourself with me.
       </div>
+
+    </div>
+
+    <div class="next-wrap">
+
+      <button
+        class="next"
+        data-next
+      >
+        There's more →
+      </button>
 
     </div>
 
@@ -202,28 +257,32 @@ const pages = [
 </section>
 `,
 
-/* =========================
-   PAGE 05
-========================= */
+
+/* ---------------------------------------------------------
+   PAGE 05 — VERY JAS
+--------------------------------------------------------- */
 
 `
 <section class="page">
 
   <div class="content">
 
-    <div class="eyebrow reveal d1">
+    <div class="eyebrow">
       very, very Jas
     </div>
 
     <h2
-      class="title reveal d2"
-      style="font-size:clamp(42px,12vw,75px)"
+      class="title"
+      style="
+        font-size:
+        clamp(43px,12vw,75px);
+      "
     >
       And then there's
       <em>you.</em>
     </h2>
 
-    <div class="glass reveal d3">
+    <div class="glass">
 
       <p class="lead">
         Your “blehhh” while teasing me.
@@ -238,7 +297,8 @@ const pages = [
       <br>
 
       <p class="lead">
-        Sharing your pictures without hesitation.
+        You sharing your pictures
+        without hesitation.
       </p>
 
       <br>
@@ -254,148 +314,216 @@ const pages = [
 
     </div>
 
+    <div class="next-wrap">
+
+      <button
+        class="next"
+        data-next
+      >
+        One more thing →
+      </button>
+
+    </div>
+
   </div>
 
 </section>
 `,
 
-/* =========================
-   PAGE 06
-========================= */
+
+/* ---------------------------------------------------------
+   PAGE 06 — NOTIFICATION
+--------------------------------------------------------- */
 
 `
 <section class="page">
 
   <div class="content">
 
-    <div class="eyebrow reveal d1">
+    <div class="eyebrow">
       one notification
     </div>
 
-    <div class="notification reveal d2">
+    <div class="notification">
 
       <div class="notification-top">
         Jas · now
       </div>
 
-      <div class="notification-message">
+      <div class="notification-text">
         New message
       </div>
 
     </div>
 
-    <p class="lead reveal d3">
+    <p class="lead">
       Every time I get a notification…
     </p>
 
     <h2
-      class="title reveal d4"
-      style="font-size:clamp(40px,11vw,70px)"
+      class="title"
+      style="
+        font-size:
+        clamp(40px,11vw,70px);
+        margin-top:20px;
+      "
     >
       I just wish it would be
       <em>you.</em>
     </h2>
 
+    <div class="next-wrap">
+
+      <button
+        class="next"
+        data-next
+      >
+        And then I realized →
+      </button>
+
+    </div>
+
   </div>
 
 </section>
 `,
 
-/* =========================
-   PAGE 07
-========================= */
+
+/* ---------------------------------------------------------
+   PAGE 07 — ROUTINE
+--------------------------------------------------------- */
 
 `
 <section class="page">
 
   <div class="content">
 
-    <div class="eyebrow reveal d1">
+    <div class="eyebrow">
       without even trying
     </div>
 
     <h2
-      class="title reveal d2"
-      style="font-size:clamp(40px,11vw,70px)"
+      class="title"
+      style="
+        font-size:
+        clamp(40px,11vw,70px);
+      "
     >
       You changed my
       <em>routine.</em>
     </h2>
 
-    <p class="lead reveal d3">
+    <p class="lead">
       You became someone I look forward
       to hearing from.
     </p>
 
-    <p class="lead reveal d4">
-      Someone whose messages I genuinely wait for.
+    <p
+      class="lead"
+      style="margin-top:15px"
+    >
+      Someone whose messages
+      I genuinely wait for.
     </p>
 
-    <p class="quote reveal d5">
+    <p class="quote">
       You became my favorite notification.
     </p>
+
+    <div class="next-wrap">
+
+      <button
+        class="next"
+        data-next
+      >
+        I need to tell you something →
+      </button>
+
+    </div>
 
   </div>
 
 </section>
 `,
 
-/* =========================
-   PAGE 08
-========================= */
+
+/* ---------------------------------------------------------
+   PAGE 08 — EVERYTHING
+--------------------------------------------------------- */
 
 `
 <section class="page">
 
   <div class="content">
 
-    <div class="eyebrow reveal d1">
+    <div class="eyebrow">
       what words can't explain
     </div>
 
-    <p class="lead reveal d2">
+    <p class="lead">
+
       Your kindness.
       Your trust.
       Your little habits.
       Your teasing.
       The way you are with me.
+
     </p>
 
     <h2
-      class="title reveal d3"
-      style="font-size:clamp(45px,12vw,78px)"
+      class="title"
+      style="
+        font-size:
+        clamp(45px,12vw,78px);
+        margin-top:30px;
+      "
     >
       It's
       <em>everything.</em>
     </h2>
 
-    <p class="small reveal d4">
+    <p class="small">
       And somehow, words still don't feel like enough.
     </p>
+
+    <div class="next-wrap">
+
+      <button
+        class="next"
+        data-next
+      >
+        So here's the truth →
+      </button>
+
+    </div>
 
   </div>
 
 </section>
 `,
 
-/* =========================
-   PAGE 09
-========================= */
+
+/* ---------------------------------------------------------
+   PAGE 09 — CONFESSION
+--------------------------------------------------------- */
 
 `
 <section class="page">
 
   <div class="content">
 
-    <div class="eyebrow reveal d1">
+    <div class="eyebrow">
       the part I needed to say
     </div>
 
-    <div class="glass reveal d2">
+    <div class="glass">
 
       <h2
         class="title"
-        style="font-size:clamp(38px,10vw,60px)"
+        style="
+          font-size:
+          clamp(38px,10vw,60px);
+        "
       >
         Jas,
       </h2>
@@ -405,9 +533,10 @@ const pages = [
         But I don't think you know how much.
       </p>
 
-      <br>
-
-      <p class="lead">
+      <p
+        class="lead"
+        style="margin-top:20px"
+      >
         Somewhere between our conversations,
         your little jokes, your replies,
         your trust, and all those tiny moments…
@@ -426,29 +555,43 @@ const pages = [
 
     </div>
 
+    <div class="next-wrap">
+
+      <button
+        class="next"
+        data-next
+      >
+        One last thing →
+      </button>
+
+    </div>
+
   </div>
 
 </section>
 `,
 
-/* =========================
-   PAGE 10
-========================= */
+
+/* ---------------------------------------------------------
+   PAGE 10 — BUILDUP
+--------------------------------------------------------- */
 
 `
 <section class="page">
 
   <div class="content">
 
-    <span class="heart reveal d1">
+    <div class="final-glow"></div>
+
+    <span class="heart">
       ♡
     </span>
 
-    <div class="eyebrow reveal d1">
+    <div class="eyebrow">
       the one thing I want you to know
     </div>
 
-    <p class="lead reveal d2">
+    <p class="lead">
 
       If I had to choose one person
       to keep talking to,
@@ -462,23 +605,30 @@ const pages = [
     </p>
 
     <h2
-      class="title reveal d3"
-      style="font-size:clamp(45px,13vw,82px)"
+      class="title"
+      style="
+        font-size:
+        clamp(45px,13vw,82px);
+      "
     >
       It would be
       <em>you.</em>
     </h2>
 
-    <p class="lead reveal d4">
+    <p class="lead">
       You and only you, Jas.
     </p>
 
-    <button
-      class="btn yes reveal d5"
-      id="proposalButton"
-    >
-      One last thing →
-    </button>
+    <div class="next-wrap">
+
+      <button
+        class="next yes"
+        id="proposalButton"
+      >
+        There's one question left →
+      </button>
+
+    </div>
 
   </div>
 
@@ -488,187 +638,132 @@ const pages = [
 ];
 
 
-/* =========================================
-   RENDER
-========================================= */
+/* =========================================================
+   INSERT STORY
+========================================================= */
 
-app.innerHTML = pages
-  .map(page => page)
-  .join("");
+story.innerHTML =
+  pages.join("");
 
 
 const pageElements =
-  [...document.querySelectorAll(".page")];
+  [
+    ...document.querySelectorAll(".page")
+  ];
 
-const currentPage =
-  document.getElementById("currentPage");
 
-const totalPages =
-  document.getElementById("totalPages");
+let current =
+  0;
 
-const progressBar =
-  document.getElementById("progressBar");
+let locked =
+  false;
+
+
+/* =========================================================
+   INITIAL UI
+========================================================= */
 
 totalPages.textContent =
-  String(pageElements.length).padStart(2,"0");
+  String(pageElements.length)
+    .padStart(2,"0");
 
 
-let current = 0;
+function updateUI() {
 
-let locked = false;
+  pageNumber.textContent =
+    String(current + 1)
+      .padStart(2,"0");
 
-
-/* =========================================
-   PAGE UPDATE
-========================================= */
-
-function updatePage() {
-
-  pageElements.forEach(
-    (page,index) => {
-
-      page.classList.toggle(
-        "active",
-        index === current
-      );
-
-    }
-  );
-
-  currentPage.textContent =
-    String(current + 1).padStart(2,"0");
 
   progressBar.style.width =
-    `${((current + 1) / pageElements.length) * 100}%`;
+    (
+      ((current + 1) /
+      pageElements.length)
+      * 100
+    ) + "%";
 
 }
 
 
-/* =========================================
+updateUI();
+
+
+/* =========================================================
    NEXT PAGE
-========================================= */
+========================================================= */
 
 function nextPage() {
 
-  if (locked) return;
-
-  if (current >= pageElements.length - 1)
+  if (locked)
     return;
+
+
+  if (
+    current >=
+    pageElements.length - 1
+  )
+    return;
+
 
   locked = true;
 
+
+  pageElements[current]
+    .classList.remove("active");
+
+
   current++;
 
-  updatePage();
+
+  /*
+    Tiny delay makes the transition
+    feel more cinematic.
+  */
 
   setTimeout(() => {
+
+    pageElements[current]
+      .classList.add("active");
+
+    updateUI();
+
+  }, 120);
+
+
+  setTimeout(() => {
+
     locked = false;
-  }, 850);
+
+  }, 950);
 
 }
 
 
-/* =========================================
-   BUTTONS
-========================================= */
+/* =========================================================
+   BUTTON NAVIGATION ONLY
+========================================================= */
 
 document.addEventListener(
   "click",
   event => {
 
-    if (
-      event.target.closest("[data-next]")
-    ) {
-      nextPage();
-    }
+    const button =
+      event.target.closest("[data-next]");
+
+
+    if (!button)
+      return;
+
+
+    nextPage();
 
   }
 );
 
 
-/* =========================================
-   DESKTOP SCROLL
-========================================= */
-
-window.addEventListener(
-  "wheel",
-  event => {
-
-    if (event.deltaY > 20) {
-
-      nextPage();
-
-    }
-
-  },
-  { passive: true }
-);
-
-
-/* =========================================
-   KEYBOARD
-========================================= */
-
-window.addEventListener(
-  "keydown",
-  event => {
-
-    if (
-      event.key === "ArrowDown" ||
-      event.key === " " ||
-      event.key === "Enter"
-    ) {
-
-      nextPage();
-
-    }
-
-  }
-);
-
-
-/* =========================================
-   MOBILE SWIPE
-========================================= */
-
-let touchStartY = 0;
-
-window.addEventListener(
-  "touchstart",
-  event => {
-
-    touchStartY =
-      event.touches[0].clientY;
-
-  },
-  { passive: true }
-);
-
-
-window.addEventListener(
-  "touchend",
-  event => {
-
-    const touchEndY =
-      event.changedTouches[0].clientY;
-
-    const distance =
-      touchStartY - touchEndY;
-
-    if (distance > 55) {
-
-      nextPage();
-
-    }
-
-  },
-  { passive: true }
-);
-
-
-/* =========================================
-   PROPOSAL
-========================================= */
+/* =========================================================
+   PROPOSAL SCREEN
+========================================================= */
 
 document
   .getElementById("proposalButton")
@@ -680,44 +775,66 @@ document
 
 function showProposal() {
 
+  if (locked)
+    return;
+
+
+  locked = true;
+
+
+  pageElements.forEach(
+    page =>
+      page.classList.remove("active")
+  );
+
+
   const proposal =
-    document.createElement("div");
+    document.createElement("section");
+
 
   proposal.className =
     "page active";
+
 
   proposal.innerHTML = `
 
     <div class="content">
 
-      <div class="eyebrow reveal d1">
+      <span class="heart">
+        ♡
+      </span>
+
+      <div class="eyebrow">
         no more chapters
       </div>
 
       <h2
-        class="title reveal d2"
-        style="font-size:clamp(43px,12vw,76px)"
+        class="title"
+        style="
+          font-size:
+          clamp(44px,13vw,82px);
+        "
       >
         Jas, will you be
         <em>mine?</em>
       </h2>
 
-      <p class="lead reveal d3">
+      <p class="lead">
         One honest question from me.
       </p>
 
-      <div class="actions reveal d4">
+      <div class="actions">
 
         <button
-          class="btn yes"
+          class="next yes"
           id="yesButton"
         >
           YES ♡
         </button>
 
         <button
-          class="btn wait"
-          id="waitButton"
+          class="next"
+          id="momentButton"
         >
           I need a moment 🥹
         </button>
@@ -728,33 +845,32 @@ function showProposal() {
 
   `;
 
-  document.body.appendChild(proposal);
 
-  requestAnimationFrame(() => {
+  story.appendChild(proposal);
 
-    proposal.classList.add("active");
 
-  });
+  setTimeout(() => {
 
+    locked = false;
+
+  }, 900);
+
+
+  /*
+    "I need a moment"
+  */
 
   document
-    .getElementById("waitButton")
+    .getElementById("momentButton")
     .addEventListener(
       "click",
-      () => {
-
-        proposal.querySelector(".lead")
-          .textContent =
-          "Take all the time you need. ♡";
-
-        document
-          .getElementById("waitButton")
-          .textContent =
-          "I'm ready →";
-
-      }
+      handleMoment
     );
 
+
+  /*
+    YES
+  */
 
   document
     .getElementById("yesButton")
@@ -766,9 +882,47 @@ function showProposal() {
 }
 
 
-/* =========================================
-   YES CELEBRATION
-========================================= */
+/* =========================================================
+   MOMENT BUTTON
+========================================================= */
+
+function handleMoment() {
+
+  const button =
+    document.getElementById(
+      "momentButton"
+    );
+
+
+  button.textContent =
+    "Take your time ♡";
+
+
+  button.style.opacity =
+    ".65";
+
+
+  setTimeout(() => {
+
+    button.textContent =
+      "I'm ready →";
+
+
+    button.style.opacity =
+      "1";
+
+
+    button.onclick =
+      celebrate;
+
+  }, 900);
+
+}
+
+
+/* =========================================================
+   YES — FINAL SCENE
+========================================================= */
 
 function celebrate() {
 
@@ -780,20 +934,21 @@ function celebrate() {
     );
 
 
-  const final =
-    document.createElement("div");
+  const finalPage =
+    document.createElement("section");
 
-  final.className =
+
+  finalPage.className =
     "page active";
 
 
-  final.innerHTML = `
+  finalPage.innerHTML = `
 
     <div class="content">
 
       <span
         class="heart"
-        style="font-size:70px"
+        style="font-size:76px"
       >
         ♥
       </span>
@@ -803,30 +958,42 @@ function celebrate() {
       </div>
 
       <h1 class="title">
+
         You said
         <em>yes.</em>
+
       </h1>
 
       <p class="lead">
+
         I think I'm going to remember
         this forever.
+
       </p>
 
       <p
         class="lead"
         style="margin-top:15px"
       >
+
         Thank you for choosing me, Jas.
+
       </p>
 
       <p class="quote">
+
         It was always you.
+
       </p>
 
       <p class="small">
+
         You and only you.
+
         <br><br>
+
         — I
+
       </p>
 
     </div>
@@ -834,16 +1001,17 @@ function celebrate() {
   `;
 
 
-  document.body.appendChild(final);
+  story.appendChild(finalPage);
+
 
   createCelebration();
 
 }
 
 
-/* =========================================
-   CELEBRATION PARTICLES
-========================================= */
+/* =========================================================
+   CINEMATIC PARTICLE EXPLOSION
+========================================================= */
 
 function createCelebration() {
 
@@ -858,15 +1026,18 @@ function createCelebration() {
 
   for (
     let i = 0;
-    i < 75;
+    i < 100;
     i++
   ) {
 
     const particle =
       document.createElement("span");
 
-    particle.className =
+
+    particle
+      .className =
       "celebration-particle";
+
 
     particle.textContent =
       symbols[
@@ -877,9 +1048,15 @@ function createCelebration() {
       ];
 
 
-    document.body.appendChild(
-      particle
-    );
+    particle.style.fontSize =
+      (
+        10 +
+        Math.random() * 18
+      ) + "px";
+
+
+    document.body
+      .appendChild(particle);
 
 
     const angle =
@@ -889,9 +1066,9 @@ function createCelebration() {
 
 
     const distance =
-      120 +
+      130 +
       Math.random() *
-      380;
+      450;
 
 
     const x =
@@ -907,37 +1084,51 @@ function createCelebration() {
     const duration =
       1000 +
       Math.random() *
-      1400;
+      1600;
 
 
     particle.animate(
 
       [
-        {
-          transform:
-            "translate(-50%,-50%) scale(.3)",
-          opacity: 1
-        },
 
         {
           transform:
-            `translate(
+            "translate(-50%,-50%) scale(.2)",
+
+          opacity: 1
+
+        },
+
+        {
+
+          transform:
+            `
+            translate(
               calc(-50% + ${x}px),
               calc(-50% + ${y}px)
             )
-            scale(1)`,
+            scale(1.2)
+            `,
+
           opacity: 0
+
         }
 
       ],
 
       {
-        duration,
+
+        duration:
+
+          duration,
+
         easing:
           "cubic-bezier(.1,.8,.2,1)"
+
       }
 
-    ).onfinish =
+    )
+    .onfinish =
       () => particle.remove();
 
   }
@@ -945,9 +1136,9 @@ function createCelebration() {
 }
 
 
-/* =========================================
+/* =========================================================
    BACKGROUND STARS
-========================================= */
+========================================================= */
 
 const stars =
   document.getElementById("stars");
@@ -955,12 +1146,13 @@ const stars =
 
 for (
   let i = 0;
-  i < 65;
+  i < 80;
   i++
 ) {
 
   const star =
     document.createElement("span");
+
 
   star.className =
     "star";
@@ -975,11 +1167,33 @@ for (
 
 
   star.style.animationDuration =
-    7 + Math.random() * 15 + "s";
+    (
+      7 +
+      Math.random() * 15
+    ) + "s";
 
 
   star.style.animationDelay =
-    -Math.random() * 15 + "s";
+    (
+      -Math.random() * 15
+    ) + "s";
+
+
+  /*
+    A few stars are slightly larger.
+  */
+
+  if (
+    Math.random() > .88
+  ) {
+
+    star.style.width =
+      "3px";
+
+    star.style.height =
+      "3px";
+
+  }
 
 
   stars.appendChild(star);
@@ -987,29 +1201,14 @@ for (
 }
 
 
-/* =========================================
-   SOUND BUTTON
-========================================= */
+/* =========================================================
+   IMPORTANT:
+   NO wheel listener
+   NO touch/swipe listener
+   NO back navigation
+   NO previous button
 
-const soundButton =
-  document.getElementById("soundBtn");
-
-
-soundButton.addEventListener(
-  "click",
-  () => {
-
-    soundButton.textContent =
-      soundButton.textContent === "♪"
-        ? "◼"
-        : "♪";
-
-  }
-);
-
-
-/* =========================================
-   INITIALIZE
-========================================= */
-
-updatePage();
+   The story intentionally moves forward ONLY
+   when a visible button is clicked.
+========================================================= */
+```
