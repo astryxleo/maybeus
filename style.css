@@ -1,3 +1,10 @@
+```css
+/* ============================================================
+   MAYBE US
+   Leo × Judy
+============================================================ */
+
+
 /* ============================================================
    RESET
 ============================================================ */
@@ -32,7 +39,6 @@ body {
 ============================================================ */
 
 :root {
-
     --bg: #05040a;
     --bg-soft: #0b0912;
 
@@ -69,6 +75,7 @@ body {
     overflow: hidden;
     pointer-events: none;
     z-index: -10;
+
     background:
         radial-gradient(
             circle at 50% 0%,
@@ -85,7 +92,9 @@ body {
     border-radius: 50%;
     filter: blur(110px);
     opacity: 0.16;
-    animation: auroraMove 16s ease-in-out infinite alternate;
+
+    animation:
+        auroraMove 16s ease-in-out infinite alternate;
 }
 
 .aurora-1 {
@@ -109,7 +118,6 @@ body {
 }
 
 @keyframes auroraMove {
-
     0% {
         transform: translate3d(0, 0, 0) scale(1);
     }
@@ -124,14 +132,23 @@ body {
 }
 
 
+/* ============================================================
+   NOISE
+============================================================ */
+
 .noise {
     position: absolute;
     inset: 0;
     opacity: 0.025;
+
     background-image:
         url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.8'/%3E%3C/svg%3E");
 }
 
+
+/* ============================================================
+   STARS
+============================================================ */
 
 .stars {
     position: absolute;
@@ -140,11 +157,16 @@ body {
 
 .stars span {
     position: absolute;
+
     width: 2px;
     height: 2px;
+
     border-radius: 50%;
+
     background: rgba(255, 255, 255, 0.7);
-    animation: twinkle 3s ease-in-out infinite;
+
+    animation:
+        twinkle 3s ease-in-out infinite;
 }
 
 .stars span:nth-child(1) {
@@ -234,7 +256,6 @@ body {
 }
 
 @keyframes twinkle {
-
     0%,
     100% {
         opacity: 0.15;
@@ -254,9 +275,11 @@ body {
 
 .top-ui {
     position: fixed;
+
     top: 26px;
     left: 32px;
     right: 32px;
+
     z-index: 100;
 
     display: flex;
@@ -273,6 +296,7 @@ body {
 
     font-size: 12px;
     font-weight: 600;
+
     letter-spacing: 0.16em;
     text-transform: uppercase;
 
@@ -282,17 +306,19 @@ body {
 .brand-dot {
     width: 7px;
     height: 7px;
+
     border-radius: 50%;
-    background: #fff;
+
+    background: #ffffff;
 
     box-shadow:
         0 0 12px rgba(255, 255, 255, 0.8);
 
-    animation: brandPulse 2s ease-in-out infinite;
+    animation:
+        brandPulse 2s ease-in-out infinite;
 }
 
 @keyframes brandPulse {
-
     0%,
     100% {
         transform: scale(1);
@@ -312,29 +338,35 @@ body {
 
     font-size: 10px;
     letter-spacing: 0.15em;
+
     color: rgba(255, 255, 255, 0.45);
 }
 
 .page-indicator #currentPage {
-    color: white;
+    color: #ffffff;
 }
 
 .indicator-line {
     width: 35px;
     height: 1px;
+
     background: rgba(255, 255, 255, 0.25);
 }
 
 
 /* ============================================================
-   APP / PAGE SYSTEM
+   PAGE SYSTEM
 ============================================================ */
 
 #app {
     position: relative;
+
     width: 100%;
     height: 100vh;
+
     overflow: hidden;
+
+    touch-action: pan-y;
 }
 
 .page {
@@ -348,7 +380,9 @@ body {
     visibility: hidden;
     pointer-events: none;
 
-    transform: scale(0.96) translateY(30px);
+    transform:
+        scale(0.96)
+        translateY(30px);
 
     transition:
         opacity 0.7s cubic-bezier(0.22, 1, 0.36, 1),
@@ -362,13 +396,20 @@ body {
     opacity: 1;
     visibility: visible;
     pointer-events: auto;
-    transform: scale(1) translateY(0);
+
+    transform:
+        scale(1)
+        translateY(0);
+
     z-index: 5;
 }
 
 .page.exit {
     opacity: 0;
-    transform: scale(1.04) translateY(-30px);
+
+    transform:
+        scale(1.04)
+        translateY(-30px);
 }
 
 .page-inner {
@@ -384,19 +425,32 @@ body {
 
     display: flex;
     flex-direction: column;
+
     align-items: center;
     justify-content: center;
 }
 
+
+/* ============================================================
+   INTERNAL SCROLL
+============================================================ */
+
 .scroll-page {
     justify-content: flex-start;
+
     overflow-y: auto;
     overflow-x: hidden;
 
+    touch-action: pan-y;
+    overscroll-behavior: contain;
+
     scrollbar-width: thin;
+
     scrollbar-color:
         rgba(255, 255, 255, 0.2)
         transparent;
+
+    -webkit-overflow-scrolling: touch;
 }
 
 .scroll-page::-webkit-scrollbar {
@@ -418,7 +472,7 @@ body {
 
 
 /* ============================================================
-   REVEAL ANIMATIONS
+   REVEALS
 ============================================================ */
 
 .page.active .reveal {
@@ -449,20 +503,23 @@ body {
 }
 
 @keyframes revealUp {
-
     from {
         opacity: 0;
+
         transform:
             translateY(35px)
             scale(0.97);
+
         filter: blur(8px);
     }
 
     to {
         opacity: 1;
+
         transform:
             translateY(0)
             scale(1);
+
         filter: blur(0);
     }
 }
@@ -477,6 +534,7 @@ body {
 
     font-size: 10px;
     font-weight: 700;
+
     letter-spacing: 0.25em;
     text-transform: uppercase;
 
@@ -487,9 +545,14 @@ body {
     margin-top: 18px;
 
     font-family: "Playfair Display", serif;
-    font-size: clamp(80px, 14vw, 180px);
+
+    font-size:
+        clamp(80px, 14vw, 180px);
+
     line-height: 0.85;
+
     font-weight: 600;
+
     letter-spacing: -0.07em;
 
     background:
@@ -502,6 +565,7 @@ body {
 
     -webkit-background-clip: text;
     background-clip: text;
+
     color: transparent;
 
     filter:
@@ -521,6 +585,7 @@ body {
     margin-top: 30px;
 
     color: var(--muted);
+
     font-size: 15px;
     line-height: 1.8;
 }
@@ -531,12 +596,15 @@ body {
     margin-bottom: 20px;
 
     font-size: 9px;
+
     letter-spacing: 0.22em;
+
     color: rgba(255, 255, 255, 0.3);
 }
 
 .section-heading {
     width: 100%;
+
     margin-bottom: 35px;
 }
 
@@ -550,9 +618,13 @@ body {
 
     font-family: "Playfair Display", serif;
 
-    font-size: clamp(42px, 6vw, 76px);
+    font-size:
+        clamp(42px, 6vw, 76px);
+
     line-height: 0.98;
+
     letter-spacing: -0.045em;
+
     font-weight: 600;
 }
 
@@ -568,15 +640,19 @@ body {
     margin-top: 13px;
 
     color: var(--faint);
+
     font-size: 12px;
 }
 
 .section-description {
     max-width: 580px;
+
     margin-top: 25px;
 
     color: var(--muted);
+
     line-height: 1.85;
+
     font-size: 14px;
 }
 
@@ -603,21 +679,32 @@ body {
     inset: 0;
 
     border-radius: 50%;
-    border: 1px solid rgba(255, 255, 255, 0.1);
+
+    border:
+        1px solid
+        rgba(255, 255, 255, 0.1);
 }
 
 .ring-one {
-    animation: rotateRing 14s linear infinite;
+    animation:
+        rotateRing
+        14s
+        linear
+        infinite;
 }
 
 .ring-two {
     inset: 18px;
-    border-color: rgba(231, 201, 255, 0.22);
+
+    border-color:
+        rgba(231, 201, 255, 0.22);
 
     animation:
-        rotateRing 9s
+        rotateRing
+        9s
         linear
-        infinite reverse;
+        infinite
+        reverse;
 }
 
 .ring-one::before,
@@ -631,7 +718,7 @@ body {
 
     border-radius: 50%;
 
-    background: white;
+    background: #ffffff;
 
     box-shadow:
         0 0 18px
@@ -663,7 +750,8 @@ body {
     width: 65px;
     height: 65px;
 
-    transform: translate(-50%, -50%);
+    transform:
+        translate(-50%, -50%);
 
     display: grid;
     place-items: center;
@@ -677,7 +765,9 @@ body {
             rgba(210, 160, 255, 0.1)
         );
 
-    border: 1px solid rgba(255, 255, 255, 0.2);
+    border:
+        1px solid
+        rgba(255, 255, 255, 0.2);
 
     box-shadow:
         0 0 50px
@@ -685,7 +775,11 @@ body {
         inset 0 0 25px
         rgba(255, 255, 255, 0.05);
 
-    animation: coreFloat 4s ease-in-out infinite;
+    animation:
+        coreFloat
+        4s
+        ease-in-out
+        infinite;
 }
 
 .orbit-core span {
@@ -693,7 +787,6 @@ body {
 }
 
 @keyframes coreFloat {
-
     0%,
     100% {
         transform:
@@ -711,11 +804,13 @@ body {
 .hero-note {
     display: flex;
     align-items: center;
+
     gap: 8px;
 
     margin-top: 22px;
 
     font-size: 11px;
+
     color: rgba(255, 255, 255, 0.4);
 }
 
@@ -741,9 +836,13 @@ body {
     display: flex;
     align-items: center;
     justify-content: space-between;
+
     gap: 30px;
 
-    border: 1px solid rgba(255, 255, 255, 0.13);
+    border:
+        1px solid
+        rgba(255, 255, 255, 0.13);
+
     border-radius: 999px;
 
     background:
@@ -753,19 +852,22 @@ body {
             rgba(255, 255, 255, 0.035)
         );
 
-    color: white;
+    color: #ffffff;
 
     cursor: pointer;
 
     font-family: inherit;
+
     font-size: 11px;
     font-weight: 600;
+
     letter-spacing: 0.04em;
 
     backdrop-filter: blur(18px);
 
     box-shadow:
-        0 10px 40px rgba(0, 0, 0, 0.25);
+        0 10px 40px
+        rgba(0, 0, 0, 0.25);
 
     transition:
         transform 0.35s ease,
@@ -774,12 +876,15 @@ body {
         box-shadow 0.35s ease;
 
     overflow: hidden;
+
+    -webkit-tap-highlight-color: transparent;
 }
 
 .next-btn::before {
     content: "";
 
     position: absolute;
+
     top: 0;
     left: -100%;
 
@@ -794,7 +899,8 @@ body {
             transparent
         );
 
-    transition: left 0.6s ease;
+    transition:
+        left 0.6s ease;
 }
 
 .next-btn:hover::before {
@@ -802,7 +908,8 @@ body {
 }
 
 .next-btn:hover {
-    transform: translateY(-4px);
+    transform:
+        translateY(-4px);
 
     border-color:
         rgba(255, 255, 255, 0.3);
@@ -818,7 +925,9 @@ body {
 }
 
 .next-btn:active {
-    transform: translateY(0) scale(0.97);
+    transform:
+        translateY(0)
+        scale(0.97);
 }
 
 .arrow {
@@ -830,13 +939,16 @@ body {
 
     border-radius: 50%;
 
-    background: rgba(255, 255, 255, 0.09);
+    background:
+        rgba(255, 255, 255, 0.09);
 
-    transition: transform 0.3s ease;
+    transition:
+        transform 0.3s ease;
 }
 
 .next-btn:hover .arrow {
-    transform: translateX(4px);
+    transform:
+        translateX(4px);
 }
 
 
@@ -849,8 +961,12 @@ body {
 
     width: min(700px, 100%);
 
-    border: 1px solid var(--border);
-    border-radius: var(--radius-xl);
+    border:
+        1px solid
+        var(--border);
+
+    border-radius:
+        var(--radius-xl);
 
     background:
         linear-gradient(
@@ -859,13 +975,18 @@ body {
             rgba(255, 255, 255, 0.025)
         );
 
-    box-shadow: var(--shadow);
+    box-shadow:
+        var(--shadow);
 
     overflow: hidden;
 
     backdrop-filter: blur(25px);
 
-    animation: cardAppear 1s ease both;
+    animation:
+        cardAppear
+        1s
+        ease
+        both;
 }
 
 .story-glow {
@@ -879,7 +1000,8 @@ body {
 
     border-radius: 50%;
 
-    background: rgba(220, 170, 255, 0.14);
+    background:
+        rgba(220, 170, 255, 0.14);
 
     filter: blur(50px);
 }
@@ -892,22 +1014,33 @@ body {
 
     padding: 18px 24px;
 
-    color: rgba(255, 255, 255, 0.35);
+    color:
+        rgba(255, 255, 255, 0.35);
 
     font-size: 9px;
+
     letter-spacing: 0.16em;
+
     text-transform: uppercase;
 }
 
 .story-top {
-    border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+    border-bottom:
+        1px solid
+        rgba(255, 255, 255, 0.07);
 }
 
 .story-footer {
-    border-top: 1px solid rgba(255, 255, 255, 0.07);
+    border-top:
+        1px solid
+        rgba(255, 255, 255, 0.07);
+
     justify-content: center;
+
     gap: 10px;
+
     text-transform: none;
+
     letter-spacing: 0.03em;
 }
 
@@ -924,20 +1057,27 @@ body {
     left: 42px;
 
     font-family: Georgia, serif;
+
     font-size: 80px;
 
     line-height: 1;
 
-    color: rgba(255, 255, 255, 0.06);
+    color:
+        rgba(255, 255, 255, 0.06);
 }
 
 .story-content > p {
     position: relative;
 
-    color: rgba(255, 255, 255, 0.76);
+    color:
+        rgba(255, 255, 255, 0.76);
 
-    font-family: "Playfair Display", serif;
+    font-family:
+        "Playfair Display",
+        serif;
+
     font-size: 24px;
+
     line-height: 1.5;
 }
 
@@ -948,7 +1088,8 @@ body {
 
     padding: 16px 22px;
 
-    border-radius: 18px 18px 18px 5px;
+    border-radius:
+        18px 18px 18px 5px;
 
     background:
         linear-gradient(
@@ -957,7 +1098,8 @@ body {
             rgba(255, 255, 255, 0.06)
         );
 
-    border: 1px solid
+    border:
+        1px solid
         rgba(235, 210, 255, 0.16);
 
     color: #f4eaff;
@@ -972,23 +1114,31 @@ body {
 }
 
 .story-content .story-small {
-    font-family: "DM Sans", sans-serif;
+    font-family:
+        "DM Sans",
+        sans-serif;
 
-    color: rgba(255, 255, 255, 0.48);
+    color:
+        rgba(255, 255, 255, 0.48);
 
     font-size: 13px;
 }
 
 @keyframes cardAppear {
-
     from {
         opacity: 0;
-        transform: translateY(25px) scale(0.98);
+
+        transform:
+            translateY(25px)
+            scale(0.98);
     }
 
     to {
         opacity: 1;
-        transform: translateY(0) scale(1);
+
+        transform:
+            translateY(0)
+            scale(1);
     }
 }
 
@@ -1003,8 +1153,10 @@ body {
     margin-top: 45px;
 
     display: flex;
+
     align-items: center;
     justify-content: center;
+
     gap: 25px;
 }
 
@@ -1013,16 +1165,21 @@ body {
 
     display: flex;
     align-items: center;
+
     gap: 13px;
 
     padding: 15px;
 
     text-align: left;
 
-    border: 1px solid var(--border);
+    border:
+        1px solid
+        var(--border);
+
     border-radius: 20px;
 
-    background: var(--glass);
+    background:
+        var(--glass);
 
     backdrop-filter: blur(18px);
 
@@ -1032,8 +1189,11 @@ body {
 }
 
 .person-pill:hover {
-    transform: translateY(-7px);
-    border-color: var(--border-bright);
+    transform:
+        translateY(-7px);
+
+    border-color:
+        var(--border-bright);
 }
 
 .pill-icon {
@@ -1052,7 +1212,10 @@ body {
             rgba(255, 255, 255, 0.04)
         );
 
-    font-family: "Playfair Display", serif;
+    font-family:
+        "Playfair Display",
+        serif;
+
     font-size: 18px;
 }
 
@@ -1060,24 +1223,31 @@ body {
     display: block;
 
     font-size: 8px;
+
     letter-spacing: 0.18em;
+
     color: var(--faint);
 }
 
 .person-pill strong {
     display: block;
+
     margin-top: 2px;
 }
 
 .connection {
     display: flex;
+
     flex-direction: column;
+
     align-items: center;
+
     gap: 8px;
 
     color: var(--accent);
 
     font-size: 8px;
+
     letter-spacing: 0.2em;
 }
 
@@ -1096,8 +1266,11 @@ body {
 
 .floating-words {
     display: flex;
+
     flex-wrap: wrap;
+
     justify-content: center;
+
     gap: 9px;
 
     max-width: 550px;
@@ -1108,16 +1281,25 @@ body {
 .floating-words span {
     padding: 8px 13px;
 
-    border: 1px solid rgba(255, 255, 255, 0.08);
+    border:
+        1px solid
+        rgba(255, 255, 255, 0.08);
+
     border-radius: 999px;
 
-    color: rgba(255, 255, 255, 0.4);
+    color:
+        rgba(255, 255, 255, 0.4);
 
-    background: rgba(255, 255, 255, 0.025);
+    background:
+        rgba(255, 255, 255, 0.025);
 
     font-size: 10px;
 
-    animation: floatWord 4s ease-in-out infinite;
+    animation:
+        floatWord
+        4s
+        ease-in-out
+        infinite;
 }
 
 .floating-words span:nth-child(2) {
@@ -1133,14 +1315,15 @@ body {
 }
 
 @keyframes floatWord {
-
     0%,
     100% {
-        transform: translateY(0);
+        transform:
+            translateY(0);
     }
 
     50% {
-        transform: translateY(-5px);
+        transform:
+            translateY(-5px);
     }
 }
 
@@ -1168,6 +1351,9 @@ body {
     perspective: 1200px;
 
     cursor: pointer;
+
+    transition:
+        transform 0.25s ease;
 }
 
 .flip-card-inner {
@@ -1183,8 +1369,10 @@ body {
         cubic-bezier(0.22, 1, 0.36, 1);
 }
 
-.flip-card.flipped .flip-card-inner {
-    transform: rotateY(180deg);
+.flip-card.flipped
+.flip-card-inner {
+    transform:
+        rotateY(180deg);
 }
 
 .flip-front,
@@ -1195,9 +1383,12 @@ body {
     display: flex;
     flex-direction: column;
 
-    border-radius: var(--radius-lg);
+    border-radius:
+        var(--radius-lg);
 
-    border: 1px solid var(--border);
+    border:
+        1px solid
+        var(--border);
 
     background:
         linear-gradient(
@@ -1207,7 +1398,8 @@ body {
         );
 
     box-shadow:
-        0 20px 60px rgba(0, 0, 0, 0.2);
+        0 20px 60px
+        rgba(0, 0, 0, 0.2);
 
     backdrop-filter: blur(18px);
 
@@ -1220,7 +1412,8 @@ body {
 .flip-front {
     padding: 24px;
 
-    justify-content: space-between;
+    justify-content:
+        space-between;
 }
 
 .flip-front::after {
@@ -1245,13 +1438,16 @@ body {
 }
 
 .flip-card:hover .flip-front {
-    border-color: rgba(255, 255, 255, 0.23);
+    border-color:
+        rgba(255, 255, 255, 0.23);
 }
 
 .card-number,
 .back-number {
     font-size: 9px;
+
     letter-spacing: 0.2em;
+
     color: var(--faint);
 }
 
@@ -1261,13 +1457,17 @@ body {
     top: 50%;
     left: 50%;
 
-    transform: translate(-50%, -58%);
+    transform:
+        translate(-50%, -58%);
 
-    font-family: "Playfair Display", serif;
+    font-family:
+        "Playfair Display",
+        serif;
 
     font-size: 45px;
 
-    color: rgba(235, 213, 255, 0.8);
+    color:
+        rgba(235, 213, 255, 0.8);
 
     text-shadow:
         0 0 35px
@@ -1278,9 +1478,12 @@ body {
     position: relative;
     z-index: 2;
 
-    font-family: "Playfair Display", serif;
+    font-family:
+        "Playfair Display",
+        serif;
 
     font-size: 21px;
+
     font-weight: 500;
 }
 
@@ -1289,18 +1492,23 @@ body {
     z-index: 2;
 
     font-size: 8px;
+
     letter-spacing: 0.15em;
+
     text-transform: uppercase;
 
-    color: rgba(255, 255, 255, 0.28);
+    color:
+        rgba(255, 255, 255, 0.28);
 }
 
 .flip-back {
-    transform: rotateY(180deg);
+    transform:
+        rotateY(180deg);
 
     padding: 27px;
 
-    justify-content: space-between;
+    justify-content:
+        space-between;
 
     background:
         linear-gradient(
@@ -1311,12 +1519,16 @@ body {
 }
 
 .flip-back p {
-    font-family: "Playfair Display", serif;
+    font-family:
+        "Playfair Display",
+        serif;
 
     font-size: 17px;
+
     line-height: 1.65;
 
-    color: rgba(255, 255, 255, 0.76);
+    color:
+        rgba(255, 255, 255, 0.76);
 }
 
 
@@ -1330,7 +1542,8 @@ body {
     width: 180px;
     height: 180px;
 
-    margin: 25px 0 40px;
+    margin:
+        25px 0 40px;
 }
 
 .orb-ring {
@@ -1339,13 +1552,17 @@ body {
 
     border-radius: 50%;
 
-    border: 1px solid
+    border:
+        1px solid
         rgba(230, 205, 255, 0.12);
 }
 
 .orb-ring-1 {
     animation:
-        rotateRing 18s linear infinite;
+        rotateRing
+        18s
+        linear
+        infinite;
 }
 
 .orb-ring-2 {
@@ -1354,7 +1571,11 @@ body {
     border-style: dashed;
 
     animation:
-        rotateRing 12s linear infinite reverse;
+        rotateRing
+        12s
+        linear
+        infinite
+        reverse;
 }
 
 .orb-ring-3 {
@@ -1364,7 +1585,10 @@ body {
         rgba(255, 190, 225, 0.17);
 
     animation:
-        rotateRing 8s linear infinite;
+        rotateRing
+        8s
+        linear
+        infinite;
 }
 
 .orb-content {
@@ -1384,14 +1608,19 @@ body {
             rgba(255, 255, 255, 0.03)
         );
 
-    border: 1px solid
+    border:
+        1px solid
         rgba(255, 255, 255, 0.15);
 
     box-shadow:
         0 0 70px
         rgba(220, 170, 255, 0.18);
 
-    animation: orbPulse 3s ease-in-out infinite;
+    animation:
+        orbPulse
+        3s
+        ease-in-out
+        infinite;
 }
 
 .orb-content span {
@@ -1399,7 +1628,6 @@ body {
 }
 
 @keyframes orbPulse {
-
     0%,
     100% {
         transform: scale(1);
@@ -1412,20 +1640,26 @@ body {
 
 .mini-message {
     display: flex;
+
     align-items: center;
+
     gap: 10px;
 
     margin-top: 30px;
 
     padding: 10px 15px;
 
+    border:
+        1px solid
+        var(--border);
+
     border-radius: 999px;
 
-    border: 1px solid var(--border);
+    background:
+        rgba(255, 255, 255, 0.04);
 
-    background: rgba(255, 255, 255, 0.04);
-
-    color: rgba(255, 255, 255, 0.45);
+    color:
+        rgba(255, 255, 255, 0.45);
 
     font-size: 10px;
 }
@@ -1436,14 +1670,17 @@ body {
 
     border-radius: 50%;
 
-    background: var(--accent);
+    background:
+        var(--accent);
 
     box-shadow:
         0 0 10px
         rgba(230, 190, 255, 0.8);
 
     animation:
-        brandPulse 1.5s infinite;
+        brandPulse
+        1.5s
+        infinite;
 }
 
 
@@ -1454,15 +1691,19 @@ body {
 .letter-wrapper {
     width: min(720px, 100%);
 
-    margin: 0 auto 35px;
+    margin:
+        0 auto 35px;
 }
 
 .letter-card {
     position: relative;
 
-    border-radius: var(--radius-xl);
+    border-radius:
+        var(--radius-xl);
 
-    border: 1px solid var(--border);
+    border:
+        1px solid
+        var(--border);
 
     background:
         linear-gradient(
@@ -1475,7 +1716,8 @@ body {
 
     overflow: hidden;
 
-    box-shadow: var(--shadow);
+    box-shadow:
+        var(--shadow);
 }
 
 .letter-header {
@@ -1485,12 +1727,15 @@ body {
     justify-content: space-between;
 
     border-bottom:
-        1px solid rgba(255, 255, 255, 0.08);
+        1px solid
+        rgba(255, 255, 255, 0.08);
 
     font-size: 9px;
+
     letter-spacing: 0.2em;
 
-    color: rgba(255, 255, 255, 0.35);
+    color:
+        rgba(255, 255, 255, 0.35);
 }
 
 .letter-body {
@@ -1500,7 +1745,9 @@ body {
 .letter-body h2 {
     margin-bottom: 28px;
 
-    font-family: "Playfair Display", serif;
+    font-family:
+        "Playfair Display",
+        serif;
 
     font-size: 38px;
 }
@@ -1508,20 +1755,25 @@ body {
 .letter-body p {
     margin-bottom: 20px;
 
-    color: rgba(255, 255, 255, 0.62);
+    color:
+        rgba(255, 255, 255, 0.62);
 
     font-size: 14px;
+
     line-height: 1.9;
 }
 
 .signature {
     margin-top: 35px;
 
-    font-family: "Playfair Display", serif;
+    font-family:
+        "Playfair Display",
+        serif;
 
     font-size: 24px;
 
-    color: var(--accent);
+    color:
+        var(--accent);
 }
 
 
@@ -1540,7 +1792,9 @@ body {
 
     border-radius: 50%;
 
-    border: 1px solid rgba(255, 255, 255, 0.14);
+    border:
+        1px solid
+        rgba(255, 255, 255, 0.14);
 
     background:
         radial-gradient(
@@ -1554,23 +1808,32 @@ body {
         rgba(200, 160, 255, 0.1);
 
     animation:
-        questionFloat 3s ease-in-out infinite;
+        questionFloat
+        3s
+        ease-in-out
+        infinite;
 }
 
 .countdown-symbol span {
-    font-family: "Playfair Display", serif;
+    font-family:
+        "Playfair Display",
+        serif;
+
     font-size: 43px;
 }
 
 @keyframes questionFloat {
-
     0%,
     100% {
-        transform: translateY(0) rotate(-3deg);
+        transform:
+            translateY(0)
+            rotate(-3deg);
     }
 
     50% {
-        transform: translateY(-10px) rotate(3deg);
+        transform:
+            translateY(-10px)
+            rotate(3deg);
     }
 }
 
@@ -1580,6 +1843,7 @@ body {
     margin-top: 30px;
 
     display: grid;
+
     gap: 9px;
 
     text-align: left;
@@ -1588,12 +1852,17 @@ body {
 .build-lines div {
     padding: 12px 16px;
 
-    border: 1px solid rgba(255, 255, 255, 0.06);
+    border:
+        1px solid
+        rgba(255, 255, 255, 0.06);
+
     border-radius: 13px;
 
-    background: rgba(255, 255, 255, 0.025);
+    background:
+        rgba(255, 255, 255, 0.025);
 
-    color: rgba(255, 255, 255, 0.45);
+    color:
+        rgba(255, 255, 255, 0.45);
 
     font-size: 11px;
 
@@ -1603,8 +1872,10 @@ body {
 }
 
 .build-lines div:hover {
-    transform: translateX(8px);
-    color: white;
+    transform:
+        translateX(8px);
+
+    color: #ffffff;
 }
 
 .build-lines span {
@@ -1617,7 +1888,8 @@ body {
 
     border-radius: 50%;
 
-    background: var(--accent);
+    background:
+        var(--accent);
 }
 
 
@@ -1638,7 +1910,8 @@ body {
     top: 50%;
     left: 50%;
 
-    transform: translate(-50%, -50%);
+    transform:
+        translate(-50%, -50%);
 
     border-radius: 50%;
 
@@ -1657,34 +1930,46 @@ body {
 .proposal-symbol {
     position: relative;
 
-    margin: 25px 0 15px;
+    margin:
+        25px 0 15px;
 
     font-size: 34px;
 
-    color: var(--accent);
+    color:
+        var(--accent);
 
     animation:
-        heartFloat 3s ease-in-out infinite;
+        heartFloat
+        3s
+        ease-in-out
+        infinite;
 }
 
 @keyframes heartFloat {
-
     0%,
     100% {
-        transform: translateY(0) scale(1);
+        transform:
+            translateY(0)
+            scale(1);
     }
 
     50% {
-        transform: translateY(-8px) scale(1.08);
+        transform:
+            translateY(-8px)
+            scale(1.08);
     }
 }
 
 .proposal-title {
     position: relative;
 
-    font-family: "Playfair Display", serif;
+    font-family:
+        "Playfair Display",
+        serif;
 
-    font-size: clamp(52px, 8vw, 96px);
+    font-size:
+        clamp(52px, 8vw, 96px);
+
     line-height: 0.92;
 
     letter-spacing: -0.055em;
@@ -1697,9 +1982,11 @@ body {
 
     margin-top: 28px;
 
-    color: var(--muted);
+    color:
+        var(--muted);
 
     line-height: 1.7;
+
     font-size: 14px;
 }
 
@@ -1707,6 +1994,7 @@ body {
     position: relative;
 
     display: flex;
+
     gap: 12px;
 
     margin-top: 38px;
@@ -1722,6 +2010,7 @@ body {
     font-family: inherit;
 
     font-size: 11px;
+
     font-weight: 700;
 
     cursor: pointer;
@@ -1730,10 +2019,14 @@ body {
         transform 0.35s ease,
         box-shadow 0.35s ease,
         background 0.35s ease;
+
+    -webkit-tap-highlight-color: transparent;
 }
 
 .yes-btn {
-    border: 1px solid rgba(255, 255, 255, 0.25);
+    border:
+        1px solid
+        rgba(255, 255, 255, 0.25);
 
     color: #08060b;
 
@@ -1761,16 +2054,19 @@ body {
 
 .think-btn {
     border:
-        1px solid rgba(255, 255, 255, 0.13);
+        1px solid
+        rgba(255, 255, 255, 0.13);
 
-    color: rgba(255, 255, 255, 0.7);
+    color:
+        rgba(255, 255, 255, 0.7);
 
     background:
         rgba(255, 255, 255, 0.04);
 }
 
 .think-btn:hover {
-    transform: translateY(-5px);
+    transform:
+        translateY(-5px);
 
     background:
         rgba(255, 255, 255, 0.08);
@@ -1781,14 +2077,15 @@ body {
 
     margin-top: 18px;
 
-    color: rgba(255, 255, 255, 0.25);
+    color:
+        rgba(255, 255, 255, 0.25);
 
     font-size: 9px;
 }
 
 
 /* ============================================================
-   RESPONSE PAGES
+   RESPONSE
 ============================================================ */
 
 .response-page .page-inner {
@@ -1807,7 +2104,8 @@ body {
 
     border-radius: 50%;
 
-    border: 1px solid
+    border:
+        1px solid
         rgba(255, 255, 255, 0.15);
 
     background:
@@ -1817,10 +2115,14 @@ body {
             transparent 70%
         );
 
-    font-family: "Playfair Display", serif;
+    font-family:
+        "Playfair Display",
+        serif;
+
     font-size: 38px;
 
-    color: var(--accent);
+    color:
+        var(--accent);
 
     box-shadow:
         0 0 80px
@@ -1830,9 +2132,12 @@ body {
 .response-title {
     margin-top: 14px;
 
-    font-family: "Playfair Display", serif;
+    font-family:
+        "Playfair Display",
+        serif;
 
-    font-size: clamp(55px, 9vw, 105px);
+    font-size:
+        clamp(55px, 9vw, 105px);
 
     line-height: 0.9;
 
@@ -1842,19 +2147,28 @@ body {
 .response-subtitle {
     margin-top: 20px;
 
-    color: var(--muted);
+    color:
+        var(--muted);
 
     font-size: 14px;
 }
+
+
+/* ============================================================
+   YES CARD
+============================================================ */
 
 .yes-card {
     width: min(500px, 100%);
 
     margin-top: 32px;
 
-    border: 1px solid var(--border);
+    border:
+        1px solid
+        var(--border);
 
-    border-radius: var(--radius-xl);
+    border-radius:
+        var(--radius-xl);
 
     background:
         linear-gradient(
@@ -1872,15 +2186,16 @@ body {
     overflow: hidden;
 
     animation:
-        yesCardIn 1s
+        yesCardIn
+        1s
         cubic-bezier(0.22, 1, 0.36, 1)
         both;
 }
 
 @keyframes yesCardIn {
-
     from {
         opacity: 0;
+
         transform:
             translateY(40px)
             scale(0.9);
@@ -1888,6 +2203,7 @@ body {
 
     to {
         opacity: 1;
+
         transform:
             translateY(0)
             scale(1);
@@ -1897,24 +2213,30 @@ body {
 .yes-card-top,
 .yes-card-bottom {
     display: flex;
-    justify-content: space-between;
+
+    justify-content:
+        space-between;
 
     padding: 16px 22px;
 
-    color: rgba(255, 255, 255, 0.3);
+    color:
+        rgba(255, 255, 255, 0.3);
 
     font-size: 8px;
+
     letter-spacing: 0.18em;
 }
 
 .yes-card-top {
     border-bottom:
-        1px solid rgba(255, 255, 255, 0.07);
+        1px solid
+        rgba(255, 255, 255, 0.07);
 }
 
 .yes-card-bottom {
     border-top:
-        1px solid rgba(255, 255, 255, 0.07);
+        1px solid
+        rgba(255, 255, 255, 0.07);
 }
 
 .yes-card-body {
@@ -1924,14 +2246,17 @@ body {
 .big-heart {
     font-size: 50px;
 
-    color: var(--accent);
+    color:
+        var(--accent);
 
     animation:
-        heartBeat 1.8s ease-in-out infinite;
+        heartBeat
+        1.8s
+        ease-in-out
+        infinite;
 }
 
 @keyframes heartBeat {
-
     0%,
     100% {
         transform: scale(1);
@@ -1953,33 +2278,42 @@ body {
 .yes-card-body h2 {
     margin-top: 10px;
 
-    font-family: "Playfair Display", serif;
+    font-family:
+        "Playfair Display",
+        serif;
+
     font-size: 30px;
 }
 
 .yes-card-body p {
     margin-top: 8px;
 
-    color: rgba(255, 255, 255, 0.48);
+    color:
+        rgba(255, 255, 255, 0.48);
 
     font-size: 12px;
 }
 
 .final-message {
     display: flex;
+
     align-items: center;
+
     gap: 12px;
 
     margin-top: 25px;
 
-    color: rgba(255, 255, 255, 0.32);
+    color:
+        rgba(255, 255, 255, 0.32);
 
     font-size: 9px;
+
     letter-spacing: 0.12em;
 }
 
 .final-message span:nth-child(2) {
-    color: var(--accent);
+    color:
+        var(--accent);
 }
 
 
@@ -1988,7 +2322,8 @@ body {
 ============================================================ */
 
 .think-symbol {
-    color: rgba(255, 255, 255, 0.65);
+    color:
+        rgba(255, 255, 255, 0.65);
 }
 
 .think-card {
@@ -1998,9 +2333,12 @@ body {
 
     padding: 35px;
 
-    border: 1px solid var(--border);
+    border:
+        1px solid
+        var(--border);
 
-    border-radius: var(--radius-xl);
+    border-radius:
+        var(--radius-xl);
 
     background:
         rgba(255, 255, 255, 0.04);
@@ -2020,24 +2358,30 @@ body {
 
     margin-bottom: 25px;
 
-    background: var(--accent);
+    background:
+        var(--accent);
 }
 
 .think-card p {
     margin-bottom: 18px;
 
-    color: rgba(255, 255, 255, 0.58);
+    color:
+        rgba(255, 255, 255, 0.58);
 
     font-size: 13px;
+
     line-height: 1.9;
 }
 
 .think-signature {
     margin-top: 25px;
 
-    font-family: "Playfair Display", serif;
+    font-family:
+        "Playfair Display",
+        serif;
 
-    color: var(--accent);
+    color:
+        var(--accent);
 
     font-size: 20px;
 }
@@ -2054,7 +2398,8 @@ body {
     display: grid;
     place-items: center;
 
-    background: #05040a;
+    background:
+        #05040a;
 
     opacity: 0;
     visibility: hidden;
@@ -2076,15 +2421,17 @@ body {
 .transition-logo {
     font-size: 30px;
 
-    color: var(--accent);
+    color:
+        var(--accent);
 
     animation:
-        transitionSpin 0.7s
-        ease-in-out infinite;
+        transitionSpin
+        0.7s
+        ease-in-out
+        infinite;
 }
 
 @keyframes transitionSpin {
-
     0% {
         transform:
             rotate(0deg)
@@ -2141,7 +2488,6 @@ body {
 }
 
 @keyframes confettiFall {
-
     from {
         transform:
             translate3d(0, -20px, 0)
@@ -2150,14 +2496,18 @@ body {
 
     to {
         transform:
-            translate3d(var(--drift), 110vh, 0)
+            translate3d(
+                var(--drift),
+                110vh,
+                0
+            )
             rotate(720deg);
     }
 }
 
 
 /* ============================================================
-   RESPONSIVE
+   RESPONSIVE — TABLET
 ============================================================ */
 
 @media (max-width: 850px) {
@@ -2169,7 +2519,11 @@ body {
     }
 
     .page-inner {
-        width: min(100% - 30px, 700px);
+        width:
+            min(
+                calc(100% - 30px),
+                700px
+            );
 
         padding-top: 80px;
         padding-bottom: 35px;
@@ -2198,7 +2552,15 @@ body {
 }
 
 
+/* ============================================================
+   RESPONSIVE — MOBILE
+============================================================ */
+
 @media (max-width: 600px) {
+
+    body {
+        overscroll-behavior: none;
+    }
 
     .brand {
         font-size: 9px;
@@ -2209,18 +2571,25 @@ body {
     }
 
     .page-inner {
-        width: calc(100% - 28px);
+        width:
+            calc(100% - 28px);
 
         padding-top: 75px;
         padding-bottom: 25px;
     }
 
     .hero-title {
-        font-size: clamp(75px, 23vw, 120px);
+        font-size:
+            clamp(
+                75px,
+                23vw,
+                120px
+            );
     }
 
     .hero-subtitle {
         max-width: 330px;
+
         font-size: 13px;
     }
 
@@ -2273,6 +2642,7 @@ body {
 
     .reasons-grid {
         grid-template-columns: 1fr;
+
         gap: 13px;
     }
 
@@ -2298,7 +2668,9 @@ body {
 
     .proposal-buttons {
         width: 100%;
+
         flex-direction: column;
+
         align-items: stretch;
     }
 
@@ -2317,6 +2689,18 @@ body {
     .think-card {
         padding: 27px 22px;
     }
+
+    /*
+       IMPORTANT:
+       Mobile swipe is treated ONLY as scrolling
+       inside .scroll-page.
+       It cannot trigger page navigation.
+    */
+
+    .scroll-page {
+        touch-action: pan-y;
+        overscroll-behavior: contain;
+    }
 }
 
 
@@ -2331,7 +2715,10 @@ body {
     *::after {
         animation-duration: 0.01ms !important;
         animation-iteration-count: 1 !important;
+
         scroll-behavior: auto !important;
+
         transition-duration: 0.01ms !important;
     }
 }
+```
