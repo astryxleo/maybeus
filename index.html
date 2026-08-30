@@ -4,13 +4,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>Maybe Us — Judy × Leo</title>
+    <title>Maybe Us — Leo & Judy</title>
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 
     <link
-        href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,500;0,600;1,500;1,600&display=swap"
+        href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@500;600;700&display=swap"
         rel="stylesheet"
     >
 
@@ -19,76 +19,105 @@
 
 <body>
 
-    <!-- =====================================================
-         BACKGROUND
-    ====================================================== -->
+    <!-- =========================================================
+         GLOBAL BACKGROUND
+    ========================================================== -->
 
     <div class="background">
-        <div class="aurora aurora-one"></div>
-        <div class="aurora aurora-two"></div>
-        <div class="aurora aurora-three"></div>
+        <div class="aurora aurora-1"></div>
+        <div class="aurora aurora-2"></div>
+        <div class="aurora aurora-3"></div>
+
         <div class="noise"></div>
+
+        <div class="stars">
+            <span></span>
+            <span></span>
+            <span></span>
+            <span></span>
+            <span></span>
+            <span></span>
+            <span></span>
+            <span></span>
+            <span></span>
+            <span></span>
+            <span></span>
+            <span></span>
+            <span></span>
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
     </div>
 
-    <div class="cursor-glow"></div>
 
-    <!-- =====================================================
+    <!-- =========================================================
          TOP PROGRESS
-    ====================================================== -->
+    ========================================================== -->
 
-    <div class="progress-wrap">
-        <div class="progress-bar">
-            <div class="progress-fill"></div>
+    <div class="top-ui">
+
+        <div class="brand">
+            <span class="brand-dot"></span>
+            <span>maybe us</span>
         </div>
 
-        <span class="progress-text">
-            <span id="pageNumber">01</span>
-            /
-            <span id="totalPages">11</span>
-        </span>
+        <div class="page-indicator">
+            <span id="currentPage">01</span>
+            <span class="indicator-line"></span>
+            <span>10</span>
+        </div>
+
     </div>
 
 
-    <!-- =====================================================
+    <!-- =========================================================
          MAIN APP
-    ====================================================== -->
+    ========================================================== -->
 
     <main id="app">
 
-        <!-- =================================================
-             PAGE 1 — OPENING
-        ================================================== -->
+
+        <!-- =====================================================
+             PAGE 1 — INTRO
+        ====================================================== -->
 
         <section class="page active" data-page="1">
 
-            <div class="page-content center-content">
+            <div class="page-inner hero-page">
 
                 <div class="eyebrow reveal">
-                    SOMETHING I WANTED TO TELL YOU
+                    A little something for you
                 </div>
 
                 <h1 class="hero-title reveal delay-1">
-                    Hey,
-                    <span>Judy.</span>
+                    Judy<span class="soft-dot">.</span>
                 </h1>
 
-                <p class="hero-description reveal delay-2">
-                    I don't really know how to make this sound
-                    normal...
-                    <br>
-                    so I decided not to.
+                <p class="hero-subtitle reveal delay-2">
+                    I made this little corner of the internet
+                    because some things are better said differently.
                 </p>
 
-                <div class="floating-heart reveal delay-3">
-                    <span>♡</span>
+                <div class="hero-orbit reveal delay-3">
+
+                    <div class="orbit-ring ring-one"></div>
+                    <div class="orbit-ring ring-two"></div>
+
+                    <div class="orbit-core">
+                        <span>✦</span>
+                    </div>
+
                 </div>
 
-                <button
-                    class="luxury-button reveal delay-4"
-                    data-next
-                >
-                    <span>Start here</span>
-                    <span class="button-arrow">→</span>
+                <div class="hero-note reveal delay-4">
+                    <span>from Leo</span>
+                    <span class="tiny-heart">♡</span>
+                </div>
+
+                <button class="next-btn reveal delay-5" data-next>
+                    <span>Let's begin</span>
+                    <span class="arrow">→</span>
                 </button>
 
             </div>
@@ -96,60 +125,68 @@
         </section>
 
 
-        <!-- =================================================
+        <!-- =====================================================
              PAGE 2 — HOW IT STARTED
-        ================================================== -->
+        ====================================================== -->
 
         <section class="page" data-page="2">
 
-            <div class="page-content">
+            <div class="page-inner">
 
-                <div class="section-label reveal">
-                    01 — HOW IT STARTED
+                <div class="section-number">
+                    01 / 08
                 </div>
 
-                <div class="split-layout">
+                <div class="section-heading">
+                    <span class="eyebrow">It started pretty randomly</span>
 
-                    <div class="split-left">
+                    <h2>
+                        One little compliment.
+                        <br>
+                        <em>And then you.</em>
+                    </h2>
+                </div>
 
-                        <h2 class="section-title reveal delay-1">
-                            It started with
-                            <em>something small.</em>
-                        </h2>
+                <div class="story-card">
 
+                    <div class="story-glow"></div>
+
+                    <div class="story-top">
+                        <span>THE BEGINNING</span>
+                        <span>✦</span>
                     </div>
 
-                    <div class="split-right">
+                    <div class="story-content">
 
-                        <div class="story-card glass-card reveal delay-2">
+                        <div class="quote-mark">“</div>
 
-                            <div class="card-number">
-                                01
-                            </div>
+                        <p>
+                            You kept liking my notes and stories,
+                            and eventually I had to ask...
+                        </p>
 
-                            <p>
-                                You kept liking my notes and stories,
-                                and eventually I had to wonder...
-                            </p>
-
-                            <div class="quote">
-                                “aap kon si punya aatma ho?”
-                            </div>
-
-                            <p>
-                                And somehow, that tiny interaction
-                                became a conversation.
-                            </p>
-
+                        <div class="chat-bubble">
+                            <span>aap kon si punya aatma ho?</span>
                         </div>
 
+                        <p class="story-small">
+                            And somehow, from something that simple,
+                            we ended up becoming close friends.
+                        </p>
+
+                    </div>
+
+                    <div class="story-footer">
+                        <span>two weeks-ish</span>
+                        <span>•</span>
+                        <span>one unexpectedly good friendship</span>
                     </div>
 
                 </div>
 
-                <button class="luxury-button bottom-button" data-next>
+                <button class="next-btn" data-next>
                     <span>Keep going</span>
-                    <span class="button-arrow">→</span>
+                    <span class="arrow">→</span>
                 </button>
 
             </div>
@@ -157,254 +194,70 @@
         </section>
 
 
-        <!-- =================================================
-             PAGE 3 — TWO WEEKS
-        ================================================== -->
+        <!-- =====================================================
+             PAGE 3 — THE TWIN THING
+        ====================================================== -->
 
         <section class="page" data-page="3">
 
-            <div class="page-content">
+            <div class="page-inner centered">
 
-                <div class="section-label reveal">
-                    02 — TWO WEEKS
+                <div class="section-number">
+                    02 / 08
                 </div>
 
-                <div class="center-block">
+                <span class="eyebrow">
+                    The weirdest part
+                </span>
 
-                    <div class="tiny-label reveal">
-                        ONLY A COUPLE OF WEEKS
-                    </div>
+                <h2 class="big-heading">
+                    You're basically
+                    <br>
+                    <em>my twin.</em>
+                </h2>
 
-                    <h2 class="massive-number reveal delay-1">
-                        02
-                        <span>weeks</span>
-                    </h2>
-
-                    <p class="center-description reveal delay-2">
-                        That's genuinely not a long time.
-                        <br><br>
-                        And somehow it feels like I've known
-                        my twin for much longer.
-                    </p>
-
-                    <div class="mini-orbit reveal delay-3">
-                        <span></span>
-                        <span></span>
-                        <span></span>
-                    </div>
-
-                </div>
-
-                <button class="luxury-button bottom-button" data-next>
-                    <span>There's more</span>
-                    <span class="button-arrow">→</span>
-                </button>
-
-            </div>
-
-        </section>
-
-
-        <!-- =================================================
-             PAGE 4 — THE THINGS I NOTICE
-        ================================================== -->
-
-        <section class="page" data-page="4">
-
-            <div class="page-content scroll-content">
-
-                <div class="section-label reveal">
-                    03 — THE THINGS I NOTICE
-                </div>
-
-                <div class="section-heading reveal delay-1">
-
-                    <h2 class="section-title">
-                        Little things.
-                        <br>
-                        <em>Big feelings.</em>
-                    </h2>
-
-                    <p>
-                        These are some of the things
-                        I genuinely appreciate about you.
-                    </p>
-
-                </div>
-
-
-                <div class="card-grid">
-
-                    <article class="flip-card reveal delay-1">
-                        <div class="flip-inner">
-
-                            <div class="flip-front">
-                                <span class="card-icon">✦</span>
-                                <h3>You care.</h3>
-                                <span class="tap-text">
-                                    tap to reveal
-                                </span>
-                            </div>
-
-                            <div class="flip-back">
-                                <span class="card-icon">♡</span>
-                                <p>
-                                    You actually notice the things
-                                    I do, even the small efforts.
-                                    And that means more than you
-                                    probably realize.
-                                </p>
-                            </div>
-
-                        </div>
-                    </article>
-
-
-                    <article class="flip-card reveal delay-2">
-                        <div class="flip-inner">
-
-                            <div class="flip-front">
-                                <span class="card-icon">∞</span>
-                                <h3>You notice.</h3>
-                                <span class="tap-text">
-                                    tap to reveal
-                                </span>
-                            </div>
-
-                            <div class="flip-back">
-                                <span class="card-icon">✧</span>
-                                <p>
-                                    Somehow you catch the little
-                                    details. You make me feel like
-                                    my efforts don't just disappear.
-                                </p>
-                            </div>
-
-                        </div>
-                    </article>
-
-
-                    <article class="flip-card reveal delay-3">
-                        <div class="flip-inner">
-
-                            <div class="flip-front">
-                                <span class="card-icon">♡</span>
-                                <h3>You don't ignore me.</h3>
-                                <span class="tap-text">
-                                    tap to reveal
-                                </span>
-                            </div>
-
-                            <div class="flip-back">
-                                <span class="card-icon">☾</span>
-                                <p>
-                                    Talking to you never feels like
-                                    I'm bothering you. There's always
-                                    this comfortable feeling between us.
-                                </p>
-                            </div>
-
-                        </div>
-                    </article>
-
-
-                    <article class="flip-card reveal delay-4">
-                        <div class="flip-inner">
-
-                            <div class="flip-front">
-                                <span class="card-icon">~</span>
-                                <h3>Never dry.</h3>
-                                <span class="tap-text">
-                                    tap to reveal
-                                </span>
-                            </div>
-
-                            <div class="flip-back">
-                                <span class="card-icon">✦</span>
-                                <p>
-                                    Somehow our conversations just
-                                    flow. No forcing. No pretending.
-                                    Just us being us.
-                                </p>
-                            </div>
-
-                        </div>
-                    </article>
-
-                </div>
-
-                <button class="luxury-button bottom-button" data-next>
-                    <span>One more thing</span>
-                    <span class="button-arrow">→</span>
-                </button>
-
-            </div>
-
-        </section>
-
-
-        <!-- =================================================
-             PAGE 5 — TWIN
-        ================================================== -->
-
-        <section class="page" data-page="5">
-
-            <div class="page-content">
-
-                <div class="section-label reveal">
-                    04 — MY TWIN
-                </div>
+                <p class="section-description">
+                    Not literally, obviously.
+                    But somehow our energy, humour and the way we think
+                    just line up way too often.
+                </p>
 
                 <div class="twin-layout">
 
-                    <div class="twin-text">
-
-                        <span class="tiny-label reveal">
-                            THE WEIRD PART
-                        </span>
-
-                        <h2 class="section-title reveal delay-1">
-                            You're basically
-                            <em>my copy.</em>
-                        </h2>
-
-                        <p class="large-paragraph reveal delay-2">
-                            Same energy.
-                            <br>
-                            Same randomness.
-                            <br>
-                            Same little things.
-                        </p>
-
+                    <div class="person-pill">
+                        <span class="pill-icon">L</span>
+                        <div>
+                            <small>ME</small>
+                            <strong>Leo</strong>
+                        </div>
                     </div>
 
-                    <div class="twin-visual reveal delay-3">
+                    <div class="connection">
+                        <div class="connection-line"></div>
+                        <span>MEWWWW</span>
+                        <div class="connection-line"></div>
+                    </div>
 
-                        <div class="orb orb-left">
-                            L
+                    <div class="person-pill">
+                        <span class="pill-icon">J</span>
+                        <div>
+                            <small>YOU</small>
+                            <strong>Judy</strong>
                         </div>
-
-                        <div class="connection">
-                            <span></span>
-                        </div>
-
-                        <div class="orb orb-right">
-                            J
-                        </div>
-
-                        <div class="twin-caption">
-                            Leo × Judy
-                            <br>
-                            <small>the twin theory</small>
-                        </div>
-
                     </div>
 
                 </div>
 
-                <button class="luxury-button bottom-button" data-next>
-                    <span>And then there's...</span>
-                    <span class="button-arrow">→</span>
+                <div class="floating-words">
+                    <span>same humour</span>
+                    <span>same chaos</span>
+                    <span>same energy</span>
+                    <span>twin behaviour</span>
+                </div>
+
+                <button class="next-btn" data-next>
+                    <span>There's more</span>
+                    <span class="arrow">→</span>
                 </button>
 
             </div>
@@ -412,53 +265,321 @@
         </section>
 
 
-        <!-- =================================================
-             PAGE 6 — MEWWW
-        ================================================== -->
+        <!-- =====================================================
+             PAGE 4 — WHAT I LIKE
+        ====================================================== -->
+
+        <section class="page" data-page="4">
+
+            <div class="page-inner scroll-page">
+
+                <div class="section-number">
+                    03 / 08
+                </div>
+
+                <div class="section-heading compact">
+                    <span class="eyebrow">Things I noticed about you</span>
+
+                    <h2>
+                        The little things
+                        <br>
+                        <em>matter.</em>
+                    </h2>
+
+                    <p>
+                        Tap each card.
+                    </p>
+                </div>
+
+
+                <div class="reasons-grid">
+
+
+                    <div class="flip-card">
+
+                        <div class="flip-card-inner">
+
+                            <div class="flip-front">
+                                <span class="card-number">01</span>
+                                <div class="card-icon">♡</div>
+                                <h3>You care</h3>
+                                <span class="tap-label">tap to reveal</span>
+                            </div>
+
+                            <div class="flip-back">
+                                <span class="back-number">01</span>
+                                <p>
+                                    You actually care about me,
+                                    and that is something I genuinely
+                                    appreciate.
+                                </p>
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="flip-card">
+
+                        <div class="flip-card-inner">
+
+                            <div class="flip-front">
+                                <span class="card-number">02</span>
+                                <div class="card-icon">✦</div>
+                                <h3>You notice</h3>
+                                <span class="tap-label">tap to reveal</span>
+                            </div>
+
+                            <div class="flip-back">
+                                <span class="back-number">02</span>
+                                <p>
+                                    You notice the effort I put in,
+                                    even when I don't make a big deal
+                                    out of it.
+                                </p>
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="flip-card">
+
+                        <div class="flip-card-inner">
+
+                            <div class="flip-front">
+                                <span class="card-number">03</span>
+                                <div class="card-icon">∞</div>
+                                <h3>Never dry</h3>
+                                <span class="tap-label">tap to reveal</span>
+                            </div>
+
+                            <div class="flip-back">
+                                <span class="back-number">03</span>
+                                <p>
+                                    Somehow conversations with you
+                                    never feel forced or boring.
+                                </p>
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="flip-card">
+
+                        <div class="flip-card-inner">
+
+                            <div class="flip-front">
+                                <span class="card-number">04</span>
+                                <div class="card-icon">☼</div>
+                                <h3>You're real</h3>
+                                <span class="tap-label">tap to reveal</span>
+                            </div>
+
+                            <div class="flip-back">
+                                <span class="back-number">04</span>
+                                <p>
+                                    You're comfortable being yourself
+                                    around me, and I really like that.
+                                </p>
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="flip-card">
+
+                        <div class="flip-card-inner">
+
+                            <div class="flip-front">
+                                <span class="card-number">05</span>
+                                <div class="card-icon">★</div>
+                                <h3>You're beautiful</h3>
+                                <span class="tap-label">tap to reveal</span>
+                            </div>
+
+                            <div class="flip-back">
+                                <span class="back-number">05</span>
+                                <p>
+                                    You're genuinely beautiful,
+                                    but somehow your personality makes
+                                    that even better.
+                                </p>
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="flip-card">
+
+                        <div class="flip-card-inner">
+
+                            <div class="flip-front">
+                                <span class="card-number">06</span>
+                                <div class="card-icon">☾</div>
+                                <h3>My twin</h3>
+                                <span class="tap-label">tap to reveal</span>
+                            </div>
+
+                            <div class="flip-back">
+                                <span class="back-number">06</span>
+                                <p>
+                                    Out of everyone, you're somehow
+                                    the person who feels most like me.
+                                    My twineyy.
+                                </p>
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <button class="next-btn" data-next>
+                    <span>There's something else</span>
+                    <span class="arrow">→</span>
+                </button>
+
+            </div>
+
+        </section>
+
+
+        <!-- =====================================================
+             PAGE 5 — HOW YOU MAKE ME FEEL
+        ====================================================== -->
+
+        <section class="page" data-page="5">
+
+            <div class="page-inner centered">
+
+                <div class="section-number">
+                    04 / 08
+                </div>
+
+                <span class="eyebrow">
+                    And honestly...
+                </span>
+
+                <div class="feeling-orb">
+
+                    <div class="orb-ring orb-ring-1"></div>
+                    <div class="orb-ring orb-ring-2"></div>
+                    <div class="orb-ring orb-ring-3"></div>
+
+                    <div class="orb-content">
+                        <span>♡</span>
+                    </div>
+
+                </div>
+
+                <h2 class="big-heading">
+                    You make everything
+                    <br>
+                    feel a little <em>better.</em>
+                </h2>
+
+                <p class="section-description wide">
+                    There's just something about talking to you.
+                    It feels easy. Comfortable. Familiar.
+                    Like I'm talking to someone who somehow gets me.
+                </p>
+
+                <div class="mini-message">
+                    <span class="typing-dot"></span>
+                    <span>mewwwww</span>
+                </div>
+
+                <button class="next-btn" data-next>
+                    <span>One last thing</span>
+                    <span class="arrow">→</span>
+                </button>
+
+            </div>
+
+        </section>
+
+
+        <!-- =====================================================
+             PAGE 6 — A LETTER
+        ====================================================== -->
 
         <section class="page" data-page="6">
 
-            <div class="page-content center-content">
+            <div class="page-inner scroll-page">
 
-                <div class="section-label reveal">
-                    05 — MEWWWW
+                <div class="section-number">
+                    05 / 08
                 </div>
 
-                <div class="cat-symbol reveal delay-1">
-                    ฅ^•ﻌ•^ฅ
+                <div class="letter-wrapper">
+
+                    <div class="letter-card">
+
+                        <div class="letter-header">
+                            <span>TO JUDY</span>
+                            <span>✦</span>
+                        </div>
+
+                        <div class="letter-body">
+
+                            <h2>
+                                Hey, twineyy.
+                            </h2>
+
+                            <p>
+                                I don't really know how to put all of
+                                this into words without making it sound
+                                unnecessarily dramatic.
+                            </p>
+
+                            <p>
+                                We haven't even known each other for
+                                that long, but somehow you've become
+                                someone I genuinely look forward to
+                                talking to.
+                            </p>
+
+                            <p>
+                                I love how you care, how you notice
+                                things, how you don't make conversations
+                                feel one-sided, and how you can just be
+                                yourself with me.
+                            </p>
+
+                            <p>
+                                And yes, I still think it's hilarious
+                                that we somehow act like twins.
+                            </p>
+
+                            <p>
+                                I don't know exactly where this goes.
+                                I just know that I really like having
+                                you in my life.
+                            </p>
+
+                            <div class="signature">
+                                <span>— Leo</span>
+                            </div>
+
+                        </div>
+
+                    </div>
+
                 </div>
 
-                <h2 class="section-title centered reveal delay-2">
-                    Some things
-                    <br>
-                    <em>just make sense.</em>
-                </h2>
-
-                <div class="mew-card glass-card reveal delay-3">
-
-                    <div class="mew-line">
-                        You: mewwww
-                    </div>
-
-                    <div class="mew-divider">
-                        ✦
-                    </div>
-
-                    <div class="mew-line">
-                        Me: mewwww
-                    </div>
-
-                </div>
-
-                <p class="center-description reveal delay-4">
-                    Don't ask.
-                    <br>
-                    It just became a thing.
-                </p>
-
-                <button class="luxury-button reveal delay-5" data-next>
-                    <span>Continue</span>
-                    <span class="button-arrow">→</span>
+                <button class="next-btn" data-next>
+                    <span>Okay... one question</span>
+                    <span class="arrow">→</span>
                 </button>
 
             </div>
@@ -466,334 +587,230 @@
         </section>
 
 
-        <!-- =================================================
-             PAGE 7 — HOW SHE MAKES ME FEEL
-        ================================================== -->
+        <!-- =====================================================
+             PAGE 7 — BUILD UP
+        ====================================================== -->
 
         <section class="page" data-page="7">
 
-            <div class="page-content">
+            <div class="page-inner centered">
 
-                <div class="section-label reveal">
-                    06 — HOW YOU MAKE ME FEEL
+                <div class="section-number">
+                    06 / 08
                 </div>
 
-                <div class="feel-layout">
+                <span class="eyebrow">
+                    Before I ask...
+                </span>
 
-                    <div class="feel-heading">
-
-                        <h2 class="section-title reveal">
-                            With you,
-                            <br>
-                            things feel
-                            <em>easy.</em>
-                        </h2>
-
-                    </div>
-
-                    <div class="feel-list">
-
-                        <div class="feel-item reveal delay-1">
-                            <span>01</span>
-                            <div>
-                                <h3>Comfortable</h3>
-                                <p>
-                                    I don't feel like I have to
-                                    act like someone else.
-                                </p>
-                            </div>
-                        </div>
-
-                        <div class="feel-item reveal delay-2">
-                            <span>02</span>
-                            <div>
-                                <h3>Happy</h3>
-                                <p>
-                                    Talking to you genuinely
-                                    makes my day better.
-                                </p>
-                            </div>
-                        </div>
-
-                        <div class="feel-item reveal delay-3">
-                            <span>03</span>
-                            <div>
-                                <h3>Understood</h3>
-                                <p>
-                                    There's something about our
-                                    conversations that just clicks.
-                                </p>
-                            </div>
-                        </div>
-
-                        <div class="feel-item reveal delay-4">
-                            <span>04</span>
-                            <div>
-                                <h3>Like myself</h3>
-                                <p>
-                                    And honestly, that's one of
-                                    my favorite things.
-                                </p>
-                            </div>
-                        </div>
-
-                    </div>
-
+                <div class="countdown-symbol">
+                    <span>?</span>
                 </div>
 
-                <button class="luxury-button bottom-button" data-next>
-                    <span>Almost there</span>
-                    <span class="button-arrow">→</span>
-                </button>
-
-            </div>
-
-        </section>
-
-
-        <!-- =================================================
-             PAGE 8 — WHY YOU
-        ================================================== -->
-
-        <section class="page" data-page="8">
-
-            <div class="page-content scroll-content">
-
-                <div class="section-label reveal">
-                    07 — WHY YOU
-                </div>
-
-                <div class="why-header">
-
-                    <h2 class="section-title reveal">
-                        I could list
-                        <em>a hundred reasons.</em>
-                    </h2>
-
-                    <p class="reveal delay-1">
-                        But these are the ones that matter to me.
-                    </p>
-
-                </div>
-
-
-                <div class="reason-stack">
-
-                    <div class="reason reveal delay-1">
-                        <span>01</span>
-                        <strong>
-                            You're beautiful.
-                        </strong>
-                        <p>
-                            Not just in the obvious way.
-                            There's something about your presence.
-                        </p>
-                    </div>
-
-                    <div class="reason reveal delay-2">
-                        <span>02</span>
-                        <strong>
-                            You care about my efforts.
-                        </strong>
-                        <p>
-                            You make me feel like the little things
-                            are actually worth doing.
-                        </p>
-                    </div>
-
-                    <div class="reason reveal delay-3">
-                        <span>03</span>
-                        <strong>
-                            You are yourself with me.
-                        </strong>
-                        <p>
-                            No unnecessary pretending.
-                            Just Judy being Judy.
-                        </p>
-                    </div>
-
-                    <div class="reason reveal delay-4">
-                        <span>04</span>
-                        <strong>
-                            You're my twin.
-                        </strong>
-                        <p>
-                            I still don't know how we match
-                            this much after only two weeks.
-                        </p>
-                    </div>
-
-                </div>
-
-                <button class="luxury-button bottom-button" data-next>
-                    <span>There's one last page</span>
-                    <span class="button-arrow">→</span>
-                </button>
-
-            </div>
-
-        </section>
-
-
-        <!-- =================================================
-             PAGE 9 — PROPOSAL
-        ================================================== -->
-
-        <section class="page proposal-page" data-page="9">
-
-            <div class="page-content center-content">
-
-                <div class="proposal-stars">
-                    <span>✦</span>
-                    <span>✧</span>
-                    <span>✦</span>
-                    <span>·</span>
-                    <span>✧</span>
-                </div>
-
-                <div class="section-label reveal">
-                    08 — ONE QUESTION
-                </div>
-
-                <h2 class="proposal-title reveal delay-1">
-                    Judy,
+                <h2 class="big-heading">
+                    I just wanted you
                     <br>
-                    <em>will you be my person?</em>
+                    to know <em>why.</em>
                 </h2>
 
-                <p class="proposal-text reveal delay-2">
-                    I know we've only known each other for a couple
-                    of weeks, and maybe this is a little unexpected.
-                    <br><br>
-                    But I really like what we have.
-                    And I wanted to be honest about it.
+                <p class="section-description">
+                    Not because I expect anything.
+                    Not because you owe me an answer.
+                    Just because you're important enough for me
+                    to say it properly.
                 </p>
 
-                <div class="proposal-actions reveal delay-3">
+                <div class="build-lines">
+                    <div><span></span> I like talking to you.</div>
+                    <div><span></span> I like your energy.</div>
+                    <div><span></span> I like who you are.</div>
+                    <div><span></span> And I like us.</div>
+                </div>
 
-                    <button
-                        class="answer-button yes-button"
-                        id="yesButton"
-                    >
-                        <span>Yes ♡</span>
+                <button class="next-btn" data-next>
+                    <span>Ask me</span>
+                    <span class="arrow">→</span>
+                </button>
+
+            </div>
+
+        </section>
+
+
+        <!-- =====================================================
+             PAGE 8 — PROPOSAL
+        ====================================================== -->
+
+        <section class="page proposal-page" data-page="8">
+
+            <div class="page-inner centered">
+
+                <div class="section-number">
+                    07 / 08
+                </div>
+
+                <div class="proposal-glow"></div>
+
+                <span class="eyebrow">
+                    So, Judy...
+                </span>
+
+                <div class="proposal-symbol">
+                    ♡
+                </div>
+
+                <h1 class="proposal-title">
+                    Would you
+                    <br>
+                    choose <em>us?</em>
+                </h1>
+
+                <p class="proposal-text">
+                    I really like you.
+                    And I'd love to see where this could go.
+                </p>
+
+                <div class="proposal-buttons">
+
+                    <button class="answer-btn yes-btn" id="yesButton">
+                        <span>HAAA ♡</span>
                     </button>
 
-                    <button
-                        class="answer-button think-button"
-                        id="thinkButton"
-                    >
+                    <button class="answer-btn think-btn" id="thinkButton">
                         <span>Let me think</span>
                     </button>
 
                 </div>
 
-                <p class="answer-note reveal delay-4">
-                    Whatever you choose, take your time.
-                </p>
+                <div class="tiny-note">
+                    Whatever your answer is, take your time.
+                </div>
 
             </div>
 
         </section>
 
 
-        <!-- =================================================
-             PAGE 10 — YES
-        ================================================== -->
+        <!-- =====================================================
+             PAGE 9 — YES
+        ====================================================== -->
 
-        <section class="page outcome-page yes-page" data-page="10">
+        <section class="page response-page yes-page" data-page="9">
 
-            <div class="confetti-container" id="confettiContainer"></div>
+            <div class="confetti-container" id="confetti"></div>
 
-            <div class="page-content center-content">
+            <div class="page-inner centered">
 
-                <div class="outcome-symbol reveal">
-                    ♡
+                <div class="response-symbol">
+                    ✦
                 </div>
 
-                <div class="section-label reveal delay-1">
-                    09 — WAIT...
-                </div>
+                <span class="eyebrow">
+                    WAIT.
+                </span>
 
-                <h2 class="outcome-title reveal delay-2">
-                    SHE SAID
-                    <em>YES.</em>
-                </h2>
+                <h1 class="response-title">
+                    HAAAAA?!
+                </h1>
 
-                <p class="outcome-text reveal delay-3">
-                    Okay.
-                    <br>
-                    Now I'm smiling like an idiot.
+                <p class="response-subtitle">
+                    You actually said yes.
                 </p>
 
-                <div class="yes-card glass-card reveal delay-4">
+                <div class="yes-card">
 
-                    <span class="yes-card-small">
-                        OFFICIALLY
-                    </span>
+                    <div class="yes-card-top">
+                        <span>JUDY + LEO</span>
+                        <span>♡</span>
+                    </div>
 
-                    <strong>
-                        Leo × Judy
-                    </strong>
+                    <div class="yes-card-body">
 
-                    <span class="yes-card-small">
-                        my favorite plot twist
-                    </span>
+                        <div class="big-heart">
+                            ♡
+                        </div>
 
-                </div>
+                        <h2>
+                            Maybe us.
+                        </h2>
 
-                <p class="mew-final reveal delay-5">
-                    mewwww ♡
-                </p>
+                        <p>
+                            Then let's make this something
+                            worth remembering.
+                        </p>
 
-            </div>
+                    </div>
 
-        </section>
-
-
-        <!-- =================================================
-             PAGE 11 — LET ME THINK
-        ================================================== -->
-
-        <section class="page outcome-page think-page" data-page="11">
-
-            <div class="page-content center-content">
-
-                <div class="outcome-symbol moon-symbol reveal">
-                    ☾
-                </div>
-
-                <div class="section-label reveal delay-1">
-                    09 — TAKE YOUR TIME
-                </div>
-
-                <h2 class="outcome-title reveal delay-2">
-                    That's
-                    <em>okay.</em>
-                </h2>
-
-                <p class="outcome-text reveal delay-3">
-                    You don't have to answer right now.
-                    <br><br>
-                    Take all the time you need.
-                    I just wanted you to know how I feel.
-                </p>
-
-                <div class="think-card glass-card reveal delay-4">
-
-                    <div class="think-quote">
-                        “No pressure.
-                        <br>
-                        No awkwardness.
-                        <br>
-                        Just take your time.”
+                    <div class="yes-card-bottom">
+                        <span>chapter one</span>
+                        <span>✦</span>
+                        <span>2026</span>
                     </div>
 
                 </div>
 
-                <p class="quiet-ending reveal delay-5">
-                    Whatever happens,
-                    I'm glad I told you.
+                <div class="final-message">
+                    <span>mewwwww</span>
+                    <span>♡</span>
+                    <span>mewwwww</span>
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- =====================================================
+             PAGE 10 — LET ME THINK
+        ====================================================== -->
+
+        <section class="page response-page think-page" data-page="10">
+
+            <div class="page-inner centered">
+
+                <div class="think-symbol">
+                    …
+                </div>
+
+                <span class="eyebrow">
+                    That's completely okay.
+                </span>
+
+                <h1 class="response-title">
+                    Take your
+                    <br>
+                    <em>time.</em>
+                </h1>
+
+                <p class="response-subtitle">
+                    There's no pressure for an answer right now.
                 </p>
+
+                <div class="think-card">
+
+                    <div class="think-card-line"></div>
+
+                    <p>
+                        I meant what I said, but I also mean this:
+                        you don't have to rush your feelings.
+                    </p>
+
+                    <p>
+                        Whatever you decide,
+                        I'm glad I got to tell you.
+                    </p>
+
+                    <div class="think-signature">
+                        — Leo
+                    </div>
+
+                </div>
+
+                <div class="final-message">
+                    <span>take your time</span>
+                    <span>♡</span>
+                    <span>twineyy</span>
+                </div>
 
             </div>
 
@@ -802,9 +819,14 @@
     </main>
 
 
-    <!-- =====================================================
-         JAVASCRIPT
-    ====================================================== -->
+    <!-- =========================================================
+         PAGE TRANSITION
+    ========================================================== -->
+
+    <div class="transition-layer" id="transitionLayer">
+        <div class="transition-logo">✦</div>
+    </div>
+
 
     <script src="script.js"></script>
 
