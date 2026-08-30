@@ -1,239 +1,189 @@
-/* =========================================================
-   JUDY × LEO
-   CINEMATIC INTERACTION ENGINE
-   ========================================================= */
-
-(() => {
-
-    "use strict";
+/* ============================================================
+   LEO × JUDY
+   Interactive Proposal Website
+============================================================ */
 
 
-    /* =====================================================
-       ELEMENTS
-    ====================================================== */
+/* ============================================================
+   DOM
+============================================================ */
 
-    const pages =
-        [...document.querySelectorAll(".page")];
+const pages = Array.from(
+    document.querySelectorAll(".page")
+);
 
-    const dots =
-        [...document.querySelectorAll(".dot")];
+const nextButtons = Array.from(
+    document.querySelectorAll("[data-next]")
+);
 
-    const nextButtons =
-        [...document.querySelectorAll(".next")];
+const currentPageElement =
+    document.getElementById("currentPage");
 
-    const progress =
-        document.getElementById("progress");
+const transitionLayer =
+    document.getElementById("transitionLayer");
 
-    const counter =
-        document.getElementById("counter");
+const starsContainer =
+    document.getElementById("stars");
 
-    const cursorGlow =
-        document.querySelector(".cursor-glow");
+const yesButton =
+    document.getElementById("yesButton");
 
+const maybeButton =
+    document.getElementById("maybeButton");
 
-    /* =====================================================
-       STATE
-    ====================================================== */
+const answerMessage =
+    document.getElementById("answerMessage");
 
-    let currentPage = 0;
+const celebration =
+    document.getElementById("celebration");
 
-    let changing = false;
-
-    let celebrationUnlocked = false;
-
-
-    /* =====================================================
-       CREATE BACKGROUND PARTICLES
-    ====================================================== */
-
-    const particleContainer =
-        document.getElementById("particles");
+const confettiContainer =
+    document.getElementById("confetti");
 
 
-    for (let i = 0; i < 45; i++) {
+/* ============================================================
+   STATE
+============================================================ */
 
-        const particle =
+let currentPage = 1;
+
+let isTransitioning = false;
+
+const totalPages = pages.length;
+
+
+/* ============================================================
+   INITIAL SETUP
+============================================================ */
+
+document.addEventListener(
+    "DOMContentLoaded",
+    () => {
+
+        createStars();
+
+        setupFlipCards();
+
+        setupButtons();
+
+        setupProposalButtons();
+
+        updatePageCounter();
+
+        resetAllPageScroll();
+
+    }
+);
+
+
+/* ============================================================
+   CREATE STARS
+============================================================ */
+
+function createStars() {
+
+    if (!starsContainer) {
+        return;
+    }
+
+    const numberOfStars =
+        window.innerWidth < 700
+            ? 45
+            : 85;
+
+
+    for (
+        let index = 0;
+        index < numberOfStars;
+        index++
+    ) {
+
+        const star =
             document.createElement("span");
 
-        particle.className =
-            "particle";
 
-        particle.style.left =
-            `${Math.random() * 100}%`;
+        star.className =
+            "star";
 
-        particle.style.top =
-            `${Math.random() * 100}%`;
 
-        particle.style.setProperty(
+        const x =
+            Math.random() * 100;
+
+        const y =
+            Math.random() * 100;
+
+
+        const size =
+            Math.random() > 0.85
+                ? 3
+                : 1.5;
+
+
+        const duration =
+            2.5 +
+            Math.random() * 5;
+
+
+        const delay =
+            Math.random() * 5;
+
+
+        star.style.left =
+            `${x}%`;
+
+        star.style.top =
+            `${y}%`;
+
+        star.style.width =
+            `${size}px`;
+
+        star.style.height =
+            `${size}px`;
+
+        star.style.setProperty(
             "--duration",
-            `${5 + Math.random() * 9}s`
+            `${duration}s`
         );
 
-        particle.style.setProperty(
+        star.style.setProperty(
             "--delay",
-            `${Math.random() * -10}s`
+            `${delay}s`
         );
 
-        particleContainer.appendChild(
-            particle
-        );
 
-    }
-
-
-    /* =====================================================
-       UPDATE UI
-    ====================================================== */
-
-    function updateUI() {
-
-        const total =
-            pages.length;
-
-        const number =
-            currentPage + 1;
-
-
-        progress.style.width =
-            `${number / total * 100}%`;
-
-
-        counter.textContent =
-            `${String(number).padStart(2, "0")} / ${String(total).padStart(2, "0")}`;
-
-
-        dots.forEach(
-            (dot, index) => {
-
-                dot.classList.toggle(
-                    "active",
-                    index === currentPage
-                );
-
-            }
+        starsContainer.appendChild(
+            star
         );
 
     }
 
-
-    /* =====================================================
-       RESET PAGE SCROLL
-    ====================================================== */
-
-    function resetScroll(page) {
-
-        const scroll =
-            page.querySelector(
-                ".page-scroll"
-            );
+}
 
 
-        if (scroll) {
+/* ============================================================
+   NEXT BUTTONS
+============================================================ */
 
-            scroll.scrollTop = 0;
-
-        }
-
-    }
-
-
-    /* =====================================================
-       PAGE TRANSITION
-    ====================================================== */
-
-    function goToPage(target) {
-
-        if (changing) return;
-
-        if (
-            target < 0 ||
-            target >= pages.length
-        ) {
-
-            return;
-
-        }
-
-
-        /*
-         * PAGE 09 IS LOCKED
-         */
-
-        if (
-            target === 8 &&
-            !celebrationUnlocked
-        ) {
-
-            return;
-
-        }
-
-
-        if (
-            target === currentPage
-        ) {
-
-            return;
-
-        }
-
-
-        changing = true;
-
-
-        const previous =
-            pages[currentPage];
-
-        const next =
-            pages[target];
-
-
-        previous.classList.remove(
-            "active"
-        );
-
-
-        next.classList.add(
-            "active"
-        );
-
-
-        resetScroll(next);
-
-
-        currentPage =
-            target;
-
-
-        updateUI();
-
-
-        setTimeout(
-            () => {
-
-                changing = false;
-
-            },
-            950
-        );
-
-    }
-
-
-    /* =====================================================
-       NEXT BUTTONS
-    ====================================================== */
+function setupButtons() {
 
     nextButtons.forEach(
-        button => {
+        (button) => {
 
             button.addEventListener(
                 "click",
                 () => {
 
-                    goToPage(
-                        currentPage + 1
-                    );
+                    const target =
+                        currentPage + 1;
+
+
+                    if (
+                        target <= totalPages
+                    ) {
+
+                        goToPage(target);
+
+                    }
 
                 }
             );
@@ -241,17 +191,191 @@
         }
     );
 
+}
 
-    /* =====================================================
-       FLIP CARDS
-    ====================================================== */
+
+/* ============================================================
+   PAGE NAVIGATION
+============================================================ */
+
+function goToPage(targetPage) {
+
+    if (isTransitioning) {
+        return;
+    }
+
+
+    if (
+        targetPage < 1 ||
+        targetPage > totalPages
+    ) {
+        return;
+    }
+
+
+    if (
+        targetPage === currentPage
+    ) {
+        return;
+    }
+
+
+    isTransitioning = true;
+
+
+    transitionLayer.classList.add(
+        "active"
+    );
+
+
+    setTimeout(
+        () => {
+
+            const oldPage =
+                pages[currentPage - 1];
+
+            const newPage =
+                pages[targetPage - 1];
+
+
+            oldPage.classList.remove(
+                "active"
+            );
+
+            oldPage.classList.add(
+                "exit"
+            );
+
+
+            newPage.classList.remove(
+                "exit"
+            );
+
+            newPage.classList.add(
+                "active"
+            );
+
+
+            currentPage =
+                targetPage;
+
+
+            updatePageCounter();
+
+
+            scrollPageToTop(
+                newPage
+            );
+
+
+            setTimeout(
+                () => {
+
+                    transitionLayer.classList.remove(
+                        "active"
+                    );
+
+                },
+                80
+            );
+
+
+            setTimeout(
+                () => {
+
+                    oldPage.classList.remove(
+                        "exit"
+                    );
+
+                    isTransitioning =
+                        false;
+
+                },
+                850
+            );
+
+        },
+        420
+    );
+
+}
+
+
+/* ============================================================
+   PAGE COUNTER
+============================================================ */
+
+function updatePageCounter() {
+
+    if (!currentPageElement) {
+        return;
+    }
+
+
+    currentPageElement.textContent =
+        String(currentPage)
+            .padStart(2, "0");
+
+}
+
+
+/* ============================================================
+   SCROLL RESET
+============================================================ */
+
+function scrollPageToTop(page) {
+
+    const content =
+        page.querySelector(
+            ".page-content"
+        );
+
+
+    if (!content) {
+        return;
+    }
+
+
+    content.scrollTo(
+        {
+            top: 0,
+            left: 0,
+            behavior: "instant"
+        }
+    );
+
+}
+
+
+function resetAllPageScroll() {
+
+    pages.forEach(
+        (page) => {
+
+            scrollPageToTop(
+                page
+            );
+
+        }
+    );
+
+}
+
+
+/* ============================================================
+   FLIP CARDS
+============================================================ */
+
+function setupFlipCards() {
 
     const cards =
-        [...document.querySelectorAll(".flip-card")];
+        document.querySelectorAll(
+            ".flip-card"
+        );
 
 
     cards.forEach(
-        card => {
+        (card) => {
 
             card.addEventListener(
                 "click",
@@ -267,11 +391,13 @@
 
             card.addEventListener(
                 "keydown",
-                event => {
+                (event) => {
 
                     if (
-                        event.key === "Enter" ||
-                        event.key === " "
+                        event.key ===
+                        "Enter" ||
+                        event.key ===
+                        " "
                     ) {
 
                         event.preventDefault();
@@ -285,41 +411,339 @@
                 }
             );
 
+        }
+    );
 
-            card.setAttribute(
-                "tabindex",
-                "0"
+}
+
+
+/* ============================================================
+   PROPOSAL BUTTONS
+============================================================ */
+
+function setupProposalButtons() {
+
+    if (yesButton) {
+
+        yesButton.addEventListener(
+            "click",
+            handleYes
+        );
+
+    }
+
+
+    if (maybeButton) {
+
+        maybeButton.addEventListener(
+            "click",
+            handleMaybe
+        );
+
+    }
+
+}
+
+
+/* ============================================================
+   YES
+============================================================ */
+
+function handleYes() {
+
+    if (
+        celebration.classList.contains(
+            "active"
+        )
+    ) {
+        return;
+    }
+
+
+    answerMessage.textContent =
+        "Okay... that made me smile.";
+
+
+    createConfetti();
+
+
+    setTimeout(
+        () => {
+
+            celebration.classList.add(
+                "active"
             );
+
+        },
+        650
+    );
+
+}
+
+
+/* ============================================================
+   MAYBE
+============================================================ */
+
+function handleMaybe() {
+
+    if (!answerMessage) {
+        return;
+    }
+
+
+    answerMessage.textContent =
+        "Take all the time you need. ♡";
+
+
+    maybeButton.animate(
+        [
+            {
+                transform:
+                    "translateY(0)"
+            },
+
+            {
+                transform:
+                    "translateY(-4px)"
+            },
+
+            {
+                transform:
+                    "translateY(0)"
+            }
+        ],
+        {
+            duration: 500,
+            easing:
+                "cubic-bezier(.16,1,.3,1)"
+        }
+    );
+
+}
+
+
+/* ============================================================
+   CONFETTI
+============================================================ */
+
+function createConfetti() {
+
+    if (!confettiContainer) {
+        return;
+    }
+
+
+    confettiContainer.innerHTML =
+        "";
+
+
+    const amount =
+        window.innerWidth < 700
+            ? 70
+            : 120;
+
+
+    for (
+        let index = 0;
+        index < amount;
+        index++
+    ) {
+
+        const piece =
+            document.createElement(
+                "span"
+            );
+
+
+        piece.className =
+            "confetti";
+
+
+        const left =
+            Math.random() * 100;
+
+
+        const drift =
+            (
+                Math.random() * 240
+            ) - 120;
+
+
+        const duration =
+            3 +
+            Math.random() * 4;
+
+
+        const delay =
+            Math.random() * 1.4;
+
+
+        const rotation =
+            Math.random() * 360;
+
+
+        const width =
+            4 +
+            Math.random() * 5;
+
+
+        const height =
+            8 +
+            Math.random() * 8;
+
+
+        piece.style.left =
+            `${left}%`;
+
+
+        piece.style.width =
+            `${width}px`;
+
+
+        piece.style.height =
+            `${height}px`;
+
+
+        piece.style.setProperty(
+            "--drift",
+            `${drift}px`
+        );
+
+
+        piece.style.setProperty(
+            "--fall-duration",
+            `${duration}s`
+        );
+
+
+        piece.style.setProperty(
+            "--rotation",
+            `${rotation}deg`
+        );
+
+
+        piece.style.animationDelay =
+            `${delay}s`;
+
+
+        confettiContainer.appendChild(
+            piece
+        );
+
+    }
+
+}
+
+
+/* ============================================================
+   MOUSE PARALLAX
+============================================================ */
+
+let mouseX = 0;
+
+let mouseY = 0;
+
+let targetX = 0;
+
+let targetY = 0;
+
+
+window.addEventListener(
+    "mousemove",
+    (event) => {
+
+        mouseX =
+            (
+                event.clientX /
+                window.innerWidth
+            ) - 0.5;
+
+
+        mouseY =
+            (
+                event.clientY /
+                window.innerHeight
+            ) - 0.5;
+
+    }
+);
+
+
+function animateParallax() {
+
+    targetX +=
+        (
+            mouseX -
+            targetX
+        ) * 0.025;
+
+
+    targetY +=
+        (
+            mouseY -
+            targetY
+        ) * 0.025;
+
+
+    const orbs =
+        document.querySelectorAll(
+            ".floating-orb"
+        );
+
+
+    orbs.forEach(
+        (orb, index) => {
+
+            const multiplier =
+                (index + 1) * 7;
+
+
+            orb.style.transform =
+                `translate3d(
+                    ${targetX * multiplier}px,
+                    ${targetY * multiplier}px,
+                    0
+                )`;
 
         }
     );
 
 
-    /* =====================================================
-       CARD 3D TILT
-    ====================================================== */
+    requestAnimationFrame(
+        animateParallax
+    );
+
+}
+
+
+animateParallax();
+
+
+/* ============================================================
+   CARD TILT
+============================================================ */
+
+function setupCardTilt() {
+
+    const cards =
+        document.querySelectorAll(
+            ".glass-card"
+        );
+
 
     cards.forEach(
-        card => {
-
-            const flip =
-                card.querySelector(
-                    ".flip"
-                );
-
+        (card) => {
 
             card.addEventListener(
-                "pointermove",
-                event => {
+                "mousemove",
+                (event) => {
 
                     if (
-                        card.classList.contains(
-                            "flipped"
-                        )
+                        window.innerWidth <
+                        800
                     ) {
-
                         return;
-
                     }
 
 
@@ -337,43 +761,44 @@
                         rect.top;
 
 
-                    const rotateY =
-                        (
-                            x /
-                            rect.width -
-                            .5
-                        ) * 10;
+                    const centerX =
+                        rect.width / 2;
+
+
+                    const centerY =
+                        rect.height / 2;
 
 
                     const rotateX =
                         (
-                            .5 -
-                            y /
-                            rect.height
-                        ) * 10;
+                            y -
+                            centerY
+                        ) / 30;
 
 
-                    flip.style.transform =
-                        `rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
+                    const rotateY =
+                        (
+                            centerX -
+                            x
+                        ) / 30;
+
+
+                    card.style.transform =
+                        `perspective(1000px)
+                         rotateX(${rotateX}deg)
+                         rotateY(${rotateY}deg)
+                         translateY(-5px)`;
 
                 }
             );
 
 
             card.addEventListener(
-                "pointerleave",
+                "mouseleave",
                 () => {
 
-                    if (
-                        !card.classList.contains(
-                            "flipped"
-                        )
-                    ) {
-
-                        flip.style.transform =
-                            "";
-
-                    }
+                    card.style.transform =
+                        "";
 
                 }
             );
@@ -381,592 +806,189 @@
         }
     );
 
+}
 
-    /* =====================================================
-       CURSOR LIGHT
-    ====================================================== */
 
-    window.addEventListener(
-        "pointermove",
-        event => {
+setupCardTilt();
 
-            cursorGlow.style.left =
-                `${event.clientX}px`;
 
-            cursorGlow.style.top =
-                `${event.clientY}px`;
+/* ============================================================
+   BUTTON RIPPLE
+============================================================ */
 
-        },
-        {
-            passive: true
+document.addEventListener(
+    "click",
+    (event) => {
+
+        const button =
+            event.target.closest(
+                "button"
+            );
+
+
+        if (!button) {
+            return;
         }
-    );
 
 
-    /* =====================================================
-       MAGNETIC BUTTONS
-    ====================================================== */
-
-    document
-        .querySelectorAll(
-            ".main-button, .answer, .replay"
-        )
-        .forEach(
-            button => {
-
-                button.addEventListener(
-                    "pointermove",
-                    event => {
-
-                        const rect =
-                            button.getBoundingClientRect();
+        const rect =
+            button.getBoundingClientRect();
 
 
-                        const x =
-                            event.clientX -
-                            rect.left -
-                            rect.width / 2;
+        const ripple =
+            document.createElement(
+                "span"
+            );
 
 
-                        const y =
-                            event.clientY -
-                            rect.top -
-                            rect.height / 2;
+        ripple.style.position =
+            "absolute";
 
 
-                        button.style.transform =
-                            `translate(${x * .04}px,${y * .04}px)`;
-
-                    }
-                );
+        ripple.style.left =
+            `${event.clientX - rect.left}px`;
 
 
-                button.addEventListener(
-                    "pointerleave",
-                    () => {
+        ripple.style.top =
+            `${event.clientY - rect.top}px`;
 
-                        button.style.transform =
-                            "";
 
-                    }
-                );
+        ripple.style.width =
+            "10px";
+
+
+        ripple.style.height =
+            "10px";
+
+
+        ripple.style.borderRadius =
+            "50%";
+
+
+        ripple.style.background =
+            "rgba(255,255,255,0.18)";
+
+
+        ripple.style.transform =
+            "translate(-50%,-50%) scale(0)";
+
+
+        ripple.style.pointerEvents =
+            "none";
+
+
+        ripple.style.transition =
+            "transform .65s ease, opacity .65s ease";
+
+
+        ripple.style.zIndex =
+            "10";
+
+
+        button.appendChild(
+            ripple
+        );
+
+
+        requestAnimationFrame(
+            () => {
+
+                ripple.style.transform =
+                    "translate(-50%,-50%) scale(25)";
+
+                ripple.style.opacity =
+                    "0";
 
             }
         );
 
-
-    /* =====================================================
-       KEYBOARD
-    ====================================================== */
-
-    document.addEventListener(
-        "keydown",
-        event => {
-
-            if (
-                event.key === "ArrowRight" ||
-                event.key === "PageDown"
-            ) {
-
-                event.preventDefault();
-
-                goToPage(
-                    currentPage + 1
-                );
-
-            }
-
-        }
-    );
-
-
-    /* =====================================================
-       PROPOSAL RESPONSE
-    ====================================================== */
-
-    const yes =
-        document.getElementById(
-            "yes"
-        );
-
-
-    const maybe =
-        document.getElementById(
-            "maybe"
-        );
-
-
-    const answerMessage =
-        document.getElementById(
-            "answerMessage"
-        );
-
-
-    const messageIcon =
-        document.getElementById(
-            "messageIcon"
-        );
-
-
-    const messageTitle =
-        document.getElementById(
-            "messageTitle"
-        );
-
-
-    const messageText =
-        document.getElementById(
-            "messageText"
-        );
-
-
-    const messageClose =
-        document.getElementById(
-            "messageClose"
-        );
-
-
-    /* =====================================================
-       MAYBE
-    ====================================================== */
-
-    maybe.addEventListener(
-        "click",
-        () => {
-
-            messageIcon.textContent =
-                "✦";
-
-
-            messageTitle.textContent =
-                "Take your time.";
-
-
-            messageText.textContent =
-                "There is no pressure. I just wanted to be honest about how I feel.";
-
-
-            answerMessage.classList.add(
-                "show"
-            );
-
-        }
-    );
-
-
-    /* =====================================================
-       CLOSE MESSAGE
-    ====================================================== */
-
-    messageClose.addEventListener(
-        "click",
-        () => {
-
-            answerMessage.classList.remove(
-                "show"
-            );
-
-        }
-    );
-
-
-    /* =====================================================
-       YES
-    ====================================================== */
-
-    yes.addEventListener(
-        "click",
-        () => {
-
-            celebrationUnlocked =
-                true;
-
-
-            unlockCelebration();
-
-        }
-    );
-
-
-    /* =====================================================
-       UNLOCK PAGE 09
-    ====================================================== */
-
-    function unlockCelebration() {
-
-        /*
-         * BIG SCREEN FLASH
-         */
-
-        const flash =
-            document.getElementById(
-                "screenFlash"
-            );
-
-
-        flash.classList.remove(
-            "flash"
-        );
-
-
-        void flash.offsetWidth;
-
-
-        flash.classList.add(
-            "flash"
-        );
-
-
-        /*
-         * CREATE CELEBRATION
-         */
-
-        createCelebrationParticles();
-
-        createConfetti();
-
-
-        /*
-         * GO TO PAGE 09
-         */
 
         setTimeout(
             () => {
 
-                goToPage(8);
+                ripple.remove();
 
             },
-            450
+            700
         );
 
     }
+);
 
 
-    /* =====================================================
-       CELEBRATION PARTICLES
-    ====================================================== */
+/* ============================================================
+   TOUCH SUPPORT FOR FLIP CARDS
+============================================================ */
 
-    function createCelebrationParticles() {
+let touchStartX = 0;
 
-        const container =
-            document.getElementById(
-                "celebrationParticles"
-            );
+let touchStartY = 0;
 
 
-        container.innerHTML = "";
+document.addEventListener(
+    "touchstart",
+    (event) => {
+
+        if (
+            event.touches.length !== 1
+        ) {
+            return;
+        }
 
 
-        const symbols = [
-            "♥",
-            "✦",
-            "✧",
-            "⋆",
-            "♡"
-        ];
+        touchStartX =
+            event.touches[0].clientX;
 
 
-        for (
-            let i = 0;
-            i < 45;
-            i++
+        touchStartY =
+            event.touches[0].clientY;
+
+    },
+    {
+        passive: true
+    }
+);
+
+
+document.addEventListener(
+    "touchend",
+    (event) => {
+
+        if (
+            event.changedTouches.length !== 1
+        ) {
+            return;
+        }
+
+
+        const endX =
+            event.changedTouches[0].clientX;
+
+
+        const endY =
+            event.changedTouches[0].clientY;
+
+
+        const distanceX =
+            endX -
+            touchStartX;
+
+
+        const distanceY =
+            endY -
+            touchStartY;
+
+
+        if (
+            Math.abs(distanceX) > 80 &&
+            Math.abs(distanceX) >
+            Math.abs(distanceY)
         ) {
 
-            const element =
-                document.createElement(
-                    "span"
-                );
-
-
-            element.className =
-                "celeb-particle";
-
-
-            element.textContent =
-                symbols[
-                    Math.floor(
-                        Math.random() *
-                        symbols.length
-                    )
-                ];
-
-
-            const angle =
-                Math.random() *
-                Math.PI *
-                2;
-
-
-            const distance =
-                150 +
-                Math.random() *
-                500;
-
-
-            const x =
-                Math.cos(angle) *
-                distance;
-
-
-            const y =
-                Math.sin(angle) *
-                distance;
-
-
-            element.style.setProperty(
-                "--x",
-                `${x}px`
-            );
-
-
-            element.style.setProperty(
-                "--y",
-                `${y}px`
-            );
-
-
-            element.style.setProperty(
-                "--rotate",
-                `${Math.random() * 720 - 360}deg`
-            );
-
-
-            element.style.setProperty(
-                "--size",
-                `${10 + Math.random() * 18}px`
-            );
-
-
-            element.style.setProperty(
-                "--delay",
-                `${Math.random() * .7}s`
-            );
-
-
-            container.appendChild(
-                element
-            );
-
-        }
-
-    }
-
-
-    /* =====================================================
-       CONFETTI
-    ====================================================== */
-
-    function createConfetti() {
-
-        const pieces =
-            100;
-
-
-        for (
-            let i = 0;
-            i < pieces;
-            i++
-        ) {
-
-            const piece =
-                document.createElement(
-                    "span"
-                );
-
-
-            piece.className =
-                "celeb-confetti";
-
-
-            piece.style.left =
-                `${Math.random() * 100}%`;
-
-
-            piece.style.setProperty(
-                "--duration",
-                `${2.5 + Math.random() * 3}s`
-            );
-
-
-            piece.style.setProperty(
-                "--delay",
-                `${Math.random() * 1.5}s`
-            );
-
-
-            piece.style.setProperty(
-                "--drift",
-                `${Math.random() * 300 - 150}px`
-            );
-
-
-            /*
-             * Use CSS custom properties for
-             * varied appearance without
-             * creating another stylesheet.
-             */
-
-            const variants = [
-                "rgba(237,169,195,.9)",
-                "rgba(255,255,255,.75)",
-                "rgba(211,181,220,.8)",
-                "rgba(245,210,190,.8)"
-            ];
-
-
-            piece.style.background =
-                variants[
-                    Math.floor(
-                        Math.random() *
-                        variants.length
-                    )
-                ];
-
-
-            piece.style.transform =
-                `rotate(${Math.random() * 360}deg)`;
-
-
-            document.body.appendChild(
-                piece
-            );
-
-
-            setTimeout(
-                () => {
-
-                    piece.remove();
-
-                },
-                6500
-            );
-
-        }
-
-    }
-
-
-    /* =====================================================
-       REPLAY CELEBRATION
-    ====================================================== */
-
-    const replay =
-        document.getElementById(
-            "replay"
-        );
-
-
-    replay.addEventListener(
-        "click",
-        () => {
-
-            const page =
-                pages[8];
-
-
-            page.classList.remove(
-                "active"
-            );
-
-
-            void page.offsetWidth;
-
-
-            page.classList.add(
-                "active"
-            );
-
-
-            createCelebrationParticles();
-
-            createConfetti();
-
-        }
-    );
-
-
-    /* =====================================================
-       CLICK OUTSIDE MESSAGE
-    ====================================================== */
-
-    answerMessage.addEventListener(
-        "click",
-        event => {
-
             if (
-                event.target ===
-                answerMessage
-            ) {
-
-                answerMessage.classList.remove(
-                    "show"
-                );
-
-            }
-
-        }
-    );
-
-
-    /* =====================================================
-       TOUCH SUPPORT
-    ====================================================== */
-
-    let touchStartX = 0;
-
-    let touchStartY = 0;
-
-
-    document.addEventListener(
-        "touchstart",
-        event => {
-
-            const touch =
-                event.touches[0];
-
-
-            touchStartX =
-                touch.clientX;
-
-
-            touchStartY =
-                touch.clientY;
-
-        },
-        {
-            passive: true
-        }
-    );
-
-
-    document.addEventListener(
-        "touchend",
-        event => {
-
-            const touch =
-                event.changedTouches[0];
-
-
-            const deltaX =
-                touch.clientX -
-                touchStartX;
-
-
-            const deltaY =
-                touch.clientY -
-                touchStartY;
-
-
-            /*
-             * Only a clear horizontal swipe
-             * advances the experience.
-             */
-
-            if (
-                Math.abs(deltaX) > 100 &&
-                Math.abs(deltaX) >
-                Math.abs(deltaY) * 1.5 &&
-                deltaX < 0
+                distanceX < 0 &&
+                currentPage <
+                totalPages
             ) {
 
                 goToPage(
@@ -975,18 +997,86 @@
 
             }
 
-        },
-        {
-            passive: true
         }
-    );
+
+    },
+    {
+        passive: true
+    }
+);
 
 
-    /* =====================================================
-       INITIALIZE
-    ====================================================== */
+/* ============================================================
+   KEYBOARD
+============================================================ */
 
-    updateUI();
+document.addEventListener(
+    "keydown",
+    (event) => {
+
+        if (
+            event.key === "ArrowRight" ||
+            event.key === "Enter"
+        ) {
+
+            if (
+                currentPage <
+                totalPages
+            ) {
+
+                goToPage(
+                    currentPage + 1
+                );
+
+            }
+
+        }
+
+    }
+);
 
 
-})();
+/* ============================================================
+   PREVENT HORIZONTAL OVERFLOW
+============================================================ */
+
+function preventHorizontalOverflow() {
+
+    document.documentElement.style
+        .overflowX = "hidden";
+
+    document.body.style
+        .overflowX = "hidden";
+
+}
+
+
+preventHorizontalOverflow();
+
+
+/* ============================================================
+   RESIZE
+============================================================ */
+
+window.addEventListener(
+    "resize",
+    () => {
+
+        preventHorizontalOverflow();
+
+    }
+);
+
+
+/* ============================================================
+   FINAL CONSOLE
+============================================================ */
+
+console.log(
+    "%cLEO × JUDY",
+    "font-size:24px;font-weight:bold;"
+);
+
+console.log(
+    "A little website made with a lot of effort."
+);
