@@ -1,612 +1,166 @@
 
 /* =========================================================
    JAS — CINEMATIC EXPERIENCE
+   BACKTICK-FREE VERSION
 ========================================================= */
+
+var app = document.getElementById("app");
+var currentNumber = document.getElementById("current");
+var totalNumber = document.getElementById("total");
+var progressBar = document.getElementById("progressBar");
+var cursorGlow = document.getElementById("cursorGlow");
 
 
 /* =========================================================
-   DOM
+   STORY SCENES
 ========================================================= */
 
-const app =
-  document.getElementById("app");
-
-const currentNumber =
-  document.getElementById("current");
-
-const totalNumber =
-  document.getElementById("total");
-
-const progressBar =
-  document.getElementById("progressBar");
-
-const cursorGlow =
-  document.getElementById("cursorGlow");
-
-
-/* =========================================================
-   STORY
-========================================================= */
-
-const scenes = [
-
-  /* =====================================================
-     01 — OPEN
-  ===================================================== */
-
-  
-  <section class="page active">
-
-    <div class="content">
-
-      <div class="eyebrow">
-        I made this for you
-      </div>
-
-      <h1 class="title">
-        Jas<span>.</span>
-      </h1>
-
-      <p class="lead">
-        There's something I've been wanting
-        to tell you properly.
-      </p>
-
-      <div class="button-area">
-
-        <button class="next" data-next>
-          Begin →
-        </button>
-
-      </div>
-
-    </div>
-
-  </section>
-  
-
-
-  /* =====================================================
-     02 — DRAWING
-  ===================================================== */
-
-  
-  <section class="page">
-
-    <div class="content">
-
-      <div class="eyebrow">
-        where it started
-      </div>
-
-      <h2 class="title">
-        One little
-        <em>drawing.</em>
-      </h2>
-
-      <p class="lead">
-        I saw your drawing on your highlights
-        and I just had to compliment it.
-      </p>
-
-      <p class="small">
-        Your drawings are genuinely amazing.
-      </p>
-
-      <p
-        class="lead"
-        style="margin-top:20px"
-      >
-        I didn't know that tiny interaction
-        would become something this important.
-      </p>
-
-      <div class="button-area">
-
-        <button class="next" data-next>
-          Keep going →
-        </button>
-
-      </div>
-
-    </div>
-
-  </section>
-  
-
-
-  /* =====================================================
-     03 — IMPORTANT
-  ===================================================== */
-
-  
-  <section class="page">
-
-    <div class="content">
-
-      <div class="eyebrow">
-        somewhere along the way
-      </div>
-
-      <div class="glass">
-
-        <p class="quote">
-          You became someone
-          I genuinely care about.
-        </p>
-
-        <p class="small">
-          Not because of one particular moment.
-          Because of all the tiny ones.
-        </p>
-
-      </div>
-
-      <div class="button-area">
-
-        <button class="next" data-next>
-          The tiny ones →
-        </button>
-
-      </div>
-
-    </div>
-
-  </section>
-  
-
-
-  /* =====================================================
-     04 — THINGS ABOUT JAS
-  ===================================================== */
-
-  
-  <section class="page">
-
-    <div class="content">
-
-      <div class="eyebrow">
-        things I notice about you
-      </div>
-
-      <h2
-        class="title"
-        style="
-          font-size:
-          clamp(42px,11vw,72px);
-        "
-      >
-        It's <em>you.</em>
-      </h2>
-
-      <div class="memories">
-
-        <div class="memory">
-          <span class="number">01</span>
-          You're beautiful.
-        </div>
-
-        <div class="memory">
-          <span class="number">02</span>
-          You care about me.
-        </div>
-
-        <div class="memory">
-          <span class="number">03</span>
-          You notice my efforts.
-        </div>
-
-        <div class="memory">
-          <span class="number">04</span>
-          You don't ignore me.
-        </div>
-
-        <div class="memory">
-          <span class="number">05</span>
-          You share things with me.
-        </div>
-
-        <div class="memory">
-          <span class="number">06</span>
-          You make me feel important.
-        </div>
-
-        <div class="memory">
-          <span class="number">07</span>
-          You trust me.
-        </div>
-
-        <div class="memory">
-          <span class="number">08</span>
-          You're kind.
-        </div>
-
-        <div class="memory">
-          <span class="number">09</span>
-          You're genuinely yourself with me.
-        </div>
-
-      </div>
-
-      <div class="button-area">
-
-        <button class="next" data-next>
-          There's more →
-        </button>
-
-      </div>
-
-    </div>
-
-  </section>
-  
-
-
-  /* =====================================================
-     05 — LITTLE THINGS
-  ===================================================== */
-
-  
-  <section class="page">
-
-    <div class="content">
-
-      <div class="eyebrow">
-        the little things
-      </div>
-
-      <h2
-        class="title"
-        style="
-          font-size:
-          clamp(40px,11vw,70px);
-        "
-      >
-        Very, very
-        <em>Jas.</em>
-      </h2>
-
-      <div class="glass">
-
-        <p class="lead">
-          Your “blehhh” when you're teasing me.
-        </p>
-
-        <br>
-
-        <p class="lead">
-          You somehow mogging me
-          with your PFP.
-        </p>
-
-        <br>
-
-        <p class="lead">
-          Sharing your pictures
-          without hesitation.
-        </p>
-
-        <br>
-
-        <p class="lead">
-          Telling me your random things.
-        </p>
-
-        <p class="small">
-          Things that might seem ordinary to you
-          somehow mean a lot to me.
-        </p>
-
-      </div>
-
-      <div class="button-area">
-
-        <button class="next" data-next>
-          One more thing →
-        </button>
-
-      </div>
-
-    </div>
-
-  </section>
-  
-
-
-  /* =====================================================
-     06 — NOTIFICATION
-  ===================================================== */
-
-  
-  <section class="page">
-
-    <div class="content">
-
-      <div class="eyebrow">
-        a tiny confession
-      </div>
-
-      <div class="notification">
-
-        <div class="notification-label">
-          JAS · NOW
-        </div>
-
-        <div class="notification-message">
-          New message
-        </div>
-
-      </div>
-
-      <p class="lead">
-        Every time I get a notification…
-      </p>
-
-      <h2
-        class="title"
-        style="
-          margin-top:20px;
-          font-size:
-          clamp(39px,11vw,70px);
-        "
-      >
-        I just hope
-        it's <em>you.</em>
-      </h2>
-
-      <div class="button-area">
-
-        <button class="next" data-next>
-          Wait… →
-        </button>
-
-      </div>
-
-    </div>
-
-  </section>
-  
-
-
-  /* =====================================================
-     07 — ROUTINE
-  ===================================================== */
-
-  
-  <section class="page">
-
-    <div class="content">
-
-      <div class="eyebrow">
-        without even trying
-      </div>
-
-      <h2
-        class="title"
-        style="
-          font-size:
-          clamp(40px,11vw,72px);
-        "
-      >
-        You changed
-        my <em>routine.</em>
-      </h2>
-
-      <p class="lead">
-        You became someone
-        I look forward to hearing from.
-      </p>
-
-      <p
-        class="lead"
-        style="margin-top:15px"
-      >
-        Someone whose messages
-        I genuinely wait for.
-      </p>
-
-      <p class="quote" style="margin-top:28px">
-        My favorite notification.
-      </p>
-
-      <div class="button-area">
-
-        <button class="next" data-next>
-          I should tell you why →
-        </button>
-
-      </div>
-
-    </div>
-
-  </section>
-  `,
-
-
-  /* =====================================================
-     08 — EVERYTHING
-  ===================================================== */
-
-  `
-  <section class="page">
-
-    <div class="content">
-
-      <div class="eyebrow">
-        beyond words
-      </div>
-
-      <p class="lead">
-
-        Your kindness.
-        Your trust.
-        Your little habits.
-        Your teasing.
-        The way you're yourself with me.
-
-      </p>
-
-      <h2
-        class="title"
-        style="
-          margin-top:30px;
-          font-size:
-          clamp(43px,12vw,78px);
-        "
-      >
-        It's
-        <em>everything.</em>
-      </h2>
-
-      <p class="small">
-        And somehow, words still aren't enough.
-      </p>
-
-      <div class="button-area">
-
-        <button class="next" data-next>
-          So here's the truth →
-        </button>
-
-      </div>
-
-    </div>
-
-  </section>
-  
-
-
-  /* =====================================================
-     09 — CONFESSION
-  ===================================================== */
-
-  
-  <section class="page">
-
-    <div class="content">
-
-      <div class="eyebrow">
-        the part I couldn't leave unsaid
-      </div>
-
-      <div class="glass">
-
-        <h2
-          class="title"
-          style="
-            font-size:
-            clamp(39px,10vw,62px);
-          "
-        >
-          Jas,
-        </h2>
-
-        <p class="lead">
-          You already know I like you.
-          But I don't think you know
-          how much.
-        </p>
-
-        <p
-          class="lead"
-          style="margin-top:20px"
-        >
-          Somewhere between our conversations,
-          your jokes, your replies,
-          your trust and all those
-          tiny moments…
-        </p>
-
-        <p class="quote" style="margin-top:25px">
-          I fell for you.
-        </p>
-
-        <p
-          class="lead"
-          style="margin-top:20px"
-        >
-          And I love you.
-        </p>
-
-      </div>
-
-      <div class="button-area">
-
-        <button class="next" data-next>
-          One last thing →
-        </button>
-
-      </div>
-
-    </div>
-
-  </section>
-  `,
-
-
-  /* =====================================================
-     10 — FINAL
-  ===================================================== */
-
-  `
-  <section class="page">
-
-    <div class="content">
-
-      <div class="final-glow"></div>
-
-      <span class="heart">
-        ♡
-      </span>
-
-      <div class="eyebrow">
-        just you
-      </div>
-
-      <p class="lead">
-
-        If I had to choose one person
-        whose messages I'd always want to see,
-
-        one person whose little things
-        I'd always want to remember,
-
-        one person I'd want to keep
-        talking to…
-
-      </p>
-
-      <h2
-        class="title"
-        style="
-          margin-top:28px;
-          font-size:
-          clamp(44px,13vw,84px);
-        "
-      >
-        It would be
-        <em>you.</em>
-      </h2>
-
-      <p class="lead">
-        You and only you, Jas.
-      </p>
-
-      <div class="button-area">
-
-        <button
-          class="next yes"
-          id="proposal"
-        >
-          There's one question left →
-        </button>
-
-      </div>
-
-    </div>
-
-  </section>
-  
+var scenes = [
+
+  '<section class="page active">' +
+    '<div class="content">' +
+      '<div class="eyebrow">I made this for you</div>' +
+      '<h1 class="title">Jas<span>.</span></h1>' +
+      '<p class="lead">There is something I have been wanting to tell you properly.</p>' +
+      '<div class="button-area">' +
+        '<button class="next" data-next>Begin →</button>' +
+      '</div>' +
+    '</div>' +
+  '</section>',
+
+  '<section class="page">' +
+    '<div class="content">' +
+      '<div class="eyebrow">where it started</div>' +
+      '<h2 class="title">One little <em>drawing.</em></h2>' +
+      '<p class="lead">I saw your drawing on your highlights and I just had to compliment it.</p>' +
+      '<p class="small">Your drawings are genuinely amazing.</p>' +
+      '<p class="lead extra-space">I did not know that tiny interaction would become something this important.</p>' +
+      '<div class="button-area">' +
+        '<button class="next" data-next>Keep going →</button>' +
+      '</div>' +
+    '</div>' +
+  '</section>',
+
+  '<section class="page">' +
+    '<div class="content">' +
+      '<div class="eyebrow">somewhere along the way</div>' +
+      '<div class="glass">' +
+        '<p class="quote">You became someone I genuinely care about.</p>' +
+        '<p class="small">Not because of one particular moment. Because of all the tiny ones.</p>' +
+      '</div>' +
+      '<div class="button-area">' +
+        '<button class="next" data-next>The tiny ones →</button>' +
+      '</div>' +
+    '</div>' +
+  '</section>',
+
+  '<section class="page">' +
+    '<div class="content">' +
+      '<div class="eyebrow">things I notice about you</div>' +
+      '<h2 class="title title-small">It is <em>you.</em></h2>' +
+      '<div class="memories">' +
+        '<div class="memory"><span class="number">01</span>You are beautiful.</div>' +
+        '<div class="memory"><span class="number">02</span>You care about me.</div>' +
+        '<div class="memory"><span class="number">03</span>You notice my efforts.</div>' +
+        '<div class="memory"><span class="number">04</span>You do not ignore me.</div>' +
+        '<div class="memory"><span class="number">05</span>You share things with me.</div>' +
+        '<div class="memory"><span class="number">06</span>You make me feel important.</div>' +
+        '<div class="memory"><span class="number">07</span>You trust me.</div>' +
+        '<div class="memory"><span class="number">08</span>You are kind.</div>' +
+        '<div class="memory"><span class="number">09</span>You are genuinely yourself with me.</div>' +
+      '</div>' +
+      '<div class="button-area">' +
+        '<button class="next" data-next>There is more →</button>' +
+      '</div>' +
+    '</div>' +
+  '</section>',
+
+  '<section class="page">' +
+    '<div class="content">' +
+      '<div class="eyebrow">the little things</div>' +
+      '<h2 class="title title-small">Very, very <em>Jas.</em></h2>' +
+      '<div class="glass">' +
+        '<p class="lead">Your "blehhh" when you are teasing me.</p>' +
+        '<p class="lead">You somehow mogging me with your PFP.</p>' +
+        '<p class="lead">Sharing your pictures without hesitation.</p>' +
+        '<p class="lead">Telling me your random things.</p>' +
+        '<p class="small">Things that might seem ordinary to you somehow mean a lot to me.</p>' +
+      '</div>' +
+      '<div class="button-area">' +
+        '<button class="next" data-next>One more thing →</button>' +
+      '</div>' +
+    '</div>' +
+  '</section>',
+
+  '<section class="page">' +
+    '<div class="content">' +
+      '<div class="eyebrow">a tiny confession</div>' +
+      '<div class="notification">' +
+        '<div class="notification-label">JAS · NOW</div>' +
+        '<div class="notification-message">New message</div>' +
+      '</div>' +
+      '<p class="lead">Every time I get a notification...</p>' +
+      '<h2 class="title title-small">I just hope it is <em>you.</em></h2>' +
+      '<div class="button-area">' +
+        '<button class="next" data-next>Wait... →</button>' +
+      '</div>' +
+    '</div>' +
+  '</section>',
+
+  '<section class="page">' +
+    '<div class="content">' +
+      '<div class="eyebrow">without even trying</div>' +
+      '<h2 class="title title-small">You changed my <em>routine.</em></h2>' +
+      '<p class="lead">You became someone I look forward to hearing from.</p>' +
+      '<p class="lead">Someone whose messages I genuinely wait for.</p>' +
+      '<p class="quote extra-space">My favorite notification.</p>' +
+      '<div class="button-area">' +
+        '<button class="next" data-next>I should tell you why →</button>' +
+      '</div>' +
+    '</div>' +
+  '</section>',
+
+  '<section class="page">' +
+    '<div class="content">' +
+      '<div class="eyebrow">beyond words</div>' +
+      '<p class="lead">Your kindness. Your trust. Your little habits. Your teasing. The way you are yourself with me.</p>' +
+      '<h2 class="title title-small extra-space">It is <em>everything.</em></h2>' +
+      '<p class="small">And somehow, words still are not enough.</p>' +
+      '<div class="button-area">' +
+        '<button class="next" data-next>So here is the truth →</button>' +
+      '</div>' +
+    '</div>' +
+  '</section>',
+
+  '<section class="page">' +
+    '<div class="content">' +
+      '<div class="eyebrow">the part I could not leave unsaid</div>' +
+      '<div class="glass">' +
+        '<h2 class="title title-small">Jas,</h2>' +
+        '<p class="lead">You already know I like you. But I do not think you know how much.</p>' +
+        '<p class="lead">Somewhere between our conversations, your jokes, your replies, your trust and all those tiny moments...</p>' +
+        '<p class="quote extra-space">I fell for you.</p>' +
+        '<p class="lead">And I love you.</p>' +
+      '</div>' +
+      '<div class="button-area">' +
+        '<button class="next" data-next>One last thing →</button>' +
+      '</div>' +
+    '</div>' +
+  '</section>',
+
+  '<section class="page">' +
+    '<div class="content">' +
+      '<div class="final-glow"></div>' +
+      '<span class="heart">♡</span>' +
+      '<div class="eyebrow">just you</div>' +
+      '<p class="lead">If I had to choose one person whose messages I would always want to see, one person whose little things I would always want to remember, one person I would want to keep talking to...</p>' +
+      '<h2 class="title title-small">It would be <em>you.</em></h2>' +
+      '<p class="lead">You and only you, Jas.</p>' +
+      '<div class="button-area">' +
+        '<button class="next yes" id="proposal">There is one question left →</button>' +
+      '</div>' +
+    '</div>' +
+  '</section>'
 
 ];
 
@@ -615,78 +169,62 @@ const scenes = [
    RENDER
 ========================================================= */
 
-app.innerHTML =
-  scenes.join("");
+app.innerHTML = scenes.join("");
 
+var pages = document.querySelectorAll(".page");
 
-const pages =
-  [
-    ...document.querySelectorAll(".page")
-  ];
+var index = 0;
 
-
-let index = 0;
-
-let transitionLock = false;
-
+var transitionLock = false;
 
 totalNumber.textContent =
-  String(pages.length)
-    .padStart(2,"0");
+  String(pages.length).padStart(2, "0");
 
 
 /* =========================================================
-   UI UPDATE
+   UPDATE UI
 ========================================================= */
 
 function updateUI() {
 
   currentNumber.textContent =
-    String(index + 1)
-      .padStart(2,"0");
+    String(index + 1).padStart(2, "0");
 
   progressBar.style.width =
-    (
-      ((index + 1) /
-      pages.length) * 100
-    ) + "%";
+    (((index + 1) / pages.length) * 100) + "%";
 
 }
 
 
 /* =========================================================
-   NEXT
+   NEXT PAGE
 ========================================================= */
 
 function goNext() {
 
-  if (transitionLock)
+  if (transitionLock) {
     return;
+  }
 
-  if (index >= pages.length - 1)
+  if (index >= pages.length - 1) {
     return;
+  }
 
   transitionLock = true;
 
-
-  pages[index]
-    .classList.remove("active");
-
+  pages[index].classList.remove("active");
 
   index++;
 
+  setTimeout(function() {
 
-  setTimeout(() => {
-
-    pages[index]
-      .classList.add("active");
+    pages[index].classList.add("active");
 
     updateUI();
 
   }, 130);
 
-
-  setTimeout(() => {
+  setTimeout(function() {
 
     transitionLock = false;
 
@@ -696,178 +234,145 @@ function goNext() {
 
 
 /* =========================================================
-   BUTTON EVENTS
+   BUTTON NAVIGATION
 ========================================================= */
 
-document.addEventListener(
-  "click",
-  event => {
+document.addEventListener("click", function(event) {
 
-    const button =
-      event.target.closest("[data-next]");
+  var button =
+    event.target.closest("[data-next]");
 
-    if (!button)
-      return;
-
-    goNext();
-
+  if (!button) {
+    return;
   }
-);
+
+  goNext();
+
+});
 
 
 /* =========================================================
-   BUTTON MAGNETIC LIGHT
+   BUTTON LIGHT
 ========================================================= */
 
-document.addEventListener(
-  "pointermove",
-  event => {
+document.addEventListener("pointermove", function(event) {
 
-    const button =
-      event.target.closest(".next");
+  var button =
+    event.target.closest(".next");
 
-    if (!button)
-      return;
-
-
-    const rect =
-      button.getBoundingClientRect();
-
-
-    const x =
-      event.clientX -
-      rect.left;
-
-
-    const y =
-      event.clientY -
-      rect.top;
-
-
-    button.style.setProperty(
-      "--mx",
-      `${x}px`
-    );
-
-
-    button.style.setProperty(
-      "--my",
-      `${y}px`
-    );
-
+  if (!button) {
+    return;
   }
-);
+
+  var rect =
+    button.getBoundingClientRect();
+
+  var x =
+    event.clientX - rect.left;
+
+  var y =
+    event.clientY - rect.top;
+
+  button.style.setProperty("--mx", x + "px");
+
+  button.style.setProperty("--my", y + "px");
+
+});
 
 
 /* =========================================================
-   FINAL PROPOSAL
+   PROPOSAL
 ========================================================= */
 
-document
-  .getElementById("proposal")
-  .addEventListener(
+var proposal =
+  document.getElementById("proposal");
+
+if (proposal) {
+
+  proposal.addEventListener(
     "click",
     openProposal
   );
 
+}
+
 
 function openProposal() {
 
-  if (transitionLock)
+  if (transitionLock) {
     return;
+  }
 
   transitionLock = true;
 
+  for (
+    var i = 0;
+    i < pages.length;
+    i++
+  ) {
 
-  pages.forEach(
-    page =>
-      page.classList.remove("active")
-  );
+    pages[i].classList.remove("active");
 
+  }
 
-  setTimeout(() => {
+  setTimeout(function() {
 
-    const proposal =
+    var proposalPage =
       document.createElement("section");
 
-
-    proposal.className =
+    proposalPage.className =
       "page active";
 
+    proposalPage.innerHTML =
+      '<div class="content">' +
 
-    proposal.innerHTML = 
+        '<div class="final-glow"></div>' +
 
-      <div class="content">
+        '<span class="heart">♡</span>' +
 
-        <div class="final-glow"></div>
+        '<div class="eyebrow">no more chapters</div>' +
 
-        <span class="heart">
-          ♡
-        </span>
+        '<h2 class="title title-small">' +
+          'Jas, will you be <em>mine?</em>' +
+        '</h2>' +
 
-        <div class="eyebrow">
-          no more chapters
-        </div>
+        '<p class="lead">' +
+          'One honest question. One honest answer.' +
+        '</p>' +
 
-        <h2
-          class="title"
-          style="
-            font-size:
-            clamp(44px,13vw,84px);
-          "
-        >
-          Jas, will you be
-          <em>mine?</em>
-        </h2>
+        '<div class="actions">' +
 
-        <p class="lead">
-          One honest question.
-          One honest answer.
-        </p>
+          '<button class="next yes" id="yesButton">' +
+            'YES ♡' +
+          '</button>' +
 
-        <div class="actions">
+          '<button class="next" id="momentButton">' +
+            'I need a moment 🥹' +
+          '</button>' +
 
-          <button
-            class="next yes"
-            id="yesButton"
-          >
-            YES ♡
-          </button>
+        '</div>' +
 
-          <button
-            class="next"
-            id="momentButton"
-          >
-            I need a moment 🥹
-          </button>
+      '</div>';
 
-        </div>
-
-      </div>
-
-    ;
-
-
-    app.appendChild(proposal);
-
+    app.appendChild(proposalPage);
 
     transitionLock = false;
 
+    var yesButton =
+      document.getElementById("yesButton");
 
-    document
-      .getElementById("yesButton")
-      .addEventListener(
-        "click",
-        celebrate
-      );
+    var momentButton =
+      document.getElementById("momentButton");
 
+    yesButton.addEventListener(
+      "click",
+      celebrate
+    );
 
-    document
-      .getElementById("momentButton")
-      .addEventListener(
-        "click",
-        moment
-      );
+    momentButton.addEventListener(
+      "click",
+      moment
+    );
 
   }, 300);
 
@@ -880,33 +385,26 @@ function openProposal() {
 
 function moment() {
 
-  const button =
-    document.getElementById(
-      "momentButton"
-    );
+  var button =
+    document.getElementById("momentButton");
 
-
-  if (!button)
+  if (!button) {
     return;
-
+  }
 
   button.textContent =
     "Take your time ♡";
 
-
   button.style.opacity =
-    ".6";
+    "0.6";
 
-
-  setTimeout(() => {
+  setTimeout(function() {
 
     button.textContent =
-      "I'm ready →";
-
+      "I am ready →";
 
     button.style.opacity =
       "1";
-
 
     button.onclick =
       celebrate;
@@ -917,93 +415,68 @@ function moment() {
 
 
 /* =========================================================
-   CELEBRATION
+   FINAL CELEBRATION
 ========================================================= */
 
 function celebrate() {
 
-  document
-    .querySelectorAll(".page")
-    .forEach(
-      page =>
-        page.classList.remove("active")
-    );
+  var allPages =
+    document.querySelectorAll(".page");
+
+  for (
+    var i = 0;
+    i < allPages.length;
+    i++
+  ) {
+
+    allPages[i]
+      .classList.remove("active");
+
+  }
 
 
-  const finalPage =
+  var finalPage =
     document.createElement("section");
-
 
   finalPage.className =
     "page active";
 
 
-  finalPage.innerHTML = 
+  finalPage.innerHTML =
+    '<div class="content">' +
 
-    <div class="content">
+      '<div class="final-glow"></div>' +
 
-      <div class="final-glow"></div>
+      '<span class="heart" style="font-size:78px">♥</span>' +
 
-      <span
-        class="heart"
-        style="font-size:78px"
-      >
-        ♥
-      </span>
+      '<div class="eyebrow">and just like that...</div>' +
 
-      <div class="eyebrow">
-        and just like that…
-      </div>
+      '<h1 class="title">' +
+        'You said <em>yes.</em>' +
+      '</h1>' +
 
-      <h1 class="title">
+      '<p class="lead">' +
+        'I think I am going to remember this moment for a very long time.' +
+      '</p>' +
 
-        You said
-        <em>yes.</em>
+      '<p class="lead">' +
+        'Thank you for choosing me, Jas.' +
+      '</p>' +
 
-      </h1>
+      '<p class="quote extra-space">' +
+        'It was always you.' +
+      '</p>' +
 
-      <p class="lead">
+      '<p class="small">' +
+        'You and only you.' +
+        '<br><br>' +
+        '— I' +
+      '</p>' +
 
-        I think I'm going to remember
-        this moment for a very long time.
-
-      </p>
-
-      <p
-        class="lead"
-        style="margin-top:15px"
-      >
-
-        Thank you for choosing me, Jas.
-
-      </p>
-
-      <p
-        class="quote"
-        style="margin-top:25px"
-      >
-
-        It was always you.
-
-      </p>
-
-      <p class="small">
-
-        You and only you.
-
-        <br><br>
-
-        — I
-
-      </p>
-
-    </div>
-
-  ;
+    '</div>';
 
 
   app.appendChild(finalPage);
-
 
   createBurst();
 
@@ -1011,12 +484,12 @@ function celebrate() {
 
 
 /* =========================================================
-   PARTICLE BURST
+   HEART / STAR BURST
 ========================================================= */
 
 function createBurst() {
 
-  const symbols = [
+  var symbols = [
     "♥",
     "♡",
     "✦",
@@ -1026,18 +499,16 @@ function createBurst() {
 
 
   for (
-    let i = 0;
+    var i = 0;
     i < 120;
     i++
   ) {
 
-    const particle =
+    var particle =
       document.createElement("span");
-
 
     particle.className =
       "burst";
-
 
     particle.textContent =
       symbols[
@@ -1047,87 +518,75 @@ function createBurst() {
         )
       ];
 
-
     particle.style.fontSize =
-      (
-        9 +
-        Math.random() * 18
-      ) + "px";
+      (9 + Math.random() * 18) + "px";
+
+    document.body.appendChild(
+      particle
+    );
 
 
-    document.body
-      .appendChild(particle);
-
-
-    const angle =
+    var angle =
       Math.random() *
       Math.PI *
       2;
 
-
-    const distance =
+    var distance =
       120 +
       Math.random() *
       500;
 
-
-    const x =
+    var x =
       Math.cos(angle) *
       distance;
 
-
-    const y =
+    var y =
       Math.sin(angle) *
       distance;
 
-
-    const duration =
+    var duration =
       1100 +
       Math.random() *
       1700;
 
 
-    particle.animate(
+    var animation =
+      particle.animate(
 
-      [
+        [
+          {
+            transform:
+              "translate(-50%,-50%) scale(0.1)",
+            opacity: 1
+          },
+
+          {
+            transform:
+              "translate(calc(-50% + " +
+              x +
+              "px), calc(-50% + " +
+              y +
+              "px)) rotate(" +
+              (Math.random() * 720) +
+              "deg) scale(1.2)",
+            opacity: 0
+          }
+        ],
 
         {
-          transform:
-            "translate(-50%,-50%) scale(.1)",
-
-          opacity: 1
-
-        },
-
-        {
-
-          transform:
-            
-            translate(
-              calc(-50% + ${x}px),
-              calc(-50% + ${y}px)
-            )
-            rotate(${Math.random()*720}deg)
-            scale(1.2)
-            ,
-
-          opacity: 0
-
+          duration: duration,
+          easing: "cubic-bezier(.1,.8,.2,1)"
         }
 
-      ],
+      );
 
-      {
 
-        duration,
+    animation.onfinish =
+      function() {
 
-        easing:
-          "cubic-bezier(.1,.8,.2,1)"
+        particle.remove();
 
-      }
-
-    ).onfinish =
-      () => particle.remove();
+      };
 
   }
 
@@ -1135,21 +594,25 @@ function createBurst() {
 
 
 /* =========================================================
-   CURSOR FOLLOWING STAR
+   CURSOR FOLLOWING GLOWING STAR
 ========================================================= */
 
-let mouseX = window.innerWidth / 2;
+var mouseX =
+  window.innerWidth / 2;
 
-let mouseY = window.innerHeight / 2;
+var mouseY =
+  window.innerHeight / 2;
 
-let glowX = mouseX;
+var glowX =
+  mouseX;
 
-let glowY = mouseY;
+var glowY =
+  mouseY;
 
 
 window.addEventListener(
   "pointermove",
-  event => {
+  function(event) {
 
     mouseX =
       event.clientX;
@@ -1158,22 +621,23 @@ window.addEventListener(
       event.clientY;
 
   },
-  { passive: true }
+  {
+    passive: true
+  }
 );
 
 
 function animateCursor() {
 
   glowX +=
-    (mouseX - glowX) * .16;
+    (mouseX - glowX) * 0.16;
 
   glowY +=
-    (mouseY - glowY) * .16;
+    (mouseY - glowY) * 0.16;
 
 
   cursorGlow.style.left =
     glowX + "px";
-
 
   cursorGlow.style.top =
     glowY + "px";
@@ -1193,48 +657,36 @@ animateCursor();
    BACKGROUND STARS
 ========================================================= */
 
-const starContainer =
+var starContainer =
   document.getElementById("stars");
 
 
 for (
-  let i = 0;
+  var i = 0;
   i < 100;
   i++
 ) {
 
-  const star =
+  var star =
     document.createElement("span");
-
 
   star.className =
     "star";
 
-
   star.style.left =
-    Math.random() * 100 + "%";
-
+    (Math.random() * 100) + "%";
 
   star.style.top =
-    Math.random() * 100 + "%";
-
+    (Math.random() * 100) + "%";
 
   star.style.animationDuration =
-    (
-      6 +
-      Math.random() * 16
-    ) + "s";
-
+    (6 + Math.random() * 16) + "s";
 
   star.style.animationDelay =
-    (
-      -Math.random() * 16
-    ) + "s";
+    (-Math.random() * 16) + "s";
 
 
-  if (
-    Math.random() > .9
-  ) {
+  if (Math.random() > 0.9) {
 
     star.style.width =
       "3px";
@@ -1245,29 +697,28 @@ for (
   }
 
 
-  starContainer
-    .appendChild(star);
+  starContainer.appendChild(
+    star
+  );
 
 }
 
 
 /* =========================================================
-   PARTICLE FIELD
+   PARTICLE CANVAS
 ========================================================= */
 
-const canvas =
-  document.getElementById(
-    "particles"
-  );
+var canvas =
+  document.getElementById("particles");
 
-const ctx =
+var ctx =
   canvas.getContext("2d");
 
 
-let particleWidth =
+var particleWidth =
   window.innerWidth;
 
-let particleHeight =
+var particleHeight =
   window.innerHeight;
 
 
@@ -1280,7 +731,7 @@ function resizeCanvas() {
     window.innerHeight;
 
 
-  const ratio =
+  var ratio =
     Math.min(
       window.devicePixelRatio || 1,
       2
@@ -1292,7 +743,6 @@ function resizeCanvas() {
 
   canvas.height =
     particleHeight * ratio;
-
 
   canvas.style.width =
     particleWidth + "px";
@@ -1322,17 +772,16 @@ window.addEventListener(
 );
 
 
-const particles = [];
+var particles = [];
 
-
-const particleCount =
+var particleCount =
   window.innerWidth < 600
     ? 45
     : 75;
 
 
 for (
-  let i = 0;
+  var i = 0;
   i < particleCount;
   i++
 ) {
@@ -1348,16 +797,16 @@ for (
       particleHeight,
 
     vx:
-      (Math.random() - .5) * .15,
+      (Math.random() - 0.5) * 0.15,
 
     vy:
-      (Math.random() - .5) * .15,
+      (Math.random() - 0.5) * 0.15,
 
     size:
-      Math.random() * 1.5 + .3,
+      Math.random() * 1.5 + 0.3,
 
     alpha:
-      Math.random() * .4 + .05
+      Math.random() * 0.4 + 0.05
 
   });
 
@@ -1379,35 +828,35 @@ function animateParticles() {
 
 
   for (
-    const p of particles
+    var i = 0;
+    i < particles.length;
+    i++
   ) {
 
+    var p =
+      particles[i];
+
+
     p.x += p.vx;
+
     p.y += p.vy;
 
 
-    if (
-      p.x < 0
-    )
-      p.x =
-        particleWidth;
+    if (p.x < 0) {
+      p.x = particleWidth;
+    }
 
-    if (
-      p.x > particleWidth
-    )
+    if (p.x > particleWidth) {
       p.x = 0;
+    }
 
+    if (p.y < 0) {
+      p.y = particleHeight;
+    }
 
-    if (
-      p.y < 0
-    )
-      p.y =
-        particleHeight;
-
-    if (
-      p.y > particleHeight
-    )
+    if (p.y > particleHeight) {
       p.y = 0;
+    }
 
 
     ctx.beginPath();
@@ -1423,7 +872,9 @@ function animateParticles() {
 
 
     ctx.fillStyle =
-      `rgba(255,255,255,${p.alpha})`;
+      "rgba(255,255,255," +
+      p.alpha +
+      ")";
 
 
     ctx.fill();
@@ -1442,19 +893,7 @@ animateParticles();
 
 
 /* =========================================================
-   INITIAL STATE
+   INITIAL UI
 ========================================================= */
 
 updateUI();
-
-
-/* =========================================================
-   INTENTIONALLY NO:
-   - wheel navigation
-   - touch navigation
-   - swipe navigation
-   - browser back button
-   - previous button
-
-   The story advances ONLY through buttons.
-========================================================= */
