@@ -1,38 +1,26 @@
-/* ==========================================================
+/* ============================================================
    MAYBE US
-   Judy × Leo
-========================================================== */
+   Leo × Judy
+   ============================================================ */
 
 
-/* ==========================================================
-   GLOBAL STATE
-========================================================== */
+/* ============================================================
+   DOM
+============================================================ */
 
 const pages = Array.from(
     document.querySelectorAll(".page")
 );
 
-const totalPages = pages.length;
+const nextButtons = document.querySelectorAll(
+    "[data-next]"
+);
 
-let currentPage = 1;
-let isTransitioning = false;
+const currentPageElement =
+    document.getElementById("currentPage");
 
-
-/* ==========================================================
-   ELEMENTS
-========================================================== */
-
-const pageNumber =
-    document.getElementById("pageNumber");
-
-const totalPagesElement =
-    document.getElementById("totalPages");
-
-const progressFill =
-    document.querySelector(".progress-fill");
-
-const cursorGlow =
-    document.querySelector(".cursor-glow");
+const transitionLayer =
+    document.getElementById("transitionLayer");
 
 const yesButton =
     document.getElementById("yesButton");
@@ -41,304 +29,222 @@ const thinkButton =
     document.getElementById("thinkButton");
 
 const confettiContainer =
-    document.getElementById("confettiContainer");
+    document.getElementById("confetti");
 
 
-/* ==========================================================
-   INITIALIZATION
-========================================================== */
+/* ============================================================
+   STATE
+============================================================ */
 
-totalPagesElement.textContent =
-    String(totalPages).padStart(2, "0");
-
-updatePageUI();
-
-setTimeout(() => {
-    animateCurrentPage();
-}, 100);
+let currentPage = 0;
+let isTransitioning = false;
 
 
-/* ==========================================================
-   PAGE NAVIGATION
-========================================================== */
+/* ============================================================
+   INITIALIZE
+============================================================ */
 
-function goToPage(targetPage) {
+function initialize() {
+
+    pages.forEach((page, index) => {
+
+        page.classList.remove(
+            "active",
+            "exit"
+        );
+
+        if (index === 0) {
+            page.classList.add("active");
+        }
+
+    });
+
+    updatePageIndicator();
+
+    setupFlipCards();
+
+    setupMouseGlow();
+
+}
+
+
+/* ============================================================
+   PAGE INDICATOR
+============================================================ */
+
+function updatePageIndicator() {
+
+    if (!currentPageElement) {
+        return;
+    }
+
+    const number =
+        String(currentPage + 1)
+            .padStart(2, "0");
+
+    currentPageElement.textContent = number;
+}
+
+
+/* ============================================================
+   PAGE TRANSITION
+============================================================ */
+
+function goToPage(targetIndex) {
 
     if (isTransitioning) {
         return;
     }
 
     if (
-        targetPage < 1 ||
-        targetPage > totalPages ||
-        targetPage === currentPage
+        targetIndex < 0 ||
+        targetIndex >= pages.length
     ) {
+        return;
+    }
+
+    if (targetIndex === currentPage) {
         return;
     }
 
     isTransitioning = true;
 
-    const oldPage =
-        pages[currentPage - 1];
+    const oldPage = pages[currentPage];
+    const newPage = pages[targetIndex];
 
-    const newPage =
-        pages[targetPage - 1];
+    oldPage.classList.add("exit");
 
-    oldPage.classList.remove("active");
+    transitionLayer.classList.add("show");
 
     setTimeout(() => {
 
-        currentPage = targetPage;
+        oldPage.classList.remove(
+            "active",
+            "exit"
+        );
 
         newPage.classList.add("active");
 
-        updatePageUI();
+        currentPage = targetIndex;
+
+        updatePageIndicator();
+
+        resetPageScroll(newPage);
 
         setTimeout(() => {
-            animateCurrentPage();
-            isTransitioning = false;
-        }, 80);
 
-    }, 300);
+            transitionLayer.classList.remove("show");
+
+            setTimeout(() => {
+
+                isTransitioning = false;
+
+            }, 350);
+
+        }, 220);
+
+    }, 360);
 }
 
 
-/* ==========================================================
+/* ============================================================
+   RESET INTERNAL SCROLL
+============================================================ */
+
+function resetPageScroll(page) {
+
+    if (!page) {
+        return;
+    }
+
+    const scrollContainer =
+        page.querySelector(".scroll-page");
+
+    if (scrollContainer) {
+
+        scrollContainer.scrollTop = 0;
+
+    }
+
+}
+
+
+/* ============================================================
    NEXT BUTTONS
-========================================================== */
+============================================================ */
 
-document.querySelectorAll("[data-next]")
-    .forEach(button => {
+nextButtons.forEach(button => {
 
-        button.addEventListener("click", () => {
+    button.addEventListener("click", () => {
 
-            if (currentPage < 9) {
-                goToPage(currentPage + 1);
-            }
+        goToPage(currentPage + 1);
+
+    });
+
+});
+
+
+/* ============================================================
+   FLIP CARDS
+============================================================ */
+
+function setupFlipCards() {
+
+    const cards =
+        document.querySelectorAll(".flip-card");
+
+    cards.forEach(card => {
+
+        card.addEventListener("click", () => {
+
+            card.classList.toggle("flipped");
 
         });
 
     });
 
+}
 
-/* ==========================================================
-   PROPOSAL ANSWERS
-========================================================== */
+
+/* ============================================================
+   YES BUTTON
+============================================================ */
 
 if (yesButton) {
 
     yesButton.addEventListener("click", () => {
 
-        if (isTransitioning) {
-            return;
-        }
-
         createConfetti();
 
-        goToPage(10);
+        setTimeout(() => {
+
+            goToPage(8);
+
+        }, 500);
 
     });
 
 }
 
+
+/* ============================================================
+   THINK BUTTON
+============================================================ */
 
 if (thinkButton) {
 
     thinkButton.addEventListener("click", () => {
 
-        goToPage(11);
+        goToPage(9);
 
     });
 
 }
 
 
-/* ==========================================================
-   UPDATE PAGE UI
-========================================================== */
-
-function updatePageUI() {
-
-    const formatted =
-        String(currentPage).padStart(2, "0");
-
-    pageNumber.textContent =
-        formatted;
-
-    const progress =
-        (currentPage / totalPages) * 100;
-
-    progressFill.style.width =
-        `${progress}%`;
-
-}
-
-
-/* ==========================================================
-   PAGE ANIMATION REFRESH
-========================================================== */
-
-function animateCurrentPage() {
-
-    const current =
-        pages[currentPage - 1];
-
-    if (!current) {
-        return;
-    }
-
-    const revealElements =
-        current.querySelectorAll(".reveal");
-
-    revealElements.forEach(element => {
-
-        element.style.animation = "none";
-
-        void element.offsetWidth;
-
-        element.style.animation = "";
-
-    });
-
-}
-
-
-/* ==========================================================
-   FLIP CARDS
-========================================================== */
-
-const flipCards =
-    document.querySelectorAll(".flip-card");
-
-flipCards.forEach(card => {
-
-    card.addEventListener("click", () => {
-
-        card.classList.toggle("flipped");
-
-    });
-
-});
-
-
-/* ==========================================================
-   CURSOR GLOW
-========================================================== */
-
-document.addEventListener("mousemove", event => {
-
-    if (!cursorGlow) {
-        return;
-    }
-
-    cursorGlow.style.left =
-        `${event.clientX}px`;
-
-    cursorGlow.style.top =
-        `${event.clientY}px`;
-
-});
-
-
-/* ==========================================================
-   BUTTON MAGNETIC EFFECT
-========================================================== */
-
-const buttons =
-    document.querySelectorAll(
-        ".luxury-button, .answer-button"
-    );
-
-buttons.forEach(button => {
-
-    button.addEventListener("mousemove", event => {
-
-        const rect =
-            button.getBoundingClientRect();
-
-        const x =
-            event.clientX - rect.left - rect.width / 2;
-
-        const y =
-            event.clientY - rect.top - rect.height / 2;
-
-        button.style.transform =
-            `translate(${x * 0.06}px, ${y * 0.06}px)`;
-
-    });
-
-
-    button.addEventListener("mouseleave", () => {
-
-        button.style.transform = "";
-
-    });
-
-});
-
-
-/* ==========================================================
-   FLIP CARD TILT
-========================================================== */
-
-flipCards.forEach(card => {
-
-    card.addEventListener("mousemove", event => {
-
-        const rect =
-            card.getBoundingClientRect();
-
-        const x =
-            event.clientX - rect.left;
-
-        const y =
-            event.clientY - rect.top;
-
-        const rotateX =
-            ((y / rect.height) - 0.5) * -5;
-
-        const rotateY =
-            ((x / rect.width) - 0.5) * 5;
-
-        const inner =
-            card.querySelector(".flip-inner");
-
-        if (!card.classList.contains("flipped")) {
-
-            inner.style.transform =
-                `rotateX(${rotateX}deg)
-                 rotateY(${rotateY}deg)`;
-
-        }
-
-    });
-
-
-    card.addEventListener("mouseleave", () => {
-
-        const inner =
-            card.querySelector(".flip-inner");
-
-        if (card.classList.contains("flipped")) {
-
-            inner.style.transform =
-                "rotateY(180deg)";
-
-        } else {
-
-            inner.style.transform =
-                "";
-
-        }
-
-    });
-
-});
-
-
-/* ==========================================================
+/* ============================================================
    CONFETTI
-========================================================== */
+============================================================ */
 
 function createConfetti() {
 
@@ -348,9 +254,16 @@ function createConfetti() {
 
     confettiContainer.innerHTML = "";
 
-    const pieces = 100;
+    const symbols = [
+        "✦",
+        "♡",
+        "✧",
+        "•"
+    ];
 
-    for (let i = 0; i < pieces; i++) {
+    const total = 70;
+
+    for (let i = 0; i < total; i++) {
 
         const piece =
             document.createElement("span");
@@ -360,31 +273,27 @@ function createConfetti() {
         const left =
             Math.random() * 100;
 
-        const x =
-            (Math.random() - 0.5) * 500;
-
         const duration =
-            3 + Math.random() * 4;
+            2.5 + Math.random() * 3;
+
+        const delay =
+            Math.random() * 0.8;
+
+        const drift =
+            (Math.random() - 0.5) * 300;
 
         const rotation =
             Math.random() * 360;
 
-        const delay =
-            Math.random() * 1.4;
-
-        const width =
-            4 + Math.random() * 6;
-
-        const height =
-            7 + Math.random() * 13;
+        piece.textContent =
+            symbols[
+                Math.floor(
+                    Math.random() * symbols.length
+                )
+            ];
 
         piece.style.left =
             `${left}%`;
-
-        piece.style.setProperty(
-            "--x",
-            `${x}px`
-        );
 
         piece.style.setProperty(
             "--duration",
@@ -392,69 +301,159 @@ function createConfetti() {
         );
 
         piece.style.setProperty(
-            "--rotation",
-            `${rotation}deg`
+            "--drift",
+            `${drift}px`
         );
-
-        piece.style.width =
-            `${width}px`;
-
-        piece.style.height =
-            `${height}px`;
 
         piece.style.animationDelay =
             `${delay}s`;
+
+        piece.style.transform =
+            `rotate(${rotation}deg)`;
+
+        piece.style.fontSize =
+            `${8 + Math.random() * 10}px`;
 
         confettiContainer.appendChild(piece);
 
     }
 
+    setTimeout(() => {
+
+        confettiContainer.innerHTML = "";
+
+    }, 6500);
+
 }
 
 
-/* ==========================================================
+/* ============================================================
+   MOUSE GLOW
+============================================================ */
+
+function setupMouseGlow() {
+
+    const isTouchDevice =
+        window.matchMedia(
+            "(hover: none)"
+        ).matches;
+
+    if (isTouchDevice) {
+        return;
+    }
+
+    const glow =
+        document.createElement("div");
+
+    glow.className =
+        "cursor-glow";
+
+    document.body.appendChild(glow);
+
+    Object.assign(
+        glow.style,
+        {
+            position: "fixed",
+            width: "260px",
+            height: "260px",
+            borderRadius: "50%",
+            pointerEvents: "none",
+            zIndex: "-1",
+            opacity: "0",
+            background:
+                "radial-gradient(circle, rgba(220,180,255,.08), transparent 65%)",
+            filter: "blur(10px)",
+            transform:
+                "translate(-50%, -50%)",
+            transition:
+                "opacity .4s ease"
+        }
+    );
+
+    window.addEventListener(
+        "mousemove",
+        event => {
+
+            glow.style.left =
+                `${event.clientX}px`;
+
+            glow.style.top =
+                `${event.clientY}px`;
+
+            glow.style.opacity = "1";
+
+        }
+    );
+
+}
+
+
+/* ============================================================
    KEYBOARD NAVIGATION
-========================================================== */
+   ============================================================ */
 
-document.addEventListener("keydown", event => {
+document.addEventListener(
+    "keydown",
+    event => {
 
-    if (
-        event.key === "ArrowRight" ||
-        event.key === "Enter"
-    ) {
+        if (event.key === "ArrowRight") {
 
-        if (
-            currentPage < 9 &&
-            !isTransitioning
-        ) {
             goToPage(currentPage + 1);
+
         }
 
     }
+);
 
-});
+
+/* ============================================================
+   PREVENT ACCIDENTAL MAIN PAGE SCROLL
+============================================================ */
+
+document.addEventListener(
+    "wheel",
+    event => {
+
+        const activePage =
+            pages[currentPage];
+
+        const scrollContainer =
+            activePage.querySelector(
+                ".scroll-page"
+            );
+
+        if (!scrollContainer) {
+
+            event.preventDefault();
+
+        }
+
+    },
+    {
+        passive: false
+    }
+);
 
 
-/* ==========================================================
+/* ============================================================
    TOUCH SWIPE
-   Forward only.
-========================================================== */
+   NOTE:
+   Swipe does NOT navigate pages.
+   It only allows internal section scrolling.
+============================================================ */
 
-let touchStartX = 0;
 let touchStartY = 0;
 
 document.addEventListener(
     "touchstart",
     event => {
 
-        const touch =
-            event.changedTouches[0];
-
-        touchStartX =
-            touch.screenX;
+        if (!event.touches.length) {
+            return;
+        }
 
         touchStartY =
-            touch.screenY;
+            event.touches[0].clientY;
 
     },
     {
@@ -464,31 +463,25 @@ document.addEventListener(
 
 
 document.addEventListener(
-    "touchend",
+    "touchmove",
     event => {
 
-        const touch =
-            event.changedTouches[0];
+        const activePage =
+            pages[currentPage];
 
-        const deltaX =
-            touch.screenX - touchStartX;
+        const scrollContainer =
+            activePage.querySelector(
+                ".scroll-page"
+            );
 
-        const deltaY =
-            touch.screenY - touchStartY;
-
-        if (
-            Math.abs(deltaX) > 100 &&
-            Math.abs(deltaX) > Math.abs(deltaY)
-        ) {
-
-            if (
-                deltaX < 0 &&
-                currentPage < 9
-            ) {
-                goToPage(currentPage + 1);
-            }
-
+        if (!scrollContainer) {
+            return;
         }
+
+        /*
+         * Let the browser handle natural
+         * internal scrolling.
+         */
 
     },
     {
@@ -497,174 +490,265 @@ document.addEventListener(
 );
 
 
-/* ==========================================================
-   PREVENT ACCIDENTAL BACK NAVIGATION
-   INSIDE THE WEBSITE.
-========================================================== */
+/* ============================================================
+   BUTTON RIPPLE
+============================================================ */
 
-window.addEventListener(
-    "popstate",
-    () => {
+document
+    .querySelectorAll(
+        ".next-btn, .answer-btn"
+    )
+    .forEach(button => {
 
-        history.pushState(
-            null,
-            "",
-            window.location.href
+        button.addEventListener(
+            "click",
+            event => {
+
+                const rect =
+                    button.getBoundingClientRect();
+
+                const ripple =
+                    document.createElement(
+                        "span"
+                    );
+
+                Object.assign(
+                    ripple.style,
+                    {
+                        position: "absolute",
+                        left:
+                            `${event.clientX - rect.left}px`,
+                        top:
+                            `${event.clientY - rect.top}px`,
+                        width: "10px",
+                        height: "10px",
+                        borderRadius: "50%",
+                        background:
+                            "rgba(255,255,255,.25)",
+                        transform:
+                            "translate(-50%,-50%) scale(0)",
+                        pointerEvents: "none",
+                        animation:
+                            "buttonRipple .6s ease-out forwards"
+                    }
+                );
+
+                button.style.position =
+                    "relative";
+
+                button.appendChild(ripple);
+
+                setTimeout(() => {
+
+                    ripple.remove();
+
+                }, 650);
+
+            }
         );
 
-    }
-);
-
-history.pushState(
-    null,
-    "",
-    window.location.href
-);
+    });
 
 
-/* ==========================================================
-   RANDOM FLOATING PARTICLES
-========================================================== */
+/* ============================================================
+   RIPPLE KEYFRAMES
+============================================================ */
 
-function createParticles() {
-
-    const particleLayer =
-        document.createElement("div");
-
-    particleLayer.className =
-        "particle-layer";
-
-    particleLayer.style.position =
-        "fixed";
-
-    particleLayer.style.inset =
-        "0";
-
-    particleLayer.style.pointerEvents =
-        "none";
-
-    particleLayer.style.zIndex =
-        "-1";
-
-    document.body.appendChild(
-        particleLayer
-    );
-
-
-    for (let i = 0; i < 30; i++) {
-
-        const particle =
-            document.createElement("span");
-
-        particle.style.position =
-            "absolute";
-
-        particle.style.width =
-            `${1 + Math.random() * 3}px`;
-
-        particle.style.height =
-            particle.style.width;
-
-        particle.style.borderRadius =
-            "50%";
-
-        particle.style.background =
-            "rgba(220,180,230,0.35)";
-
-        particle.style.left =
-            `${Math.random() * 100}%`;
-
-        particle.style.top =
-            `${Math.random() * 100}%`;
-
-        particle.style.opacity =
-            `${0.1 + Math.random() * 0.4}`;
-
-        particle.style.animation =
-            `particleDrift ${
-                8 + Math.random() * 12
-            }s ease-in-out infinite`;
-
-        particle.style.animationDelay =
-            `${Math.random() * 5}s`;
-
-        particleLayer.appendChild(
-            particle
-        );
-
-    }
-
-}
-
-
-/* ==========================================================
-   PARTICLE KEYFRAMES
-========================================================== */
-
-const particleStyle =
+const rippleStyle =
     document.createElement("style");
 
-particleStyle.textContent = `
+rippleStyle.textContent = `
 
-@keyframes particleDrift {
+@keyframes buttonRipple {
 
-    0%,
-    100% {
+    0% {
         transform:
-            translate3d(0, 0, 0);
+            translate(-50%, -50%)
+            scale(0);
+        opacity: 1;
     }
 
-    50% {
+    100% {
         transform:
-            translate3d(
-                ${Math.random() * 50 - 25}px,
-                ${Math.random() * 80 - 40}px,
-                0
-            );
+            translate(-50%, -50%)
+            scale(35);
+        opacity: 0;
     }
 
 }
 
 `;
 
-document.head.appendChild(
-    particleStyle
-);
+document.head.appendChild(rippleStyle);
 
 
-/* ==========================================================
-   START PARTICLES
-========================================================== */
+/* ============================================================
+   CARD TILT
+============================================================ */
 
-createParticles();
+function setupCardTilt() {
 
-
-/* ==========================================================
-   SOFT PAGE LOAD
-========================================================== */
-
-window.addEventListener(
-    "load",
-    () => {
-
-        document.body.classList.add(
-            "loaded"
+    const cards =
+        document.querySelectorAll(
+            ".flip-card"
         );
 
+    const touchDevice =
+        window.matchMedia(
+            "(hover: none)"
+        ).matches;
+
+    if (touchDevice) {
+        return;
     }
-);
+
+    cards.forEach(card => {
+
+        card.addEventListener(
+            "mousemove",
+            event => {
+
+                if (
+                    card.classList.contains(
+                        "flipped"
+                    )
+                ) {
+                    return;
+                }
+
+                const rect =
+                    card.getBoundingClientRect();
+
+                const x =
+                    event.clientX -
+                    rect.left;
+
+                const y =
+                    event.clientY -
+                    rect.top;
+
+                const centerX =
+                    rect.width / 2;
+
+                const centerY =
+                    rect.height / 2;
+
+                const rotateX =
+                    ((y - centerY) /
+                        centerY) *
+                    -4;
+
+                const rotateY =
+                    ((x - centerX) /
+                        centerX) *
+                    4;
+
+                card.style.transform =
+                    `rotateX(${rotateX}deg)
+                     rotateY(${rotateY}deg)
+                     translateY(-4px)`;
+
+            }
+        );
+
+        card.addEventListener(
+            "mouseleave",
+            () => {
+
+                card.style.transform =
+                    "";
+
+            }
+        );
+
+    });
+
+}
+
+setupCardTilt();
 
 
-/* ==========================================================
-   CONSOLE
-========================================================== */
+/* ============================================================
+   ACTIVE PAGE CARD ANIMATION
+============================================================ */
+
+function animateVisibleCards() {
+
+    const activePage =
+        pages[currentPage];
+
+    if (!activePage) {
+        return;
+    }
+
+    const cards =
+        activePage.querySelectorAll(
+            ".flip-card"
+        );
+
+    cards.forEach(
+        (card, index) => {
+
+            card.style.animationDelay =
+                `${index * 80}ms`;
+
+        }
+    );
+
+}
+
+
+/* ============================================================
+   OBSERVE PAGE CHANGES
+============================================================ */
+
+const pageObserver =
+    new MutationObserver(() => {
+
+        animateVisibleCards();
+
+    });
+
+pages.forEach(page => {
+
+    pageObserver.observe(
+        page,
+        {
+            attributes: true,
+            attributeFilter: [
+                "class"
+            ]
+        }
+    );
+
+});
+
+
+/* ============================================================
+   INIT
+============================================================ */
+
+initialize();
+animateVisibleCards();
+
+
+/* ============================================================
+   FINAL CONSOLE MESSAGE
+============================================================ */
 
 console.log(
-    "%cMaybe Us — Judy × Leo",
-    "font-size:18px;font-weight:bold;"
+    "%cMaybe Us — Leo × Judy",
+    `
+        font-size:18px;
+        font-weight:bold;
+        color:#e9c8ff;
+    `
 );
 
 console.log(
-    "%cMade with a little courage. ♡",
-    "font-size:12px;"
+    "%cMade with a little too much effort.",
+    `
+        font-size:12px;
+        color:#aaa;
+    `
 );
