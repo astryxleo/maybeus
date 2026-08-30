@@ -1,354 +1,1134 @@
-var app = document.getElementById("app");
-var currentNumber = document.getElementById("current");
-var totalNumber = document.getElementById("total");
-var progressBar = document.getElementById("progressBar");
-var cursorGlow = document.getElementById("cursorGlow");
+/*
+================================================================
+JAS — CINEMATIC PROPOSAL WEBSITE
+JAVASCRIPT
+================================================================
 
-var scenes = [
+This file controls:
 
-'<section class="page active"><div class="content"><div class="eyebrow">I made this for you</div><h1 class="title">Jas<span>.</span></h1><p class="lead">There is something I have been wanting to tell you properly.</p><div class="button-area"><button class="next" data-next>Begin →</button></div></div></section>',
+1. Page navigation
+2. Page transition animations
+3. Page counter
+4. Progress bar
+5. Reason card 3D flipping
+6. Cursor-following glow
+7. Floating stars
+8. Canvas particles
+9. Button glow
+10. Final cinematic effects
 
-'<section class="page"><div class="content"><div class="eyebrow">where it started</div><h2 class="title">One little <em>drawing.</em></h2><p class="lead">I saw your drawing on your highlights and I just had to compliment it.</p><p class="small">Your drawings are genuinely amazing.</p><p class="lead extra-space">I did not know that tiny interaction would become something this important.</p><div class="button-area"><button class="next" data-next>Keep going →</button></div></div></section>',
+IMPORTANT:
 
-'<section class="page"><div class="content"><div class="eyebrow">somewhere along the way</div><div class="glass"><p class="quote">You became someone I genuinely care about.</p><p class="small">Not because of one particular moment. Because of all the tiny ones.</p></div><div class="button-area"><button class="next" data-next>The tiny ones →</button></div></div></section>',
+- Mouse wheel DOES NOT change pages.
+- Touch scrolling DOES NOT change pages.
+- Only the main button changes pages.
+- There is NO back button.
+================================================================
+*/
 
-'<section class="page"><div class="content"><div class="eyebrow">things I notice about you</div><h2 class="title title-small">It is <em>you.</em></h2><div class="memories"><div class="memory"><span class="number">01</span>You are beautiful.</div><div class="memory"><span class="number">02</span>You care about me.</div><div class="memory"><span class="number">03</span>You notice my efforts.</div><div class="memory"><span class="number">04</span>You do not ignore me.</div><div class="memory"><span class="number">05</span>You share things with me.</div><div class="memory"><span class="number">06</span>You make me feel important.</div><div class="memory"><span class="number">07</span>You trust me.</div><div class="memory"><span class="number">08</span>You are kind.</div><div class="memory"><span class="number">09</span>You are genuinely yourself with me.</div></div><div class="button-area"><button class="next" data-next>There is more →</button></div></div></section>',
 
-'<section class="page"><div class="content"><div class="eyebrow">the little things</div><h2 class="title title-small">Very, very <em>Jas.</em></h2><div class="glass"><p class="lead">Your "blehhh" when you are teasing me.</p><p class="lead">You somehow mogging me with your PFP.</p><p class="lead">Sharing your pictures without hesitation.</p><p class="lead">Telling me your random things.</p><p class="small">Things that might seem ordinary to you somehow mean a lot to me.</p></div><div class="button-area"><button class="next" data-next>One more thing →</button></div></div></section>',
-
-'<section class="page"><div class="content"><div class="eyebrow">a tiny confession</div><div class="notification"><div class="notification-label">JAS · NOW</div><div class="notification-message">New message</div></div><p class="lead">Every time I get a notification...</p><h2 class="title title-small">I just hope it is <em>you.</em></h2><div class="button-area"><button class="next" data-next>Wait... →</button></div></div></section>',
-
-'<section class="page"><div class="content"><div class="eyebrow">without even trying</div><h2 class="title title-small">You changed my <em>routine.</em></h2><p class="lead">You became someone I look forward to hearing from.</p><p class="lead">Someone whose messages I genuinely wait for.</p><p class="quote extra-space">My favorite notification.</p><div class="button-area"><button class="next" data-next>I should tell you why →</button></div></div></section>',
-
-'<section class="page"><div class="content"><div class="eyebrow">beyond words</div><p class="lead">Your kindness. Your trust. Your little habits. Your teasing. The way you are yourself with me.</p><h2 class="title title-small extra-space">It is <em>everything.</em></h2><p class="small">And somehow, words still are not enough.</p><div class="button-area"><button class="next" data-next>So here is the truth →</button></div></div></section>',
-
-'<section class="page"><div class="content"><div class="eyebrow">the part I could not leave unsaid</div><div class="glass"><h2 class="title title-small">Jas,</h2><p class="lead">You already know I like you. But I do not think you know how much.</p><p class="lead">Somewhere between our conversations, your jokes, your replies, your trust and all those tiny moments...</p><p class="quote extra-space">I fell for you.</p><p class="lead">And I love you.</p></div><div class="button-area"><button class="next" data-next>One last thing →</button></div></div></section>',
-
-'<section class="page"><div class="content"><div class="final-glow"></div><span class="heart">♡</span><div class="eyebrow">just you</div><p class="lead">If I had to choose one person whose messages I would always want to see, one person whose little things I would always want to remember, one person I would want to keep talking to...</p><h2 class="title title-small">It would be <em>you.</em></h2><p class="lead">You and only you, Jas.</p><div class="button-area"><button class="next yes" id="proposal">There is one question left →</button></div></div></section>'
-
-];
-
-app.innerHTML = scenes.join("");
+/* ==============================================================
+   GET IMPORTANT HTML ELEMENTS
+   ============================================================== */
 
 var pages = document.querySelectorAll(".page");
-var index = 0;
-var locked = false;
 
-totalNumber.textContent = String(pages.length).padStart(2, "0");
+var nextButton =
+    document.getElementById("next-button");
 
-function updateUI() {
-    currentNumber.textContent = String(index + 1).padStart(2, "0");
-    progressBar.style.width = (((index + 1) / pages.length) * 100) + "%";
+var currentPage =
+    document.getElementById("current-page");
+
+var totalPages =
+    document.getElementById("total-pages");
+
+var progressBar =
+    document.getElementById("progress-bar");
+
+var cursorGlow =
+    document.getElementById("cursor-glow");
+
+var starsContainer =
+    document.getElementById("stars");
+
+var canvas =
+    document.getElementById("particles");
+
+var context =
+    canvas.getContext("2d");
+
+
+/* ==============================================================
+   PAGE STATE
+   ============================================================== */
+
+var currentIndex = 0;
+
+var isChangingPage = false;
+
+var pageCount = pages.length;
+
+
+/* Display total number of pages */
+
+totalPages.textContent =
+    String(pageCount).padStart(2, "0");
+
+
+/* ==============================================================
+   UPDATE PAGE COUNTER
+   ============================================================== */
+
+function updatePageInfo() {
+
+    currentPage.textContent =
+        String(currentIndex + 1).padStart(2, "0");
+
+
+    var percentage =
+        ((currentIndex + 1) / pageCount) * 100;
+
+
+    progressBar.style.width =
+        percentage + "%";
+
 }
 
-function nextPage() {
-    if (locked) {
+
+/* ==============================================================
+   CHANGE PAGE
+   ============================================================== */
+
+function goToNextPage() {
+
+    /*
+        Prevent multiple clicks during animation.
+    */
+
+    if (isChangingPage) {
         return;
     }
 
-    if (index >= pages.length - 1) {
+
+    /*
+        If we are already on the last page,
+        do nothing.
+    */
+
+    if (currentIndex >= pageCount - 1) {
         return;
     }
 
-    locked = true;
 
-    pages[index].classList.remove("active");
+    isChangingPage = true;
 
-    index = index + 1;
+
+    /*
+        Remove active class from current page.
+    */
+
+    pages[currentIndex]
+        .classList
+        .remove("active");
+
+
+    /*
+        Move to next page.
+    */
+
+    currentIndex++;
+
+
+    /*
+        Wait a little before showing
+        the next page.
+    */
 
     setTimeout(function() {
-        pages[index].classList.add("active");
-        updateUI();
-    }, 120);
+
+        pages[currentIndex]
+            .scrollTop = 0;
+
+
+        pages[currentIndex]
+            .classList
+            .add("active");
+
+
+        updatePageInfo();
+
+
+        /*
+            Change button text depending
+            on current page.
+        */
+
+        updateButtonText();
+
+
+    }, 250);
+
+
+    /*
+        Unlock after transition.
+    */
 
     setTimeout(function() {
-        locked = false;
-    }, 950);
+
+        isChangingPage = false;
+
+    }, 1050);
+
 }
 
-document.addEventListener("click", function(event) {
-    var button = event.target.closest("[data-next]");
 
-    if (!button) {
-        return;
+/* ==============================================================
+   BUTTON TEXT
+   ============================================================== */
+
+function updateButtonText() {
+
+    var buttonTexts = [
+
+        "Begin →",
+
+        "Continue →",
+
+        "The tiny ones →",
+
+        "There is more →",
+
+        "One more thing →",
+
+        "Keep reading →",
+
+        "You changed something →",
+
+        "Beyond words →",
+
+        "The truth →",
+
+        "One last thing →"
+
+    ];
+
+
+    if (currentIndex <
+        buttonTexts.length) {
+
+        nextButton.textContent =
+            buttonTexts[currentIndex];
+
     }
 
-    nextPage();
-});
-
-document.addEventListener("pointermove", function(event) {
-    var button = event.target.closest(".next");
-
-    if (!button) {
-        return;
-    }
-
-    var rect = button.getBoundingClientRect();
-
-    button.style.setProperty("--mx", (event.clientX - rect.left) + "px");
-    button.style.setProperty("--my", (event.clientY - rect.top) + "px");
-});
-
-var proposalButton = document.getElementById("proposal");
-
-proposalButton.addEventListener("click", showProposal);
-
-function showProposal() {
-    if (locked) {
-        return;
-    }
-
-    locked = true;
-
-    for (var i = 0; i < pages.length; i++) {
-        pages[i].classList.remove("active");
-    }
-
-    setTimeout(function() {
-        var page = document.createElement("section");
-
-        page.className = "page active";
-
-        page.innerHTML =
-            '<div class="content">' +
-            '<div class="final-glow"></div>' +
-            '<span class="heart">♡</span>' +
-            '<div class="eyebrow">no more chapters</div>' +
-            '<h2 class="title title-small">Jas, will you be <em>mine?</em></h2>' +
-            '<p class="lead">One honest question. One honest answer.</p>' +
-            '<div class="actions">' +
-            '<button class="next yes" id="yesButton">YES ♡</button>' +
-            '<button class="next" id="momentButton">I need a moment 🥹</button>' +
-            '</div>' +
-            '</div>';
-
-        app.appendChild(page);
-
-        locked = false;
-
-        document.getElementById("yesButton").addEventListener("click", celebrate);
-
-        document.getElementById("momentButton").addEventListener("click", function() {
-            var button = document.getElementById("momentButton");
-
-            button.textContent = "Take your time ♡";
-            button.style.opacity = "0.55";
-
-            setTimeout(function() {
-                button.textContent = "I am ready →";
-                button.style.opacity = "1";
-                button.onclick = celebrate;
-            }, 1200);
-        });
-    }, 350);
 }
 
-function celebrate() {
-    var oldPages = document.querySelectorAll(".page");
 
-    for (var i = 0; i < oldPages.length; i++) {
-        oldPages[i].classList.remove("active");
+/* ==============================================================
+   MAIN BUTTON CLICK
+   ============================================================== */
+
+nextButton.addEventListener(
+    "click",
+    function() {
+
+        /*
+            Last page opens the proposal.
+        */
+
+        if (currentIndex === pageCount - 1) {
+
+            showProposal();
+
+            return;
+
+        }
+
+
+        /*
+            Otherwise go forward.
+        */
+
+        goToNextPage();
+
     }
+);
 
-    var finalPage = document.createElement("section");
 
-    finalPage.className = "page active";
+/* ==============================================================
+   INITIAL PAGE
+   ============================================================== */
 
-    finalPage.innerHTML =
-        '<div class="content">' +
-        '<div class="final-glow"></div>' +
-        '<span class="heart" style="font-size:78px">♥</span>' +
-        '<div class="eyebrow">and just like that...</div>' +
-        '<h1 class="title">You said <em>yes.</em></h1>' +
-        '<p class="lead">I think I am going to remember this moment for a very long time.</p>' +
-        '<p class="lead">Thank you for choosing me, Jas.</p>' +
-        '<p class="quote extra-space">It was always you.</p>' +
-        '<p class="small">You and only you.<br><br>— I</p>' +
-        '</div>';
+updatePageInfo();
 
-    app.appendChild(finalPage);
+updateButtonText();
 
-    createBurst();
-}
 
-function createBurst() {
-    var symbols = ["♥", "♡", "✦", "✧", "·"];
+/* ==============================================================
+   DISABLE PAGE CHANGING BY MOUSE WHEEL
+   ==============================================================
 
-    for (var i = 0; i < 120; i++) {
-        var particle = document.createElement("span");
+   We DO NOT call preventDefault here because the page
+   itself still needs to scroll when it contains long content.
 
-        particle.className = "burst";
+   Wheel movement is simply ignored by our page navigation system.
+   ============================================================== */
 
-        particle.textContent = symbols[Math.floor(Math.random() * symbols.length)];
 
-        particle.style.fontSize = (9 + Math.random() * 18) + "px";
+/* ==============================================================
+   REASON CARD FLIP
+   ============================================================== */
 
-        document.body.appendChild(particle);
+/*
+    Event delegation is used so every card works
+    without needing separate event listeners.
+*/
 
-        var angle = Math.random() * Math.PI * 2;
-        var distance = 120 + Math.random() * 500;
+document.addEventListener(
+    "click",
+    function(event) {
 
-        var x = Math.cos(angle) * distance;
-        var y = Math.sin(angle) * distance;
+        var card =
+            event.target.closest(".reason-card");
 
-        var animation = particle.animate(
-            [
-                {
-                    transform: "translate(-50%, -50%) scale(0.1)",
-                    opacity: 1
-                },
-                {
-                    transform:
-                        "translate(calc(-50% + " +
-                        x +
-                        "px), calc(-50% + " +
-                        y +
-                        "px)) rotate(" +
-                        Math.random() * 720 +
-                        "deg) scale(1.2)",
-                    opacity: 0
-                }
-            ],
-            {
-                duration: 1100 + Math.random() * 1700,
-                easing: "cubic-bezier(.1,.8,.2,1)"
-            }
-        );
 
-        animation.onfinish = function() {
-            particle.remove();
-        };
+        /*
+            If click was not on a card,
+            do nothing.
+        */
+
+        if (!card) {
+            return;
+        }
+
+
+        /*
+            Flip the selected card.
+        */
+
+        card.classList.toggle("flipped");
+
     }
-}
+);
 
-var mouseX = window.innerWidth / 2;
-var mouseY = window.innerHeight / 2;
+
+/* ==============================================================
+   CURSOR GLOW
+   ============================================================== */
+
+var mouseX =
+    window.innerWidth / 2;
+
+var mouseY =
+    window.innerHeight / 2;
+
 var glowX = mouseX;
+
 var glowY = mouseY;
 
-window.addEventListener("pointermove", function(event) {
-    mouseX = event.clientX;
-    mouseY = event.clientY;
-});
 
-function cursorAnimation() {
-    glowX = glowX + (mouseX - glowX) * 0.16;
-    glowY = glowY + (mouseY - glowY) * 0.16;
+/*
+    Update target cursor position.
+*/
 
-    cursorGlow.style.left = glowX + "px";
-    cursorGlow.style.top = glowY + "px";
+window.addEventListener(
+    "pointermove",
+    function(event) {
 
-    requestAnimationFrame(cursorAnimation);
+        mouseX =
+            event.clientX;
+
+        mouseY =
+            event.clientY;
+
+    }
+);
+
+
+/*
+    Smoothly move the glow.
+*/
+
+function animateCursor() {
+
+    glowX +=
+        (mouseX - glowX) * 0.12;
+
+    glowY +=
+        (mouseY - glowY) * 0.12;
+
+
+    cursorGlow.style.left =
+        glowX + "px";
+
+    cursorGlow.style.top =
+        glowY + "px";
+
+
+    requestAnimationFrame(
+        animateCursor
+    );
+
 }
 
-cursorAnimation();
 
-var starContainer = document.getElementById("stars");
+animateCursor();
 
-for (var i = 0; i < 100; i++) {
-    var star = document.createElement("span");
 
-    star.className = "star";
+/* ==============================================================
+   BUTTON MOUSE GLOW
+   ============================================================== */
 
-    star.style.left = (Math.random() * 100) + "%";
-    star.style.top = (Math.random() * 100) + "%";
-    star.style.animationDuration = (6 + Math.random() * 16) + "s";
-    star.style.animationDelay = (-Math.random() * 16) + "s";
+document.addEventListener(
+    "pointermove",
+    function(event) {
 
-    if (Math.random() > 0.9) {
-        star.style.width = "3px";
-        star.style.height = "3px";
+        var button =
+            event.target.closest(".next");
+
+
+        if (!button) {
+            return;
+        }
+
+
+        var rectangle =
+            button.getBoundingClientRect();
+
+
+        var x =
+            event.clientX -
+            rectangle.left;
+
+
+        var y =
+            event.clientY -
+            rectangle.top;
+
+
+        button.style.setProperty(
+            "--mouse-x",
+            x + "px"
+        );
+
+
+        button.style.setProperty(
+            "--mouse-y",
+            y + "px"
+        );
+
+    }
+);
+
+
+/* ==============================================================
+   FLOATING STARS
+   ============================================================== */
+
+var starCount =
+    window.innerWidth < 600
+        ? 80
+        : 140;
+
+
+for (
+    var i = 0;
+    i < starCount;
+    i++
+) {
+
+    var star =
+        document.createElement("span");
+
+
+    star.className =
+        "star";
+
+
+    star.style.left =
+        Math.random() * 100 + "%";
+
+
+    star.style.top =
+        Math.random() * 100 + "%";
+
+
+    star.style.animationDuration =
+        5 + Math.random() * 18 + "s";
+
+
+    star.style.animationDelay =
+        -Math.random() * 18 + "s";
+
+
+    /*
+        Make a few stars larger.
+    */
+
+    if (Math.random() > 0.90) {
+
+        star.style.width =
+            "3px";
+
+        star.style.height =
+            "3px";
+
     }
 
-    starContainer.appendChild(star);
+
+    starsContainer.appendChild(star);
+
 }
 
-var canvas = document.getElementById("particles");
-var ctx = canvas.getContext("2d");
 
-var canvasWidth = window.innerWidth;
-var canvasHeight = window.innerHeight;
+/* ==============================================================
+   CANVAS PARTICLES
+   ============================================================== */
+
+var canvasWidth =
+    window.innerWidth;
+
+var canvasHeight =
+    window.innerHeight;
+
+
+/*
+    Resize canvas for high DPI screens.
+*/
 
 function resizeCanvas() {
-    canvasWidth = window.innerWidth;
-    canvasHeight = window.innerHeight;
 
-    var ratio = Math.min(window.devicePixelRatio || 1, 2);
+    canvasWidth =
+        window.innerWidth;
 
-    canvas.width = canvasWidth * ratio;
-    canvas.height = canvasHeight * ratio;
+    canvasHeight =
+        window.innerHeight;
 
-    canvas.style.width = canvasWidth + "px";
-    canvas.style.height = canvasHeight + "px";
 
-    ctx.setTransform(ratio, 0, 0, ratio, 0, 0);
+    var ratio =
+        Math.min(
+            window.devicePixelRatio || 1,
+            2
+        );
+
+
+    canvas.width =
+        canvasWidth * ratio;
+
+
+    canvas.height =
+        canvasHeight * ratio;
+
+
+    canvas.style.width =
+        canvasWidth + "px";
+
+
+    canvas.style.height =
+        canvasHeight + "px";
+
+
+    context.setTransform(
+        ratio,
+        0,
+        0,
+        ratio,
+        0,
+        0
+    );
+
 }
+
 
 resizeCanvas();
 
-window.addEventListener("resize", resizeCanvas);
+
+window.addEventListener(
+    "resize",
+    resizeCanvas
+);
+
+
+/* ==============================================================
+   CREATE PARTICLES
+   ============================================================== */
 
 var particles = [];
 
-var count = window.innerWidth < 600 ? 45 : 75;
+var particleCount =
+    window.innerWidth < 600
+        ? 55
+        : 100;
 
-for (var i = 0; i < count; i++) {
+
+for (
+    var p = 0;
+    p < particleCount;
+    p++
+) {
+
     particles.push({
-        x: Math.random() * canvasWidth,
-        y: Math.random() * canvasHeight,
-        vx: (Math.random() - 0.5) * 0.15,
-        vy: (Math.random() - 0.5) * 0.15,
-        size: Math.random() * 1.5 + 0.3,
-        alpha: Math.random() * 0.4 + 0.05
+
+        x:
+            Math.random() *
+            canvasWidth,
+
+        y:
+            Math.random() *
+            canvasHeight,
+
+        vx:
+            (Math.random() - 0.5)
+            * 0.18,
+
+        vy:
+            (Math.random() - 0.5)
+            * 0.18,
+
+        size:
+            Math.random() * 1.7
+            + 0.3,
+
+        alpha:
+            Math.random() * 0.4
+            + 0.05
+
     });
+
 }
 
+
+/* ==============================================================
+   ANIMATE PARTICLES
+   ============================================================== */
+
 function animateParticles() {
-    ctx.clearRect(0, 0, canvasWidth, canvasHeight);
 
-    for (var i = 0; i < particles.length; i++) {
-        var p = particles[i];
+    context.clearRect(
+        0,
+        0,
+        canvasWidth,
+        canvasHeight
+    );
 
-        p.x = p.x + p.vx;
-        p.y = p.y + p.vy;
 
-        if (p.x < 0) {
-            p.x = canvasWidth;
+    for (
+        var i = 0;
+        i < particles.length;
+        i++
+    ) {
+
+        var particle =
+            particles[i];
+
+
+        particle.x +=
+            particle.vx;
+
+
+        particle.y +=
+            particle.vy;
+
+
+        /*
+            Wrap particles around screen.
+        */
+
+        if (particle.x < 0) {
+
+            particle.x =
+                canvasWidth;
+
         }
 
-        if (p.x > canvasWidth) {
-            p.x = 0;
+
+        if (particle.x > canvasWidth) {
+
+            particle.x = 0;
+
         }
 
-        if (p.y < 0) {
-            p.y = canvasHeight;
+
+        if (particle.y < 0) {
+
+            particle.y =
+                canvasHeight;
+
         }
 
-        if (p.y > canvasHeight) {
-            p.y = 0;
+
+        if (particle.y > canvasHeight) {
+
+            particle.y = 0;
+
         }
 
-        ctx.beginPath();
 
-        ctx.arc(
-            p.x,
-            p.y,
-            p.size,
+        /*
+            Draw particle.
+        */
+
+        context.beginPath();
+
+
+        context.arc(
+            particle.x,
+            particle.y,
+            particle.size,
             0,
             Math.PI * 2
         );
 
-        ctx.fillStyle =
+
+        context.fillStyle =
             "rgba(255,255,255," +
-            p.alpha +
+            particle.alpha +
             ")";
 
-        ctx.fill();
+
+        context.fill();
+
     }
 
-    requestAnimationFrame(animateParticles);
+
+    requestAnimationFrame(
+        animateParticles
+    );
+
 }
+
 
 animateParticles();
 
-updateUI();
+
+/* ==============================================================
+   FINAL PROPOSAL
+   ============================================================== */
+
+function showProposal() {
+
+    /*
+        Hide the navigation button.
+    */
+
+    nextButton.style.display =
+        "none";
+
+
+    /*
+        Hide all existing pages.
+    */
+
+    for (
+        var i = 0;
+        i < pages.length;
+        i++
+    ) {
+
+        pages[i]
+            .classList
+            .remove("active");
+
+    }
+
+
+    /*
+        Create final proposal page.
+    */
+
+    var proposalPage =
+        document.createElement("section");
+
+
+    proposalPage.className =
+        "page active";
+
+
+    /*
+        We use normal string concatenation here.
+        No template literals / backticks.
+    */
+
+    proposalPage.innerHTML =
+
+        '<div class="content">' +
+
+            '<div class="final-glow"></div>' +
+
+            '<span class="heart">♡</span>' +
+
+            '<div class="eyebrow">' +
+                'the question' +
+            '</div>' +
+
+            '<h2 class="title title-small">' +
+                'Jas, will you be ' +
+                '<em>mine?</em>' +
+            '</h2>' +
+
+            '<p class="lead">' +
+                'You already know how I feel.' +
+                '<br>' +
+                'I just wanted to finally ask you properly.' +
+            '</p>' +
+
+            '<div class="proposal-actions">' +
+
+                '<button ' +
+                    'class="next proposal-yes" ' +
+                    'id="yes-button">' +
+                    'YES ♡' +
+                '</button>' +
+
+                '<button ' +
+                    'class="next proposal-think" ' +
+                    'id="think-button">' +
+                    'I need a moment 🥹' +
+                '</button>' +
+
+            '</div>' +
+
+        '</div>';
+
+
+    /*
+        Add page to website.
+    */
+
+    document
+        .getElementById("app")
+        .appendChild(proposalPage);
+
+
+    /*
+        Reset scroll.
+    */
+
+    proposalPage.scrollTop = 0;
+
+
+    /*
+        Update counter.
+    */
+
+    currentPage.textContent =
+        "♡";
+
+
+    totalPages.textContent =
+        "♡";
+
+
+    progressBar.style.width =
+        "100%";
+
+
+    /*
+        Get proposal buttons.
+    */
+
+    var yesButton =
+        document.getElementById(
+            "yes-button"
+        );
+
+
+    var thinkButton =
+        document.getElementById(
+            "think-button"
+        );
+
+
+    /*
+        YES button.
+    */
+
+    yesButton.addEventListener(
+        "click",
+        function() {
+
+            celebrate();
+
+        }
+    );
+
+
+    /*
+        "I need a moment" button.
+    */
+
+    thinkButton.addEventListener(
+        "click",
+        function() {
+
+            thinkButton.textContent =
+                "Take your time ♡";
+
+
+            setTimeout(
+                function() {
+
+                    thinkButton.textContent =
+                        "I'm ready →";
+
+                    thinkButton.onclick =
+                        celebrate;
+
+                },
+                1200
+            );
+
+        }
+    );
+
+}
+
+
+/* ==============================================================
+   CELEBRATION
+   ============================================================== */
+
+function celebrate() {
+
+    /*
+        Remove existing pages.
+    */
+
+    var oldPages =
+        document.querySelectorAll(".page");
+
+
+    for (
+        var i = 0;
+        i < oldPages.length;
+        i++
+    ) {
+
+        oldPages[i]
+            .classList
+            .remove("active");
+
+    }
+
+
+    /*
+        Create final page.
+    */
+
+    var finalPage =
+        document.createElement("section");
+
+
+    finalPage.className =
+        "page active";
+
+
+    finalPage.innerHTML =
+
+        '<div class="content">' +
+
+            '<div class="final-glow"></div>' +
+
+            '<span ' +
+                'class="heart" ' +
+                'style="font-size:80px">' +
+                '♥' +
+            '</span>' +
+
+            '<div class="eyebrow">' +
+                'and just like that...' +
+            '</div>' +
+
+            '<h1 class="title">' +
+                'You said ' +
+                '<em>yes.</em>' +
+            '</h1>' +
+
+            '<p class="lead">' +
+                'I think I am going to remember ' +
+                'this moment for a very long time.' +
+            '</p>' +
+
+            '<p class="lead">' +
+                'Thank you for choosing me, Jas.' +
+            '</p>' +
+
+            '<p class="quote">' +
+                'It was always you.' +
+            '</p>' +
+
+            '<p class="small">' +
+                'You and only you.' +
+                '<br><br>' +
+                '— I' +
+            '</p>' +
+
+        '</div>';
+
+
+    document
+        .getElementById("app")
+        .appendChild(finalPage);
+
+
+    /*
+        Celebration particles.
+    */
+
+    createHeartBurst();
+
+}
+
+
+/* ==============================================================
+   HEART / STAR BURST
+   ============================================================== */
+
+function createHeartBurst() {
+
+    var symbols = [
+        "♥",
+        "♡",
+        "✦",
+        "✧",
+        "★",
+        "·"
+    ];
+
+
+    for (
+        var i = 0;
+        i < 150;
+        i++
+    ) {
+
+        var particle =
+            document.createElement("span");
+
+
+        particle.className =
+            "burst";
+
+
+        particle.textContent =
+            symbols[
+                Math.floor(
+                    Math.random() *
+                    symbols.length
+                )
+            ];
+
+
+        particle.style.position =
+            "fixed";
+
+
+        particle.style.left =
+            "50%";
+
+
+        particle.style.top =
+            "50%";
+
+
+        particle.style.zIndex =
+            "99999";
+
+
+        particle.style.pointerEvents =
+            "none";
+
+
+        particle.style.color =
+            "white";
+
+
+        particle.style.fontSize =
+            10 +
+            Math.random() * 20 +
+            "px";
+
+
+        document.body
+            .appendChild(particle);
+
+
+        var angle =
+            Math.random() *
+            Math.PI *
+            2;
+
+
+        var distance =
+            100 +
+            Math.random() * 600;
+
+
+        var x =
+            Math.cos(angle) *
+            distance;
+
+
+        var y =
+            Math.sin(angle) *
+            distance;
+
+
+        var animation =
+            particle.animate(
+
+                [
+
+                    {
+                        transform:
+                            "translate(-50%, -50%) " +
+                            "scale(0)",
+
+                        opacity: 1
+
+                    },
+
+                    {
+
+                        transform:
+                            "translate(" +
+                            x +
+                            "px, " +
+                            y +
+                            "px) " +
+                            "rotate(" +
+                            Math.random() * 720 +
+                            "deg) " +
+                            "scale(1.4)",
+
+                        opacity: 0
+
+                    }
+
+                ],
+
+                {
+
+                    duration:
+                        1000 +
+                        Math.random() *
+                        1800,
+
+                    easing:
+                        "cubic-bezier(.1,.8,.2,1)"
+
+                }
+
+            );
+
+
+        animation.onfinish =
+            function() {
+
+                particle.remove();
+
+            };
+
+    }
+
+}
