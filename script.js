@@ -1,6 +1,6 @@
 /* =========================================================
    JUDY × LEO
-   INTERACTION ENGINE
+   CINEMATIC INTERACTION ENGINE
    ========================================================= */
 
 (() => {
@@ -9,26 +9,26 @@
 
 
     /* =====================================================
-       SELECT ELEMENTS
+       ELEMENTS
     ====================================================== */
 
     const pages =
         [...document.querySelectorAll(".page")];
 
-    const nextButtons =
-        [...document.querySelectorAll("[data-next]")];
-
     const dots =
-        [...document.querySelectorAll(".side-dot")];
+        [...document.querySelectorAll(".dot")];
 
-    const progressFill =
-        document.getElementById("progressFill");
+    const nextButtons =
+        [...document.querySelectorAll(".next")];
 
-    const pageCounter =
-        document.getElementById("pageCounter");
+    const progress =
+        document.getElementById("progress");
 
-    const toast =
-        document.getElementById("toast");
+    const counter =
+        document.getElementById("counter");
+
+    const cursorGlow =
+        document.querySelector(".cursor-glow");
 
 
     /* =====================================================
@@ -37,11 +37,52 @@
 
     let currentPage = 0;
 
-    let isAnimating = false;
+    let changing = false;
+
+    let celebrationUnlocked = false;
 
 
     /* =====================================================
-       UPDATE TOP UI
+       CREATE BACKGROUND PARTICLES
+    ====================================================== */
+
+    const particleContainer =
+        document.getElementById("particles");
+
+
+    for (let i = 0; i < 45; i++) {
+
+        const particle =
+            document.createElement("span");
+
+        particle.className =
+            "particle";
+
+        particle.style.left =
+            `${Math.random() * 100}%`;
+
+        particle.style.top =
+            `${Math.random() * 100}%`;
+
+        particle.style.setProperty(
+            "--duration",
+            `${5 + Math.random() * 9}s`
+        );
+
+        particle.style.setProperty(
+            "--delay",
+            `${Math.random() * -10}s`
+        );
+
+        particleContainer.appendChild(
+            particle
+        );
+
+    }
+
+
+    /* =====================================================
+       UPDATE UI
     ====================================================== */
 
     function updateUI() {
@@ -49,97 +90,132 @@
         const total =
             pages.length;
 
-        const shown =
+        const number =
             currentPage + 1;
 
 
-        progressFill.style.width =
-            `${(shown / total) * 100}%`;
+        progress.style.width =
+            `${number / total * 100}%`;
 
 
-        pageCounter.textContent =
-            `${String(shown).padStart(2, "0")} / ${String(total).padStart(2, "0")}`;
+        counter.textContent =
+            `${String(number).padStart(2, "0")} / ${String(total).padStart(2, "0")}`;
 
 
-        dots.forEach((dot, index) => {
+        dots.forEach(
+            (dot, index) => {
 
-            dot.classList.toggle(
-                "active",
-                index === currentPage
+                dot.classList.toggle(
+                    "active",
+                    index === currentPage
+                );
+
+            }
+        );
+
+    }
+
+
+    /* =====================================================
+       RESET PAGE SCROLL
+    ====================================================== */
+
+    function resetScroll(page) {
+
+        const scroll =
+            page.querySelector(
+                ".page-scroll"
             );
 
-        });
+
+        if (scroll) {
+
+            scroll.scrollTop = 0;
+
+        }
 
     }
 
 
     /* =====================================================
-       RESET INNER SCROLL
+       PAGE TRANSITION
     ====================================================== */
 
-    function resetPageScroll(page) {
+    function goToPage(target) {
 
-        const inner =
-            page.querySelector(".page-inner");
+        if (changing) return;
 
-        if (!inner) return;
+        if (
+            target < 0 ||
+            target >= pages.length
+        ) {
 
-        inner.scrollTop = 0;
+            return;
 
-    }
-
-
-    /* =====================================================
-       GO TO PAGE
-    ====================================================== */
-
-    function goToPage(index) {
-
-        if (isAnimating) return;
-
-        if (index < 0) return;
-
-        if (index >= pages.length) return;
-
-        if (index === currentPage) return;
+        }
 
 
-        isAnimating = true;
+        /*
+         * PAGE 09 IS LOCKED
+         */
+
+        if (
+            target === 8 &&
+            !celebrationUnlocked
+        ) {
+
+            return;
+
+        }
 
 
-        const oldPage =
+        if (
+            target === currentPage
+        ) {
+
+            return;
+
+        }
+
+
+        changing = true;
+
+
+        const previous =
             pages[currentPage];
 
-        const newPage =
-            pages[index];
+        const next =
+            pages[target];
 
 
-        oldPage.classList.remove(
+        previous.classList.remove(
             "active"
         );
 
 
-        newPage.classList.add(
+        next.classList.add(
             "active"
         );
+
+
+        resetScroll(next);
 
 
         currentPage =
-            index;
+            target;
 
 
         updateUI();
 
-        resetPageScroll(
-            newPage
+
+        setTimeout(
+            () => {
+
+                changing = false;
+
+            },
+            950
         );
-
-
-        window.setTimeout(() => {
-
-            isAnimating = false;
-
-        }, 850);
 
     }
 
@@ -148,182 +224,244 @@
        NEXT BUTTONS
     ====================================================== */
 
-    nextButtons.forEach(button => {
+    nextButtons.forEach(
+        button => {
 
-        button.addEventListener(
-            "click",
-            () => {
+            button.addEventListener(
+                "click",
+                () => {
 
-                goToPage(
-                    currentPage + 1
-                );
-
-            }
-        );
-
-    });
-
-
-    /* =====================================================
-       SIDE DOTS
-       ONLY ALLOW FORWARD MOVEMENT
-    ====================================================== */
-
-    dots.forEach((dot, index) => {
-
-        dot.addEventListener(
-            "click",
-            () => {
-
-                if (
-                    index >
-                    currentPage
-                ) {
-
-                    goToPage(index);
+                    goToPage(
+                        currentPage + 1
+                    );
 
                 }
+            );
 
-            }
-        );
-
-    });
+        }
+    );
 
 
     /* =====================================================
        FLIP CARDS
     ====================================================== */
 
-    const flipCards =
+    const cards =
         [...document.querySelectorAll(".flip-card")];
 
 
-    flipCards.forEach(card => {
+    cards.forEach(
+        card => {
+
+            card.addEventListener(
+                "click",
+                () => {
+
+                    card.classList.toggle(
+                        "flipped"
+                    );
+
+                }
+            );
 
 
-        function flip() {
+            card.addEventListener(
+                "keydown",
+                event => {
 
-            card.classList.toggle(
-                "flipped"
+                    if (
+                        event.key === "Enter" ||
+                        event.key === " "
+                    ) {
+
+                        event.preventDefault();
+
+                        card.classList.toggle(
+                            "flipped"
+                        );
+
+                    }
+
+                }
             );
 
 
             card.setAttribute(
-                "aria-pressed",
-                card.classList.contains(
-                    "flipped"
-                )
-                    ? "true"
-                    : "false"
+                "tabindex",
+                "0"
             );
 
         }
-
-
-        card.setAttribute(
-            "role",
-            "button"
-        );
-
-
-        card.setAttribute(
-            "aria-pressed",
-            "false"
-        );
-
-
-        card.addEventListener(
-            "click",
-            flip
-        );
-
-
-        card.addEventListener(
-            "keydown",
-            event => {
-
-                if (
-                    event.key === "Enter" ||
-                    event.key === " "
-                ) {
-
-                    event.preventDefault();
-
-                    flip();
-
-                }
-
-            }
-        );
-
-    });
+    );
 
 
     /* =====================================================
-       PAGE SCROLL
-       WHEEL STAYS INSIDE PAGE
+       CARD 3D TILT
     ====================================================== */
 
-    pages.forEach(page => {
+    cards.forEach(
+        card => {
 
-        const inner =
-            page.querySelector(
-                ".page-inner"
+            const flip =
+                card.querySelector(
+                    ".flip"
+                );
+
+
+            card.addEventListener(
+                "pointermove",
+                event => {
+
+                    if (
+                        card.classList.contains(
+                            "flipped"
+                        )
+                    ) {
+
+                        return;
+
+                    }
+
+
+                    const rect =
+                        card.getBoundingClientRect();
+
+
+                    const x =
+                        event.clientX -
+                        rect.left;
+
+
+                    const y =
+                        event.clientY -
+                        rect.top;
+
+
+                    const rotateY =
+                        (
+                            x /
+                            rect.width -
+                            .5
+                        ) * 10;
+
+
+                    const rotateX =
+                        (
+                            .5 -
+                            y /
+                            rect.height
+                        ) * 10;
+
+
+                    flip.style.transform =
+                        `rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
+
+                }
             );
 
 
-        if (!inner) return;
+            card.addEventListener(
+                "pointerleave",
+                () => {
 
+                    if (
+                        !card.classList.contains(
+                            "flipped"
+                        )
+                    ) {
 
-        inner.addEventListener(
-            "wheel",
-            event => {
+                        flip.style.transform =
+                            "";
 
-                event.stopPropagation();
+                    }
 
-            },
-            {
-                passive: true
-            }
-        );
+                }
+            );
 
-
-        inner.addEventListener(
-            "touchmove",
-            event => {
-
-                event.stopPropagation();
-
-            },
-            {
-                passive: true
-            }
-        );
-
-    });
+        }
+    );
 
 
     /* =====================================================
-       KEYBOARD NAVIGATION
-       RIGHT / PAGEDOWN = NEXT
-       NO BACKWARD NAVIGATION
+       CURSOR LIGHT
+    ====================================================== */
+
+    window.addEventListener(
+        "pointermove",
+        event => {
+
+            cursorGlow.style.left =
+                `${event.clientX}px`;
+
+            cursorGlow.style.top =
+                `${event.clientY}px`;
+
+        },
+        {
+            passive: true
+        }
+    );
+
+
+    /* =====================================================
+       MAGNETIC BUTTONS
+    ====================================================== */
+
+    document
+        .querySelectorAll(
+            ".main-button, .answer, .replay"
+        )
+        .forEach(
+            button => {
+
+                button.addEventListener(
+                    "pointermove",
+                    event => {
+
+                        const rect =
+                            button.getBoundingClientRect();
+
+
+                        const x =
+                            event.clientX -
+                            rect.left -
+                            rect.width / 2;
+
+
+                        const y =
+                            event.clientY -
+                            rect.top -
+                            rect.height / 2;
+
+
+                        button.style.transform =
+                            `translate(${x * .04}px,${y * .04}px)`;
+
+                    }
+                );
+
+
+                button.addEventListener(
+                    "pointerleave",
+                    () => {
+
+                        button.style.transform =
+                            "";
+
+                    }
+                );
+
+            }
+        );
+
+
+    /* =====================================================
+       KEYBOARD
     ====================================================== */
 
     document.addEventListener(
         "keydown",
         event => {
-
-            if (
-                ["INPUT", "TEXTAREA", "SELECT"]
-                    .includes(
-                        document.activeElement?.tagName
-                    )
-            ) {
-
-                return;
-
-            }
-
 
             if (
                 event.key === "ArrowRight" ||
@@ -338,26 +476,431 @@
 
             }
 
+        }
+    );
+
+
+    /* =====================================================
+       PROPOSAL RESPONSE
+    ====================================================== */
+
+    const yes =
+        document.getElementById(
+            "yes"
+        );
+
+
+    const maybe =
+        document.getElementById(
+            "maybe"
+        );
+
+
+    const answerMessage =
+        document.getElementById(
+            "answerMessage"
+        );
+
+
+    const messageIcon =
+        document.getElementById(
+            "messageIcon"
+        );
+
+
+    const messageTitle =
+        document.getElementById(
+            "messageTitle"
+        );
+
+
+    const messageText =
+        document.getElementById(
+            "messageText"
+        );
+
+
+    const messageClose =
+        document.getElementById(
+            "messageClose"
+        );
+
+
+    /* =====================================================
+       MAYBE
+    ====================================================== */
+
+    maybe.addEventListener(
+        "click",
+        () => {
+
+            messageIcon.textContent =
+                "✦";
+
+
+            messageTitle.textContent =
+                "Take your time.";
+
+
+            messageText.textContent =
+                "There is no pressure. I just wanted to be honest about how I feel.";
+
+
+            answerMessage.classList.add(
+                "show"
+            );
+
+        }
+    );
+
+
+    /* =====================================================
+       CLOSE MESSAGE
+    ====================================================== */
+
+    messageClose.addEventListener(
+        "click",
+        () => {
+
+            answerMessage.classList.remove(
+                "show"
+            );
+
+        }
+    );
+
+
+    /* =====================================================
+       YES
+    ====================================================== */
+
+    yes.addEventListener(
+        "click",
+        () => {
+
+            celebrationUnlocked =
+                true;
+
+
+            unlockCelebration();
+
+        }
+    );
+
+
+    /* =====================================================
+       UNLOCK PAGE 09
+    ====================================================== */
+
+    function unlockCelebration() {
+
+        /*
+         * BIG SCREEN FLASH
+         */
+
+        const flash =
+            document.getElementById(
+                "screenFlash"
+            );
+
+
+        flash.classList.remove(
+            "flash"
+        );
+
+
+        void flash.offsetWidth;
+
+
+        flash.classList.add(
+            "flash"
+        );
+
+
+        /*
+         * CREATE CELEBRATION
+         */
+
+        createCelebrationParticles();
+
+        createConfetti();
+
+
+        /*
+         * GO TO PAGE 09
+         */
+
+        setTimeout(
+            () => {
+
+                goToPage(8);
+
+            },
+            450
+        );
+
+    }
+
+
+    /* =====================================================
+       CELEBRATION PARTICLES
+    ====================================================== */
+
+    function createCelebrationParticles() {
+
+        const container =
+            document.getElementById(
+                "celebrationParticles"
+            );
+
+
+        container.innerHTML = "";
+
+
+        const symbols = [
+            "♥",
+            "✦",
+            "✧",
+            "⋆",
+            "♡"
+        ];
+
+
+        for (
+            let i = 0;
+            i < 45;
+            i++
+        ) {
+
+            const element =
+                document.createElement(
+                    "span"
+                );
+
+
+            element.className =
+                "celeb-particle";
+
+
+            element.textContent =
+                symbols[
+                    Math.floor(
+                        Math.random() *
+                        symbols.length
+                    )
+                ];
+
+
+            const angle =
+                Math.random() *
+                Math.PI *
+                2;
+
+
+            const distance =
+                150 +
+                Math.random() *
+                500;
+
+
+            const x =
+                Math.cos(angle) *
+                distance;
+
+
+            const y =
+                Math.sin(angle) *
+                distance;
+
+
+            element.style.setProperty(
+                "--x",
+                `${x}px`
+            );
+
+
+            element.style.setProperty(
+                "--y",
+                `${y}px`
+            );
+
+
+            element.style.setProperty(
+                "--rotate",
+                `${Math.random() * 720 - 360}deg`
+            );
+
+
+            element.style.setProperty(
+                "--size",
+                `${10 + Math.random() * 18}px`
+            );
+
+
+            element.style.setProperty(
+                "--delay",
+                `${Math.random() * .7}s`
+            );
+
+
+            container.appendChild(
+                element
+            );
+
+        }
+
+    }
+
+
+    /* =====================================================
+       CONFETTI
+    ====================================================== */
+
+    function createConfetti() {
+
+        const pieces =
+            100;
+
+
+        for (
+            let i = 0;
+            i < pieces;
+            i++
+        ) {
+
+            const piece =
+                document.createElement(
+                    "span"
+                );
+
+
+            piece.className =
+                "celeb-confetti";
+
+
+            piece.style.left =
+                `${Math.random() * 100}%`;
+
+
+            piece.style.setProperty(
+                "--duration",
+                `${2.5 + Math.random() * 3}s`
+            );
+
+
+            piece.style.setProperty(
+                "--delay",
+                `${Math.random() * 1.5}s`
+            );
+
+
+            piece.style.setProperty(
+                "--drift",
+                `${Math.random() * 300 - 150}px`
+            );
+
+
+            /*
+             * Use CSS custom properties for
+             * varied appearance without
+             * creating another stylesheet.
+             */
+
+            const variants = [
+                "rgba(237,169,195,.9)",
+                "rgba(255,255,255,.75)",
+                "rgba(211,181,220,.8)",
+                "rgba(245,210,190,.8)"
+            ];
+
+
+            piece.style.background =
+                variants[
+                    Math.floor(
+                        Math.random() *
+                        variants.length
+                    )
+                ];
+
+
+            piece.style.transform =
+                `rotate(${Math.random() * 360}deg)`;
+
+
+            document.body.appendChild(
+                piece
+            );
+
+
+            setTimeout(
+                () => {
+
+                    piece.remove();
+
+                },
+                6500
+            );
+
+        }
+
+    }
+
+
+    /* =====================================================
+       REPLAY CELEBRATION
+    ====================================================== */
+
+    const replay =
+        document.getElementById(
+            "replay"
+        );
+
+
+    replay.addEventListener(
+        "click",
+        () => {
+
+            const page =
+                pages[8];
+
+
+            page.classList.remove(
+                "active"
+            );
+
+
+            void page.offsetWidth;
+
+
+            page.classList.add(
+                "active"
+            );
+
+
+            createCelebrationParticles();
+
+            createConfetti();
+
+        }
+    );
+
+
+    /* =====================================================
+       CLICK OUTSIDE MESSAGE
+    ====================================================== */
+
+    answerMessage.addEventListener(
+        "click",
+        event => {
 
             if (
-                event.key === "Home" &&
-                currentPage === 0
+                event.target ===
+                answerMessage
             ) {
 
-                const inner =
-                    pages[0]
-                        .querySelector(
-                            ".page-inner"
-                        );
-
-
-                inner?.scrollTo({
-
-                    top: 0,
-
-                    behavior: "smooth"
-
-                });
+                answerMessage.classList.remove(
+                    "show"
+                );
 
             }
 
@@ -366,75 +909,71 @@
 
 
     /* =====================================================
-       POINTER GLOW
+       TOUCH SUPPORT
     ====================================================== */
 
-    const app =
-        document.getElementById(
-            "app"
-        );
+    let touchStartX = 0;
+
+    let touchStartY = 0;
 
 
-    window.addEventListener(
-        "pointermove",
+    document.addEventListener(
+        "touchstart",
         event => {
 
-            const pointerX =
-                (
-                    event.clientX /
-                    window.innerWidth
-                ) * 100;
+            const touch =
+                event.touches[0];
 
 
-            const pointerY =
-                (
-                    event.clientY /
-                    window.innerHeight
-                ) * 100;
+            touchStartX =
+                touch.clientX;
 
 
-            app.style.background = `
+            touchStartY =
+                touch.clientY;
 
-                radial-gradient(
-                    circle at
-                    ${pointerX}%
-                    ${pointerY}%,
+        },
+        {
+            passive: true
+        }
+    );
 
-                    rgba(
-                        233,
-                        168,
-                        193,
-                        .055
-                    ),
 
-                    transparent 26%
-                ),
+    document.addEventListener(
+        "touchend",
+        event => {
 
-                radial-gradient(
-                    circle at 50% 0%,
-                    rgba(
-                        216,
-                        130,
-                        164,
-                        .08
-                    ),
-                    transparent 38%
-                ),
+            const touch =
+                event.changedTouches[0];
 
-                radial-gradient(
-                    circle at 0% 100%,
-                    rgba(
-                        151,
-                        98,
-                        179,
-                        .06
-                    ),
-                    transparent 34%
-                ),
 
-                #08070c
+            const deltaX =
+                touch.clientX -
+                touchStartX;
 
-            `;
+
+            const deltaY =
+                touch.clientY -
+                touchStartY;
+
+
+            /*
+             * Only a clear horizontal swipe
+             * advances the experience.
+             */
+
+            if (
+                Math.abs(deltaX) > 100 &&
+                Math.abs(deltaX) >
+                Math.abs(deltaY) * 1.5 &&
+                deltaX < 0
+            ) {
+
+                goToPage(
+                    currentPage + 1
+                );
+
+            }
 
         },
         {
@@ -444,682 +983,10 @@
 
 
     /* =====================================================
-       TOAST
-    ====================================================== */
-
-    function showToast(
-        message,
-        duration = 2300
-    ) {
-
-        toast.textContent =
-            message;
-
-
-        toast.classList.add(
-            "show"
-        );
-
-
-        window.clearTimeout(
-            showToast.timer
-        );
-
-
-        showToast.timer =
-            window.setTimeout(
-                () => {
-
-                    toast.classList.remove(
-                        "show"
-                    );
-
-                },
-                duration
-            );
-
-    }
-
-
-    window.setTimeout(
-        () => {
-
-            showToast(
-                "Tap the cards when you reach them ✦"
-            );
-
-        },
-        1500
-    );
-
-
-    /* =====================================================
-       PROPOSAL RESPONSE
-    ====================================================== */
-
-    const yesBtn =
-        document.getElementById(
-            "yesBtn"
-        );
-
-
-    const maybeBtn =
-        document.getElementById(
-            "maybeBtn"
-        );
-
-
-    const responseCard =
-        document.getElementById(
-            "responseCard"
-        );
-
-
-    const responseIcon =
-        document.getElementById(
-            "responseIcon"
-        );
-
-
-    const responseTitle =
-        document.getElementById(
-            "responseTitle"
-        );
-
-
-    const responseText =
-        document.getElementById(
-            "responseText"
-        );
-
-
-    const closeResponse =
-        document.getElementById(
-            "closeResponse"
-        );
-
-
-    function showResponse(type) {
-
-
-        if (type === "yes") {
-
-            responseIcon.textContent =
-                "♥";
-
-
-            responseTitle.textContent =
-                "You just made Leo smile.";
-
-
-            responseText.textContent =
-                "Thank you, Judy. I'm really happy I finally said it.";
-
-        }
-
-
-        else {
-
-            responseIcon.textContent =
-                "✦";
-
-
-            responseTitle.textContent =
-                "Take your time.";
-
-
-            responseText.textContent =
-                "There is genuinely no pressure. I just wanted you to know how I feel.";
-
-        }
-
-
-        responseCard.classList.add(
-            "show"
-        );
-
-    }
-
-
-    yesBtn?.addEventListener(
-        "click",
-        () => {
-
-            showResponse(
-                "yes"
-            );
-
-        }
-    );
-
-
-    maybeBtn?.addEventListener(
-        "click",
-        () => {
-
-            showResponse(
-                "maybe"
-            );
-
-        }
-    );
-
-
-    closeResponse?.addEventListener(
-        "click",
-        () => {
-
-            responseCard.classList.remove(
-                "show"
-            );
-
-        }
-    );
-
-
-    /* =====================================================
-       MAGNETIC BUTTON EFFECT
-    ====================================================== */
-
-    document
-        .querySelectorAll(
-            ".next-btn, .answer-btn"
-        )
-        .forEach(button => {
-
-
-            button.addEventListener(
-                "pointermove",
-                event => {
-
-                    const rect =
-                        button.getBoundingClientRect();
-
-
-                    const x =
-                        event.clientX -
-                        rect.left -
-                        rect.width / 2;
-
-
-                    const y =
-                        event.clientY -
-                        rect.top -
-                        rect.height / 2;
-
-
-                    button.style.transform =
-                        `translate(
-                            ${x * .035}px,
-                            ${y * .035}px
-                        )`;
-
-                }
-            );
-
-
-            button.addEventListener(
-                "pointerleave",
-                () => {
-
-                    button.style.transform =
-                        "";
-
-                }
-            );
-
-        });
-
-
-    /* =====================================================
-       INTERSECTION OBSERVER
-    ====================================================== */
-
-    const observer =
-        new IntersectionObserver(
-            entries => {
-
-                entries.forEach(
-                    entry => {
-
-                        if (
-                            entry.isIntersecting
-                        ) {
-
-                            entry.target.classList.add(
-                                "seen"
-                            );
-
-                        }
-
-                    }
-                );
-
-            },
-            {
-
-                threshold: .12,
-
-                rootMargin:
-                    "0px 0px -5% 0px"
-
-            }
-        );
-
-
-    document
-        .querySelectorAll(
-            ".page-inner > *"
-        )
-        .forEach(
-            element => {
-
-                observer.observe(
-                    element
-                );
-
-            }
-        );
-
-
-    /* =====================================================
-       RESIZE
-    ====================================================== */
-
-    window.addEventListener(
-        "resize",
-        () => {
-
-            document.documentElement
-                .style
-                .setProperty(
-                    "--vw",
-                    `${window.innerWidth}px`
-                );
-
-        }
-    );
-
-
-    /* =====================================================
-       INITIAL UI
+       INITIALIZE
     ====================================================== */
 
     updateUI();
-
-
-    /* =====================================================
-       DECORATIVE PARTICLES
-    ====================================================== */
-
-    const particleLayer =
-        document.createElement(
-            "div"
-        );
-
-
-    particleLayer.setAttribute(
-        "aria-hidden",
-        "true"
-    );
-
-
-    particleLayer.style.cssText = `
-
-        position:absolute;
-
-        inset:0;
-
-        pointer-events:none;
-
-        z-index:-1;
-
-        overflow:hidden;
-
-    `;
-
-
-    for (
-        let i = 0;
-        i < 24;
-        i++
-    ) {
-
-
-        const particle =
-            document.createElement(
-                "i"
-            );
-
-
-        const size =
-            Math.random() * 3 + 1;
-
-
-        const left =
-            Math.random() * 100;
-
-
-        const top =
-            Math.random() * 100;
-
-
-        const delay =
-            Math.random() * 8;
-
-
-        const duration =
-            6 +
-            Math.random() * 8;
-
-
-        particle.style.cssText = `
-
-            position:absolute;
-
-            width:${size}px;
-
-            height:${size}px;
-
-            left:${left}%;
-
-            top:${top}%;
-
-            border-radius:50%;
-
-            background:
-                rgba(
-                    233,
-                    168,
-                    193,
-                    .28
-                );
-
-            box-shadow:
-                0 0
-                ${size * 5}px
-                rgba(
-                    233,
-                    168,
-                    193,
-                    .2
-                );
-
-            animation:
-                particleFloat
-                ${duration}s
-                ease-in-out
-                ${delay}s
-                infinite
-                alternate;
-
-        `;
-
-
-        particleLayer.appendChild(
-            particle
-        );
-
-    }
-
-
-    app.appendChild(
-        particleLayer
-    );
-
-
-    /* =====================================================
-       PARTICLE ANIMATION
-    ====================================================== */
-
-    const particleStyle =
-        document.createElement(
-            "style"
-        );
-
-
-    particleStyle.textContent = `
-
-        @keyframes particleFloat {
-
-            0% {
-
-                transform:
-                    translate3d(
-                        0,
-                        0,
-                        0
-                    );
-
-                opacity: .15;
-
-            }
-
-            50% {
-
-                opacity: .65;
-
-            }
-
-            100% {
-
-                transform:
-                    translate3d(
-                        35px,
-                        -70px,
-                        0
-                    );
-
-                opacity: .1;
-
-            }
-
-        }
-
-    `;
-
-
-    document.head.appendChild(
-        particleStyle
-    );
-
-
-    /* =====================================================
-       MEWWWW EASTER EGG
-    ====================================================== */
-
-    let typed = "";
-
-
-    document.addEventListener(
-        "keydown",
-        event => {
-
-            if (
-                event.key.length !== 1
-            ) {
-
-                return;
-
-            }
-
-
-            typed +=
-                event.key.toLowerCase();
-
-
-            if (
-                typed.length > 6
-            ) {
-
-                typed =
-                    typed.slice(-6);
-
-            }
-
-
-            if (
-                typed === "mewwww"
-            ) {
-
-                createHeartBurst();
-
-                showToast(
-                    "mewwww ♥",
-                    1800
-                );
-
-                typed = "";
-
-            }
-
-        }
-    );
-
-
-    /* =====================================================
-       HEART BURST
-    ====================================================== */
-
-    function createHeartBurst() {
-
-
-        for (
-            let i = 0;
-            i < 18;
-            i++
-        ) {
-
-
-            const heart =
-                document.createElement(
-                    "span"
-                );
-
-
-            const x =
-                window.innerWidth / 2;
-
-
-            const y =
-                window.innerHeight / 2;
-
-
-            heart.textContent =
-                "♥";
-
-
-            heart.style.cssText = `
-
-                position:fixed;
-
-                left:${x}px;
-
-                top:${y}px;
-
-                z-index:100;
-
-                pointer-events:none;
-
-                color:#e9a8c1;
-
-                font-size:
-                    ${10 + Math.random() * 18}px;
-
-                animation:
-                    burstHeart
-                    1.4s
-                    ease-out
-                    forwards;
-
-                --x:
-                    ${Math.random() * 360 - 180}px;
-
-                --y:
-                    ${Math.random() * 300 - 190}px;
-
-            `;
-
-
-            document.body.appendChild(
-                heart
-            );
-
-
-            setTimeout(
-                () => {
-
-                    heart.remove();
-
-                },
-                1500
-            );
-
-        }
-
-    }
-
-
-    /* =====================================================
-       HEART BURST ANIMATION
-    ====================================================== */
-
-    const burstStyle =
-        document.createElement(
-            "style"
-        );
-
-
-    burstStyle.textContent = `
-
-        @keyframes burstHeart {
-
-            0% {
-
-                transform:
-                    translate(
-                        -50%,
-                        -50%
-                    )
-                    scale(.4);
-
-                opacity:0;
-
-            }
-
-
-            15% {
-
-                opacity:1;
-
-            }
-
-
-            100% {
-
-                transform:
-                    translate(
-                        calc(
-                            -50% + var(--x)
-                        ),
-                        calc(
-                            -50% + var(--y)
-                        )
-                    )
-                    scale(1);
-
-                opacity:0;
-
-            }
-
-        }
-
-    `;
-
-
-    document.head.appendChild(
-        burstStyle
-    );
 
 
 })();
