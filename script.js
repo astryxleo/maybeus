@@ -1,772 +1,1125 @@
-/* ==========================================================
-   JUDY — PROPOSAL WEBSITE
-   BY LEO
-========================================================== */
+/* =========================================================
+   JUDY × LEO
+   INTERACTION ENGINE
+   ========================================================= */
 
+(() => {
 
-/* ==========================================================
-   DOM
-========================================================== */
+    "use strict";
 
-const pages = Array.from(
-    document.querySelectorAll(".page")
-);
 
-const nextButtons = document.querySelectorAll(
-    "[data-next]"
-);
+    /* =====================================================
+       SELECT ELEMENTS
+    ====================================================== */
 
-const progress = document.getElementById(
-    "progress"
-);
+    const pages =
+        [...document.querySelectorAll(".page")];
 
-const currentPageText =
-    document.getElementById("currentPage");
+    const nextButtons =
+        [...document.querySelectorAll("[data-next]")];
 
-const starsContainer =
-    document.getElementById("stars");
+    const dots =
+        [...document.querySelectorAll(".side-dot")];
 
-const reasonCards =
-    document.querySelectorAll(".reason-card");
+    const progressFill =
+        document.getElementById("progressFill");
 
-const yesButton =
-    document.getElementById("yesButton");
+    const pageCounter =
+        document.getElementById("pageCounter");
 
-const maybeButton =
-    document.getElementById("maybeButton");
+    const toast =
+        document.getElementById("toast");
 
-const answerOverlay =
-    document.getElementById("answerOverlay");
 
-const closeAnswer =
-    document.getElementById("closeAnswer");
+    /* =====================================================
+       STATE
+    ====================================================== */
 
+    let currentPage = 0;
 
-/* ==========================================================
-   STATE
-========================================================== */
+    let isAnimating = false;
 
-let currentPage = 0;
 
-let isAnimating = false;
+    /* =====================================================
+       UPDATE TOP UI
+    ====================================================== */
 
-const totalPages = pages.length;
+    function updateUI() {
 
+        const total =
+            pages.length;
 
-/* ==========================================================
-   STAR FIELD
-========================================================== */
+        const shown =
+            currentPage + 1;
 
-function createStars() {
 
-    if (!starsContainer) {
-        return;
-    }
+        progressFill.style.width =
+            `${(shown / total) * 100}%`;
 
-    const amount =
-        window.innerWidth < 600
-            ? 45
-            : 85;
 
-    const fragment =
-        document.createDocumentFragment();
+        pageCounter.textContent =
+            `${String(shown).padStart(2, "0")} / ${String(total).padStart(2, "0")}`;
 
-    for (let i = 0; i < amount; i++) {
 
-        const star =
-            document.createElement("span");
+        dots.forEach((dot, index) => {
 
-        star.className = "star";
+            dot.classList.toggle(
+                "active",
+                index === currentPage
+            );
 
-        const x =
-            Math.random() * 100;
-
-        const y =
-            Math.random() * 100;
-
-        const delay =
-            Math.random() * 4;
-
-        const duration =
-            2.5 + Math.random() * 4;
-
-        const size =
-            Math.random() > 0.85
-                ? 3
-                : 1 + Math.random();
-
-        star.style.left = `${x}%`;
-
-        star.style.top = `${y}%`;
-
-        star.style.width =
-            `${size}px`;
-
-        star.style.height =
-            `${size}px`;
-
-        star.style.animationDelay =
-            `${delay}s`;
-
-        star.style.animationDuration =
-            `${duration}s`;
-
-        fragment.appendChild(star);
-    }
-
-    starsContainer.appendChild(fragment);
-}
-
-createStars();
-
-
-/* ==========================================================
-   UPDATE UI
-========================================================== */
-
-function updateUI() {
-
-    const pageNumber =
-        currentPage + 1;
-
-    const percentage =
-        (pageNumber / totalPages) * 100;
-
-    progress.style.width =
-        `${percentage}%`;
-
-    currentPageText.textContent =
-        String(pageNumber).padStart(2, "0");
-
-}
-
-
-/* ==========================================================
-   ACTIVATE PAGE
-========================================================== */
-
-function activatePage(
-    newIndex,
-    direction = "forward"
-) {
-
-    if (
-        newIndex < 0 ||
-        newIndex >= totalPages
-    ) {
-        return;
-    }
-
-    if (
-        isAnimating ||
-        newIndex === currentPage
-    ) {
-        return;
-    }
-
-    isAnimating = true;
-
-    const oldPage =
-        pages[currentPage];
-
-    const newPage =
-        pages[newIndex];
-
-
-    /* ----------------------------------------------
-       Prepare incoming page
-    ---------------------------------------------- */
-
-    newPage.classList.remove(
-        "exit-left"
-    );
-
-    newPage.classList.add(
-        "active"
-    );
-
-
-    /* ----------------------------------------------
-       Old page animation
-    ---------------------------------------------- */
-
-    if (direction === "forward") {
-
-        oldPage.classList.add(
-            "exit-left"
-        );
+        });
 
     }
 
 
-    /* ----------------------------------------------
-       Update state
-    ---------------------------------------------- */
+    /* =====================================================
+       RESET INNER SCROLL
+    ====================================================== */
 
-    currentPage =
-        newIndex;
+    function resetPageScroll(page) {
 
-    updateUI();
+        const inner =
+            page.querySelector(".page-inner");
+
+        if (!inner) return;
+
+        inner.scrollTop = 0;
+
+    }
 
 
-    /* ----------------------------------------------
-       Clean old page
-    ---------------------------------------------- */
+    /* =====================================================
+       GO TO PAGE
+    ====================================================== */
 
-    window.setTimeout(() => {
+    function goToPage(index) {
+
+        if (isAnimating) return;
+
+        if (index < 0) return;
+
+        if (index >= pages.length) return;
+
+        if (index === currentPage) return;
+
+
+        isAnimating = true;
+
+
+        const oldPage =
+            pages[currentPage];
+
+        const newPage =
+            pages[index];
+
 
         oldPage.classList.remove(
-            "active",
-            "exit-left"
+            "active"
         );
 
-        isAnimating = false;
 
-    }, 850);
+        newPage.classList.add(
+            "active"
+        );
 
-}
+
+        currentPage =
+            index;
 
 
-/* ==========================================================
-   NEXT PAGE
-========================================================== */
+        updateUI();
 
-function goNext() {
+        resetPageScroll(
+            newPage
+        );
 
-    if (
-        currentPage >=
-        totalPages - 1
-    ) {
-        return;
+
+        window.setTimeout(() => {
+
+            isAnimating = false;
+
+        }, 850);
+
     }
 
-    activatePage(
-        currentPage + 1,
-        "forward"
-    );
 
-}
+    /* =====================================================
+       NEXT BUTTONS
+    ====================================================== */
+
+    nextButtons.forEach(button => {
+
+        button.addEventListener(
+            "click",
+            () => {
+
+                goToPage(
+                    currentPage + 1
+                );
+
+            }
+        );
+
+    });
 
 
-/* ==========================================================
-   BUTTON EVENTS
-========================================================== */
+    /* =====================================================
+       SIDE DOTS
+       ONLY ALLOW FORWARD MOVEMENT
+    ====================================================== */
 
-nextButtons.forEach(button => {
+    dots.forEach((dot, index) => {
 
-    button.addEventListener(
-        "click",
-        function (event) {
+        dot.addEventListener(
+            "click",
+            () => {
 
-            event.preventDefault();
+                if (
+                    index >
+                    currentPage
+                ) {
 
-            goNext();
+                    goToPage(index);
+
+                }
+
+            }
+        );
+
+    });
+
+
+    /* =====================================================
+       FLIP CARDS
+    ====================================================== */
+
+    const flipCards =
+        [...document.querySelectorAll(".flip-card")];
+
+
+    flipCards.forEach(card => {
+
+
+        function flip() {
+
+            card.classList.toggle(
+                "flipped"
+            );
+
+
+            card.setAttribute(
+                "aria-pressed",
+                card.classList.contains(
+                    "flipped"
+                )
+                    ? "true"
+                    : "false"
+            );
 
         }
-    );
-
-});
 
 
-/* ==========================================================
-   CARD FLIP
-========================================================== */
-
-reasonCards.forEach(card => {
-
-    function flipCard() {
-
-        card.classList.toggle(
-            "flipped"
+        card.setAttribute(
+            "role",
+            "button"
         );
 
-    }
 
-    card.addEventListener(
-        "click",
-        flipCard
-    );
+        card.setAttribute(
+            "aria-pressed",
+            "false"
+        );
 
-    card.addEventListener(
+
+        card.addEventListener(
+            "click",
+            flip
+        );
+
+
+        card.addEventListener(
+            "keydown",
+            event => {
+
+                if (
+                    event.key === "Enter" ||
+                    event.key === " "
+                ) {
+
+                    event.preventDefault();
+
+                    flip();
+
+                }
+
+            }
+        );
+
+    });
+
+
+    /* =====================================================
+       PAGE SCROLL
+       WHEEL STAYS INSIDE PAGE
+    ====================================================== */
+
+    pages.forEach(page => {
+
+        const inner =
+            page.querySelector(
+                ".page-inner"
+            );
+
+
+        if (!inner) return;
+
+
+        inner.addEventListener(
+            "wheel",
+            event => {
+
+                event.stopPropagation();
+
+            },
+            {
+                passive: true
+            }
+        );
+
+
+        inner.addEventListener(
+            "touchmove",
+            event => {
+
+                event.stopPropagation();
+
+            },
+            {
+                passive: true
+            }
+        );
+
+    });
+
+
+    /* =====================================================
+       KEYBOARD NAVIGATION
+       RIGHT / PAGEDOWN = NEXT
+       NO BACKWARD NAVIGATION
+    ====================================================== */
+
+    document.addEventListener(
         "keydown",
-        function (event) {
+        event => {
 
             if (
-                event.key === "Enter" ||
-                event.key === " "
+                ["INPUT", "TEXTAREA", "SELECT"]
+                    .includes(
+                        document.activeElement?.tagName
+                    )
+            ) {
+
+                return;
+
+            }
+
+
+            if (
+                event.key === "ArrowRight" ||
+                event.key === "PageDown"
             ) {
 
                 event.preventDefault();
 
-                flipCard();
+                goToPage(
+                    currentPage + 1
+                );
+
+            }
+
+
+            if (
+                event.key === "Home" &&
+                currentPage === 0
+            ) {
+
+                const inner =
+                    pages[0]
+                        .querySelector(
+                            ".page-inner"
+                        );
+
+
+                inner?.scrollTo({
+
+                    top: 0,
+
+                    behavior: "smooth"
+
+                });
 
             }
 
         }
     );
 
-});
+
+    /* =====================================================
+       POINTER GLOW
+    ====================================================== */
+
+    const app =
+        document.getElementById(
+            "app"
+        );
 
 
-/* ==========================================================
-   YES BUTTON
-========================================================== */
+    window.addEventListener(
+        "pointermove",
+        event => {
 
-if (yesButton) {
+            const pointerX =
+                (
+                    event.clientX /
+                    window.innerWidth
+                ) * 100;
 
-    yesButton.addEventListener(
-        "click",
-        function () {
 
-            showAnswerOverlay();
+            const pointerY =
+                (
+                    event.clientY /
+                    window.innerHeight
+                ) * 100;
 
-            createCelebration();
 
+            app.style.background = `
+
+                radial-gradient(
+                    circle at
+                    ${pointerX}%
+                    ${pointerY}%,
+
+                    rgba(
+                        233,
+                        168,
+                        193,
+                        .055
+                    ),
+
+                    transparent 26%
+                ),
+
+                radial-gradient(
+                    circle at 50% 0%,
+                    rgba(
+                        216,
+                        130,
+                        164,
+                        .08
+                    ),
+                    transparent 38%
+                ),
+
+                radial-gradient(
+                    circle at 0% 100%,
+                    rgba(
+                        151,
+                        98,
+                        179,
+                        .06
+                    ),
+                    transparent 34%
+                ),
+
+                #08070c
+
+            `;
+
+        },
+        {
+            passive: true
         }
     );
 
-}
+
+    /* =====================================================
+       TOAST
+    ====================================================== */
+
+    function showToast(
+        message,
+        duration = 2300
+    ) {
+
+        toast.textContent =
+            message;
 
 
-/* ==========================================================
-   MAYBE BUTTON
-========================================================== */
+        toast.classList.add(
+            "show"
+        );
 
-if (maybeButton) {
 
-    maybeButton.addEventListener(
+        window.clearTimeout(
+            showToast.timer
+        );
+
+
+        showToast.timer =
+            window.setTimeout(
+                () => {
+
+                    toast.classList.remove(
+                        "show"
+                    );
+
+                },
+                duration
+            );
+
+    }
+
+
+    window.setTimeout(
+        () => {
+
+            showToast(
+                "Tap the cards when you reach them ✦"
+            );
+
+        },
+        1500
+    );
+
+
+    /* =====================================================
+       PROPOSAL RESPONSE
+    ====================================================== */
+
+    const yesBtn =
+        document.getElementById(
+            "yesBtn"
+        );
+
+
+    const maybeBtn =
+        document.getElementById(
+            "maybeBtn"
+        );
+
+
+    const responseCard =
+        document.getElementById(
+            "responseCard"
+        );
+
+
+    const responseIcon =
+        document.getElementById(
+            "responseIcon"
+        );
+
+
+    const responseTitle =
+        document.getElementById(
+            "responseTitle"
+        );
+
+
+    const responseText =
+        document.getElementById(
+            "responseText"
+        );
+
+
+    const closeResponse =
+        document.getElementById(
+            "closeResponse"
+        );
+
+
+    function showResponse(type) {
+
+
+        if (type === "yes") {
+
+            responseIcon.textContent =
+                "♥";
+
+
+            responseTitle.textContent =
+                "You just made Leo smile.";
+
+
+            responseText.textContent =
+                "Thank you, Judy. I'm really happy I finally said it.";
+
+        }
+
+
+        else {
+
+            responseIcon.textContent =
+                "✦";
+
+
+            responseTitle.textContent =
+                "Take your time.";
+
+
+            responseText.textContent =
+                "There is genuinely no pressure. I just wanted you to know how I feel.";
+
+        }
+
+
+        responseCard.classList.add(
+            "show"
+        );
+
+    }
+
+
+    yesBtn?.addEventListener(
         "click",
-        function () {
+        () => {
 
-            const phrases = [
-                "Take your time ♡",
-                "Okay... I'll wait 😭",
-                "No pressure, Judy ♡",
-                "I'll still be here :)"
-            ];
-
-            const randomPhrase =
-                phrases[
-                    Math.floor(
-                        Math.random() *
-                        phrases.length
-                    )
-                ];
-
-            maybeButton.querySelector(
-                "span"
-            ).textContent =
-                randomPhrase;
-
-            maybeButton.animate(
-                [
-                    {
-                        transform:
-                            "translateX(0)"
-                    },
-                    {
-                        transform:
-                            "translateX(-7px)"
-                    },
-                    {
-                        transform:
-                            "translateX(7px)"
-                    },
-                    {
-                        transform:
-                            "translateX(0)"
-                    }
-                ],
-                {
-                    duration: 450,
-                    easing: "ease-out"
-                }
+            showResponse(
+                "yes"
             );
 
         }
     );
 
-}
 
-
-/* ==========================================================
-   ANSWER OVERLAY
-========================================================== */
-
-function showAnswerOverlay() {
-
-    if (!answerOverlay) {
-        return;
-    }
-
-    answerOverlay.classList.add(
-        "show"
-    );
-
-}
-
-
-function hideAnswerOverlay() {
-
-    if (!answerOverlay) {
-        return;
-    }
-
-    answerOverlay.classList.remove(
-        "show"
-    );
-
-}
-
-
-if (closeAnswer) {
-
-    closeAnswer.addEventListener(
+    maybeBtn?.addEventListener(
         "click",
-        hideAnswerOverlay
-    );
+        () => {
 
-}
-
-
-if (answerOverlay) {
-
-    answerOverlay.addEventListener(
-        "click",
-        function (event) {
-
-            if (
-                event.target ===
-                answerOverlay
-            ) {
-
-                hideAnswerOverlay();
-
-            }
+            showResponse(
+                "maybe"
+            );
 
         }
     );
 
-}
+
+    closeResponse?.addEventListener(
+        "click",
+        () => {
+
+            responseCard.classList.remove(
+                "show"
+            );
+
+        }
+    );
 
 
-/* ==========================================================
-   CELEBRATION PARTICLES
-========================================================== */
+    /* =====================================================
+       MAGNETIC BUTTON EFFECT
+    ====================================================== */
 
-function createCelebration() {
+    document
+        .querySelectorAll(
+            ".next-btn, .answer-btn"
+        )
+        .forEach(button => {
 
-    const symbols = [
-        "✦",
-        "♡",
-        "✧",
-        "·",
-        "✦"
-    ];
 
-    const amount =
-        window.innerWidth < 600
-            ? 22
-            : 40;
+            button.addEventListener(
+                "pointermove",
+                event => {
+
+                    const rect =
+                        button.getBoundingClientRect();
+
+
+                    const x =
+                        event.clientX -
+                        rect.left -
+                        rect.width / 2;
+
+
+                    const y =
+                        event.clientY -
+                        rect.top -
+                        rect.height / 2;
+
+
+                    button.style.transform =
+                        `translate(
+                            ${x * .035}px,
+                            ${y * .035}px
+                        )`;
+
+                }
+            );
+
+
+            button.addEventListener(
+                "pointerleave",
+                () => {
+
+                    button.style.transform =
+                        "";
+
+                }
+            );
+
+        });
+
+
+    /* =====================================================
+       INTERSECTION OBSERVER
+    ====================================================== */
+
+    const observer =
+        new IntersectionObserver(
+            entries => {
+
+                entries.forEach(
+                    entry => {
+
+                        if (
+                            entry.isIntersecting
+                        ) {
+
+                            entry.target.classList.add(
+                                "seen"
+                            );
+
+                        }
+
+                    }
+                );
+
+            },
+            {
+
+                threshold: .12,
+
+                rootMargin:
+                    "0px 0px -5% 0px"
+
+            }
+        );
+
+
+    document
+        .querySelectorAll(
+            ".page-inner > *"
+        )
+        .forEach(
+            element => {
+
+                observer.observe(
+                    element
+                );
+
+            }
+        );
+
+
+    /* =====================================================
+       RESIZE
+    ====================================================== */
+
+    window.addEventListener(
+        "resize",
+        () => {
+
+            document.documentElement
+                .style
+                .setProperty(
+                    "--vw",
+                    `${window.innerWidth}px`
+                );
+
+        }
+    );
+
+
+    /* =====================================================
+       INITIAL UI
+    ====================================================== */
+
+    updateUI();
+
+
+    /* =====================================================
+       DECORATIVE PARTICLES
+    ====================================================== */
+
+    const particleLayer =
+        document.createElement(
+            "div"
+        );
+
+
+    particleLayer.setAttribute(
+        "aria-hidden",
+        "true"
+    );
+
+
+    particleLayer.style.cssText = `
+
+        position:absolute;
+
+        inset:0;
+
+        pointer-events:none;
+
+        z-index:-1;
+
+        overflow:hidden;
+
+    `;
+
 
     for (
         let i = 0;
-        i < amount;
+        i < 24;
         i++
     ) {
 
+
         const particle =
             document.createElement(
-                "span"
+                "i"
             );
 
-        particle.textContent =
-            symbols[
-                Math.floor(
-                    Math.random() *
-                    symbols.length
-                )
-            ];
 
-        particle.style.position =
-            "fixed";
+        const size =
+            Math.random() * 3 + 1;
 
-        particle.style.left =
-            `${50 + (Math.random() - 0.5) * 50}%`;
 
-        particle.style.top =
-            `${50 + (Math.random() - 0.5) * 20}%`;
+        const left =
+            Math.random() * 100;
 
-        particle.style.zIndex =
-            "600";
 
-        particle.style.pointerEvents =
-            "none";
+        const top =
+            Math.random() * 100;
 
-        particle.style.color =
-            Math.random() > 0.5
-                ? "#e9d19b"
-                : "#c98d99";
 
-        particle.style.fontSize =
-            `${10 + Math.random() * 14}px`;
+        const delay =
+            Math.random() * 8;
 
-        document.body.appendChild(
+
+        const duration =
+            6 +
+            Math.random() * 8;
+
+
+        particle.style.cssText = `
+
+            position:absolute;
+
+            width:${size}px;
+
+            height:${size}px;
+
+            left:${left}%;
+
+            top:${top}%;
+
+            border-radius:50%;
+
+            background:
+                rgba(
+                    233,
+                    168,
+                    193,
+                    .28
+                );
+
+            box-shadow:
+                0 0
+                ${size * 5}px
+                rgba(
+                    233,
+                    168,
+                    193,
+                    .2
+                );
+
+            animation:
+                particleFloat
+                ${duration}s
+                ease-in-out
+                ${delay}s
+                infinite
+                alternate;
+
+        `;
+
+
+        particleLayer.appendChild(
             particle
         );
 
-        const angle =
-            Math.random() *
-            Math.PI *
-            2;
+    }
 
-        const distance =
-            120 +
-            Math.random() * 300;
 
-        const x =
-            Math.cos(angle) *
-            distance;
+    app.appendChild(
+        particleLayer
+    );
 
-        const y =
-            Math.sin(angle) *
-            distance;
 
-        particle.animate(
-            [
-                {
-                    transform:
-                        "translate(-50%, -50%) scale(0)",
-                    opacity: 0
+    /* =====================================================
+       PARTICLE ANIMATION
+    ====================================================== */
+
+    const particleStyle =
+        document.createElement(
+            "style"
+        );
+
+
+    particleStyle.textContent = `
+
+        @keyframes particleFloat {
+
+            0% {
+
+                transform:
+                    translate3d(
+                        0,
+                        0,
+                        0
+                    );
+
+                opacity: .15;
+
+            }
+
+            50% {
+
+                opacity: .65;
+
+            }
+
+            100% {
+
+                transform:
+                    translate3d(
+                        35px,
+                        -70px,
+                        0
+                    );
+
+                opacity: .1;
+
+            }
+
+        }
+
+    `;
+
+
+    document.head.appendChild(
+        particleStyle
+    );
+
+
+    /* =====================================================
+       MEWWWW EASTER EGG
+    ====================================================== */
+
+    let typed = "";
+
+
+    document.addEventListener(
+        "keydown",
+        event => {
+
+            if (
+                event.key.length !== 1
+            ) {
+
+                return;
+
+            }
+
+
+            typed +=
+                event.key.toLowerCase();
+
+
+            if (
+                typed.length > 6
+            ) {
+
+                typed =
+                    typed.slice(-6);
+
+            }
+
+
+            if (
+                typed === "mewwww"
+            ) {
+
+                createHeartBurst();
+
+                showToast(
+                    "mewwww ♥",
+                    1800
+                );
+
+                typed = "";
+
+            }
+
+        }
+    );
+
+
+    /* =====================================================
+       HEART BURST
+    ====================================================== */
+
+    function createHeartBurst() {
+
+
+        for (
+            let i = 0;
+            i < 18;
+            i++
+        ) {
+
+
+            const heart =
+                document.createElement(
+                    "span"
+                );
+
+
+            const x =
+                window.innerWidth / 2;
+
+
+            const y =
+                window.innerHeight / 2;
+
+
+            heart.textContent =
+                "♥";
+
+
+            heart.style.cssText = `
+
+                position:fixed;
+
+                left:${x}px;
+
+                top:${y}px;
+
+                z-index:100;
+
+                pointer-events:none;
+
+                color:#e9a8c1;
+
+                font-size:
+                    ${10 + Math.random() * 18}px;
+
+                animation:
+                    burstHeart
+                    1.4s
+                    ease-out
+                    forwards;
+
+                --x:
+                    ${Math.random() * 360 - 180}px;
+
+                --y:
+                    ${Math.random() * 300 - 190}px;
+
+            `;
+
+
+            document.body.appendChild(
+                heart
+            );
+
+
+            setTimeout(
+                () => {
+
+                    heart.remove();
+
                 },
-                {
-                    transform:
-                        "translate(-50%, -50%) scale(1)",
-                    opacity: 1,
-                    offset: 0.2
-                },
-                {
-                    transform:
-                        `translate(
-                            calc(-50% + ${x}px),
-                            calc(-50% + ${y}px)
+                1500
+            );
+
+        }
+
+    }
+
+
+    /* =====================================================
+       HEART BURST ANIMATION
+    ====================================================== */
+
+    const burstStyle =
+        document.createElement(
+            "style"
+        );
+
+
+    burstStyle.textContent = `
+
+        @keyframes burstHeart {
+
+            0% {
+
+                transform:
+                    translate(
+                        -50%,
+                        -50%
+                    )
+                    scale(.4);
+
+                opacity:0;
+
+            }
+
+
+            15% {
+
+                opacity:1;
+
+            }
+
+
+            100% {
+
+                transform:
+                    translate(
+                        calc(
+                            -50% + var(--x)
+                        ),
+                        calc(
+                            -50% + var(--y)
                         )
-                        rotate(${Math.random() * 360}deg)
-                        scale(0.5)`,
-                    opacity: 0
-                }
-            ],
-            {
-                duration:
-                    1100 +
-                    Math.random() * 900,
+                    )
+                    scale(1);
 
-                easing:
-                    "cubic-bezier(.2,.8,.2,1)",
+                opacity:0;
 
-                fill: "forwards"
-            }
-        );
-
-        window.setTimeout(
-            () => {
-                particle.remove();
-            },
-            2200
-        );
-
-    }
-
-}
-
-
-/* ==========================================================
-   KEYBOARD NAVIGATION
-========================================================== */
-
-document.addEventListener(
-    "keydown",
-    function (event) {
-
-        if (
-            event.key === "ArrowRight" ||
-            event.key === "Enter"
-        ) {
-
-            const tag =
-                document.activeElement.tagName;
-
-            const isInput =
-                tag === "INPUT" ||
-                tag === "TEXTAREA";
-
-            if (!isInput) {
-                goNext();
             }
 
         }
 
-    }
-);
+    `;
 
 
-/* ==========================================================
-   BLOCK WHEEL NAVIGATION
-   Navigation stays button-based.
-========================================================== */
-
-document.addEventListener(
-    "wheel",
-    function (event) {
-
-        /*
-         * We intentionally prevent wheel navigation.
-         * The website uses the NEXT buttons.
-         */
-
-        event.preventDefault();
-
-    },
-    {
-        passive: false
-    }
-);
+    document.head.appendChild(
+        burstStyle
+    );
 
 
-/* ==========================================================
-   TOUCH SWIPE
-   Only forward swipe is allowed.
-========================================================== */
-
-let touchStartX = 0;
-
-let touchStartY = 0;
-
-
-document.addEventListener(
-    "touchstart",
-    function (event) {
-
-        if (!event.touches.length) {
-            return;
-        }
-
-        touchStartX =
-            event.touches[0].clientX;
-
-        touchStartY =
-            event.touches[0].clientY;
-
-    },
-    {
-        passive: true
-    }
-);
-
-
-document.addEventListener(
-    "touchend",
-    function (event) {
-
-        if (!event.changedTouches.length) {
-            return;
-        }
-
-        const touch =
-            event.changedTouches[0];
-
-        const endX =
-            touch.clientX;
-
-        const endY =
-            touch.clientY;
-
-        const deltaX =
-            endX - touchStartX;
-
-        const deltaY =
-            endY - touchStartY;
-
-
-        /*
-         * Horizontal swipe only.
-         */
-
-        if (
-            Math.abs(deltaX) >
-            90 &&
-            Math.abs(deltaX) >
-            Math.abs(deltaY)
-        ) {
-
-            /*
-             * Only right-to-left swipe
-             * moves forward.
-             */
-
-            if (deltaX < 0) {
-                goNext();
-            }
-
-        }
-
-    },
-    {
-        passive: true
-    }
-);
-
-
-/* ==========================================================
-   INITIAL UI
-========================================================== */
-
-updateUI();
-
-
-/* ==========================================================
-   PREVENT CONTEXT MENU
-   Keeps the presentation cleaner.
-========================================================== */
-
-document.addEventListener(
-    "contextmenu",
-    function (event) {
-
-        /*
-         * Don't interfere with normal text
-         * interaction. Only prevent it on the
-         * decorative background.
-         */
-
-        if (
-            event.target === document.body ||
-            event.target.classList.contains(
-                "background"
-            )
-        ) {
-
-            event.preventDefault();
-
-        }
-
-    }
-);
-
-
-/* ==========================================================
-   PAGE LOAD ENTRANCE
-========================================================== */
-
-window.addEventListener(
-    "load",
-    function () {
-
-        document.body.classList.add(
-            "loaded"
-        );
-
-        updateUI();
-
-    }
-);
+})();
