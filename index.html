@@ -1,18 +1,23 @@
+```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="theme-color" content="#05030a">
-  <meta name="description" content="Something I made for Jas.">
 
-  <title>For Jas — I</title>
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0, viewport-fit=cover"
+  >
+
+  <meta name="theme-color" content="#030207">
+
+  <title>For Jas ♡</title>
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 
   <link
-    href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&family=Playfair+Display:ital,wght@0,500;0,600;1,500&display=swap"
+    href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&family=Playfair+Display:ital,wght@400;500;600&display=swap"
     rel="stylesheet"
   >
 
@@ -21,28 +26,40 @@
 
 <body>
 
-  <!-- Ambient background -->
-  <div class="ambient ambient-one"></div>
-  <div class="ambient ambient-two"></div>
-  <div class="noise"></div>
-  <div id="stars"></div>
+  <!-- Background -->
+  <div class="aurora aurora-a"></div>
+  <div class="aurora aurora-b"></div>
+  <div class="aurora aurora-c"></div>
 
-  <!-- Top UI -->
-  <div class="page-counter">
-    <span id="currentPage">01</span>
-    <span class="counter-line">/</span>
-    <span id="totalPages">10</span>
+  <div id="stars"></div>
+  <canvas id="particles"></canvas>
+
+  <!-- Cursor follower -->
+  <div id="cursorGlow">
+    <div class="cursor-core"></div>
   </div>
 
-  <!-- Progress -->
-  <div class="progress-track">
+  <!-- Top indicator -->
+  <div class="top-ui">
+    <div class="brand">FOR JAS</div>
+
+    <div class="counter">
+      <span id="current">01</span>
+      <span>/</span>
+      <span id="total">10</span>
+    </div>
+  </div>
+
+  <!-- Story -->
+  <main id="app"></main>
+
+  <!-- Bottom progress -->
+  <div class="progress">
     <div id="progressBar"></div>
   </div>
-
-  <!-- Main story -->
-  <main id="story"></main>
 
   <script src="script.js"></script>
 
 </body>
 </html>
+```
