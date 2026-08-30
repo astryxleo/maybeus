@@ -1,16 +1,22 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>For Jas</title>
+    <title>For Jas — From Leo</title>
+
+    <meta
+        name="description"
+        content="A little something made especially for Jas."
+    >
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 
     <link
-        href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&family=Playfair+Display:ital,wght@0,400;0,500;1,400&display=swap"
+        href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&family=Playfair+Display:ital,wght@0,400;1,400;1,500&display=swap"
         rel="stylesheet"
     >
 
@@ -19,161 +25,186 @@
 
 <body>
 
-    <!-- =====================================================
-         BACKGROUND
-         ===================================================== -->
-
-    <div class="aurora aurora-1"></div>
-    <div class="aurora aurora-2"></div>
-    <div class="aurora aurora-3"></div>
+    <!-- BACKGROUND -->
+    <div class="aurora aurora-one"></div>
+    <div class="aurora aurora-two"></div>
+    <div class="aurora aurora-three"></div>
 
     <div id="stars"></div>
 
     <canvas id="particleCanvas"></canvas>
 
+    <!-- CURSOR -->
     <div id="cursorGlow">
         <span>✦</span>
     </div>
 
-
-    <!-- =====================================================
-         TOP BAR
-         ===================================================== -->
-
+    <!-- TOP BAR -->
     <header class="topbar">
 
-        <div class="logo">
+        <div class="brand">
             FOR JAS
         </div>
 
-        <div class="page-counter">
-            <span id="pageNumber">01</span>
-            <span>/</span>
-            <span id="pageTotal">09</span>
+        <div class="counter">
+            <span id="currentNumber">01</span>
+            <span class="counter-line">/</span>
+            <span id="totalNumber">09</span>
         </div>
 
     </header>
 
 
-    <!-- =====================================================
-         MUSIC
-         ===================================================== -->
+    <!-- MUSIC -->
+    <audio
+        id="musicPlayer"
+        preload="auto"
+        loop
+    ></audio>
 
-    <audio id="musicPlayer" preload="auto"></audio>
-
-
-    <button id="musicButton" class="music-button">
-        ♫
+    <button
+        id="musicButton"
+        class="music-button"
+        aria-label="Music controls"
+    >
+        <span id="musicIcon">♫</span>
     </button>
 
 
-    <!-- =====================================================
-         PAGE CONTAINER
-         ===================================================== -->
+    <!-- MUSIC PANEL -->
+    <div
+        id="musicPanel"
+        class="music-panel"
+    >
 
+        <div class="music-title">
+            NOW PLAYING
+        </div>
+
+        <div
+            id="songName"
+            class="song-name"
+        >
+            Song 1
+        </div>
+
+        <div class="music-controls">
+
+            <button
+                id="previousSong"
+                class="music-control"
+            >
+                ‹
+            </button>
+
+            <button
+                id="playPause"
+                class="music-control main-control"
+            >
+                ▶
+            </button>
+
+            <button
+                id="nextSong"
+                class="music-control"
+            >
+                ›
+            </button>
+
+        </div>
+
+        <div class="volume-area">
+
+            <span>VOL</span>
+
+            <input
+                id="volumeSlider"
+                type="range"
+                min="0"
+                max="0.3"
+                step="0.01"
+                value="0.14"
+            >
+
+        </div>
+
+    </div>
+
+
+    <!-- ALL PAGES -->
     <main id="pages">
 
 
-        <!-- =================================================
+        <!-- ==================================================
              PAGE 1
-             ================================================= -->
+             ================================================== -->
 
         <section class="page active">
 
-            <div class="page-content">
+            <div class="content">
 
                 <div class="eyebrow">
-                    A little something
+                    A LITTLE SOMETHING
                 </div>
 
                 <h1 class="hero-title">
                     Jas<span>.</span>
                 </h1>
 
-                <p class="subtitle">
-                    Some things are easier to say
-                    when you take your time.
+                <p class="hero-text">
+                    There are some things I wanted to say,
+                    and somehow a normal message didn't feel
+                    enough.
                 </p>
 
-                <p class="hint">
-                    Tap the button below.
-                </p>
+                <div class="tiny-hint">
+                    take your time
+                </div>
 
             </div>
 
         </section>
 
 
-
-        <!-- =================================================
+        <!-- ==================================================
              PAGE 2
-             ================================================= -->
+             ================================================== -->
 
         <section class="page">
 
-            <div class="page-content">
+            <div class="content">
 
                 <div class="eyebrow">
-                    where it started
+                    WHERE IT STARTED
                 </div>
 
-                <h2 class="section-title">
-                    One little <em>drawing.</em>
+                <h2 class="title">
+                    It started with<br>
+                    <em>a drawing.</em>
                 </h2>
 
-                <div class="glass-card">
+                <div class="story-card">
 
-                    <p class="large-text">
-                        Replace this paragraph with your own
-                        message about how you first noticed
-                        Jas's drawing.
-                    </p>
-
-                    <p class="muted">
-                        Your Instagram-highlight story goes here.
-                    </p>
-
-                </div>
-
-            </div>
-
-        </section>
-
-
-
-        <!-- =================================================
-             PAGE 3
-             ================================================= -->
-
-        <section class="page">
-
-            <div class="page-content">
-
-                <div class="eyebrow">
-                    the little things
-                </div>
-
-                <h2 class="section-title">
-                    Things that <em>matter.</em>
-                </h2>
-
-                <div class="glass-card">
-
-                    <p class="large-text">
-                        Add your own message here about the
-                        small things you appreciate.
-                    </p>
-
-                    <div class="mini-list">
-
-                        <div>✦ Her kindness</div>
-                        <div>✦ Her trust</div>
-                        <div>✦ The effort she notices</div>
-                        <div>✦ The things she shares</div>
-                        <div>✦ The little jokes</div>
-
+                    <div class="story-number">
+                        01
                     </div>
 
+                    <p>
+                        I saw your drawing on your highlight
+                        and all I did was compliment it.
+                    </p>
+
+                    <div class="quote">
+                        "Tumhari drawings mast h."
+                    </div>
+
+                    <p class="soft">
+                        I didn't know that such a small
+                        compliment would become the beginning
+                        of something that would mean this much
+                        to me.
+                    </p>
+
                 </div>
 
             </div>
@@ -181,24 +212,69 @@
         </section>
 
 
-
-        <!-- =================================================
-             PAGE 4 — FLIP CARDS
-             ================================================= -->
+        <!-- ==================================================
+             PAGE 3
+             ================================================== -->
 
         <section class="page">
 
-            <div class="page-content wide">
+            <div class="content">
 
                 <div class="eyebrow">
-                    reasons
+                    THEN I STARTED NOTICING
                 </div>
 
-                <h2 class="section-title">
-                    Why <em>Jas?</em>
+                <h2 class="title">
+                    The little<br>
+                    <em>things.</em>
                 </h2>
 
-                <p class="subtitle">
+                <div class="glass-card">
+
+                    <p>
+                        You care about me.
+                    </p>
+
+                    <p>
+                        You notice my efforts.
+                    </p>
+
+                    <p>
+                        You don't ignore me.
+                    </p>
+
+                    <p>
+                        You share your things with me.
+                    </p>
+
+                    <p>
+                        You make me feel important.
+                    </p>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- ==================================================
+             PAGE 4 — FLIP CARDS
+             ================================================== -->
+
+        <section class="page">
+
+            <div class="content wide">
+
+                <div class="eyebrow">
+                    REASONS
+                </div>
+
+                <h2 class="title">
+                    Why you?
+                </h2>
+
+                <p class="card-instruction">
                     Tap each card.
                 </p>
 
@@ -218,16 +294,16 @@
                                     01
                                 </span>
 
-                                <span class="card-icon">
+                                <div class="card-symbol">
                                     ✦
-                                </span>
+                                </div>
 
                                 <h3>
-                                    She's beautiful
+                                    You're beautiful.
                                 </h3>
 
                                 <small>
-                                    tap to reveal
+                                    TAP TO FLIP
                                 </small>
 
                             </div>
@@ -239,8 +315,10 @@
                                 </span>
 
                                 <p>
-                                    Add your personal description
-                                    here.
+                                    You're genuinely beautiful,
+                                    but somehow it's the person
+                                    you are that makes everything
+                                    about you stand out even more.
                                 </p>
 
                             </div>
@@ -248,7 +326,6 @@
                         </div>
 
                     </article>
-
 
 
                     <!-- CARD 2 -->
@@ -263,16 +340,16 @@
                                     02
                                 </span>
 
-                                <span class="card-icon">
+                                <div class="card-symbol">
                                     ♡
-                                </span>
+                                </div>
 
                                 <h3>
-                                    She cares
+                                    You care.
                                 </h3>
 
                                 <small>
-                                    tap to reveal
+                                    TAP TO FLIP
                                 </small>
 
                             </div>
@@ -284,8 +361,10 @@
                                 </span>
 
                                 <p>
-                                    Add your personal description
-                                    here.
+                                    You care about me, and
+                                    I notice it. The little
+                                    things you do don't go
+                                    unnoticed.
                                 </p>
 
                             </div>
@@ -293,7 +372,6 @@
                         </div>
 
                     </article>
-
 
 
                     <!-- CARD 3 -->
@@ -308,16 +386,16 @@
                                     03
                                 </span>
 
-                                <span class="card-icon">
+                                <div class="card-symbol">
                                     ✧
-                                </span>
+                                </div>
 
                                 <h3>
-                                    She notices
+                                    You notice.
                                 </h3>
 
                                 <small>
-                                    tap to reveal
+                                    TAP TO FLIP
                                 </small>
 
                             </div>
@@ -329,8 +407,10 @@
                                 </span>
 
                                 <p>
-                                    Add your personal description
-                                    here.
+                                    You notice my efforts.
+                                    That means more to me
+                                    than I probably ever
+                                    manage to explain.
                                 </p>
 
                             </div>
@@ -338,7 +418,6 @@
                         </div>
 
                     </article>
-
 
 
                     <!-- CARD 4 -->
@@ -353,16 +432,16 @@
                                     04
                                 </span>
 
-                                <span class="card-icon">
+                                <div class="card-symbol">
                                     ∞
-                                </span>
+                                </div>
 
                                 <h3>
-                                    She always replies
+                                    You don't ignore me.
                                 </h3>
 
                                 <small>
-                                    tap to reveal
+                                    TAP TO FLIP
                                 </small>
 
                             </div>
@@ -374,8 +453,10 @@
                                 </span>
 
                                 <p>
-                                    Add your personal description
-                                    here.
+                                    You always reply to my
+                                    messages, and somehow that
+                                    simple thing became one of
+                                    my favourite things.
                                 </p>
 
                             </div>
@@ -383,7 +464,6 @@
                         </div>
 
                     </article>
-
 
 
                     <!-- CARD 5 -->
@@ -398,16 +478,16 @@
                                     05
                                 </span>
 
-                                <span class="card-icon">
-                                    ☾
-                                </span>
+                                <div class="card-symbol">
+                                    ◇
+                                </div>
 
                                 <h3>
-                                    She trusts you
+                                    You trust me.
                                 </h3>
 
                                 <small>
-                                    tap to reveal
+                                    TAP TO FLIP
                                 </small>
 
                             </div>
@@ -419,8 +499,10 @@
                                 </span>
 
                                 <p>
-                                    Add your personal description
-                                    here.
+                                    You trust me enough to
+                                    share things with me,
+                                    and I don't take that
+                                    trust for granted.
                                 </p>
 
                             </div>
@@ -428,7 +510,6 @@
                         </div>
 
                     </article>
-
 
 
                     <!-- CARD 6 -->
@@ -443,16 +524,16 @@
                                     06
                                 </span>
 
-                                <span class="card-icon">
+                                <div class="card-symbol">
                                     ★
-                                </span>
+                                </div>
 
                                 <h3>
-                                    Her teasing
+                                    That teasing.
                                 </h3>
 
                                 <small>
-                                    tap to reveal
+                                    TAP TO FLIP
                                 </small>
 
                             </div>
@@ -464,8 +545,10 @@
                                 </span>
 
                                 <p>
-                                    Add your personal description
-                                    here.
+                                    And obviously your
+                                    "blehhh" teasing with me.
+                                    Somehow even that became
+                                    something I look forward to.
                                 </p>
 
                             </div>
@@ -473,7 +556,6 @@
                         </div>
 
                     </article>
-
 
 
                     <!-- CARD 7 -->
@@ -488,16 +570,16 @@
                                     07
                                 </span>
 
-                                <span class="card-icon">
-                                    +
-                                </span>
+                                <div class="card-symbol">
+                                    ☾
+                                </div>
 
                                 <h3>
-                                    She's herself
+                                    You're real with me.
                                 </h3>
 
                                 <small>
-                                    tap to reveal
+                                    TAP TO FLIP
                                 </small>
 
                             </div>
@@ -509,8 +591,10 @@
                                 </span>
 
                                 <p>
-                                    Add your personal description
-                                    here.
+                                    You're just yourself with
+                                    me. No pretending, no
+                                    unnecessary filters.
+                                    And I really value that.
                                 </p>
 
                             </div>
@@ -518,7 +602,6 @@
                         </div>
 
                     </article>
-
 
 
                     <!-- CARD 8 -->
@@ -533,16 +616,16 @@
                                     08
                                 </span>
 
-                                <span class="card-icon">
+                                <div class="card-symbol">
                                     ♡
-                                </span>
+                                </div>
 
                                 <h3>
-                                    Everything else
+                                    Everything else.
                                 </h3>
 
                                 <small>
-                                    tap to reveal
+                                    TAP TO FLIP
                                 </small>
 
                             </div>
@@ -554,8 +637,10 @@
                                 </span>
 
                                 <p>
-                                    Add your personal description
-                                    here.
+                                    There are honestly so many
+                                    things I like about you that
+                                    words just aren't enough
+                                    to put all of them here.
                                 </p>
 
                             </div>
@@ -571,136 +656,198 @@
         </section>
 
 
-
-        <!-- =================================================
+        <!-- ==================================================
              PAGE 5
-             ================================================= -->
+             ================================================== -->
 
         <section class="page">
 
-            <div class="page-content">
+            <div class="content">
 
                 <div class="eyebrow">
-                    another little confession
+                    ONE SMALL CHANGE
                 </div>
 
-                <h2 class="section-title">
-                    The <em>notification.</em>
+                <h2 class="title">
+                    Then came<br>
+                    <em>the notifications.</em>
                 </h2>
 
-                <div class="notification-card">
+                <div class="phone-card">
 
-                    <div class="notification-header">
+                    <div class="phone-top">
+                        MESSAGES
+                    </div>
+
+                    <div class="notification">
+
+                        <div class="notification-dot"></div>
+
+                        <div>
+                            <strong>
+                                Jas
+                            </strong>
+
+                            <span>
+                                New message
+                            </span>
+                        </div>
+
+                        <small>
+                            now
+                        </small>
+
+                    </div>
+
+                </div>
+
+                <p class="large-message">
+                    Every time I receive a notification,
+                    I just wish it would be Jas.
+                </p>
+
+            </div>
+
+        </section>
+
+
+        <!-- ==================================================
+             PAGE 6
+             ================================================== -->
+
+        <section class="page">
+
+            <div class="content">
+
+                <div class="eyebrow">
+                    SOMEHOW
+                </div>
+
+                <h2 class="title">
+                    You changed<br>
+                    <em>my routine.</em>
+                </h2>
+
+                <div class="routine-card">
+
+                    <div class="routine-line">
+                        <span>before</span>
+                        <b>normal day</b>
+                    </div>
+
+                    <div class="routine-arrow">
+                        ↓
+                    </div>
+
+                    <div class="routine-line">
+                        <span>now</span>
+                        <b>notification → "Jas?"</b>
+                    </div>
+
+                </div>
+
+                <p class="large-message">
+                    It's funny how someone can become such
+                    an important part of your everyday life
+                    without you even realizing when it happened.
+                </p>
+
+            </div>
+
+        </section>
+
+
+        <!-- ==================================================
+             PAGE 7
+             ================================================== -->
+
+        <section class="page">
+
+            <div class="content">
+
+                <div class="eyebrow">
+                    AND THEN
+                </div>
+
+                <h2 class="title">
+                    There was<br>
+                    <em>more.</em>
+                </h2>
+
+                <div class="glass-card">
+
+                    <p>
+                        You share your pics without being
+                        hesitant.
+                    </p>
+
+                    <p>
+                        You share your things with me.
+                    </p>
+
+                    <p>
+                        You consider me important.
+                    </p>
+
+                    <p>
+                        You're kind.
+                    </p>
+
+                    <p>
+                        You trust me.
+                    </p>
+
+                    <p>
+                        And somehow, all those little things
+                        started meaning a lot to me.
+                    </p>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- ==================================================
+             PAGE 8
+             ================================================== -->
+
+        <section class="page">
+
+            <div class="content">
+
+                <div class="eyebrow">
+                    THE HONEST PART
+                </div>
+
+                <div class="confession-card">
+
+                    <div class="confession-top">
                         JAS
                     </div>
 
-                    <div class="notification-body">
-                        New message
-                    </div>
-
-                    <div class="notification-time">
-                        just now
-                    </div>
-
-                </div>
-
-                <p class="large-text">
-                    Put your notification-related message here.
-                </p>
-
-            </div>
-
-        </section>
-
-
-
-        <!-- =================================================
-             PAGE 6
-             ================================================= -->
-
-        <section class="page">
-
-            <div class="page-content">
-
-                <div class="eyebrow">
-                    somehow
-                </div>
-
-                <h2 class="section-title">
-                    You became <em>important.</em>
-                </h2>
-
-                <div class="glass-card">
-
-                    <p class="large-text">
-                        Write your own paragraph here about
-                        how your friendship changed your routine
-                        and became meaningful to you.
-                    </p>
-
-                </div>
-
-            </div>
-
-        </section>
-
-
-
-        <!-- =================================================
-             PAGE 7
-             ================================================= -->
-
-        <section class="page">
-
-            <div class="page-content">
-
-                <div class="eyebrow">
-                    beyond words
-                </div>
-
-                <h2 class="section-title">
-                    Some things can't be <em>explained.</em>
-                </h2>
-
-                <p class="large-text">
-                    Put your own message here.
-                </p>
-
-                <p class="muted">
-                    Keep this section short and cinematic.
-                </p>
-
-            </div>
-
-        </section>
-
-
-
-        <!-- =================================================
-             PAGE 8
-             ================================================= -->
-
-        <section class="page">
-
-            <div class="page-content">
-
-                <div class="eyebrow">
-                    the honest part
-                </div>
-
-                <div class="glass-card">
-
-                    <h2 class="section-title small-title">
-                        Jas,
+                    <h2>
+                        I know you know
+                        I like you.
                     </h2>
 
-                    <p class="large-text">
-                        Put your own confession here.
+                    <p>
+                        But I don't think I've ever properly
+                        explained how much you've come to mean
+                        to me.
                     </p>
 
-                    <p class="large-text">
-                        Put the words you personally want
-                        to say here.
+                    <p>
+                        I like you so much more than I ever
+                        expected to, and I love you so much.
+                    </p>
+
+                    <p>
+                        Everything about you — the things you
+                        do, the way you are with me, the little
+                        moments, the teasing, the trust —
+                        somehow all of it became special.
                     </p>
 
                 </div>
@@ -710,33 +857,45 @@
         </section>
 
 
-
-        <!-- =================================================
+        <!-- ==================================================
              PAGE 9
-             ================================================= -->
+             ================================================== -->
 
         <section class="page">
 
-            <div class="page-content">
+            <div class="content final-content">
 
-                <div class="final-heart">
+                <div class="final-symbol">
                     ♡
                 </div>
 
                 <div class="eyebrow">
-                    one last thing
+                    ONE LAST THING
                 </div>
 
-                <h2 class="section-title">
-                    <em>Your final message.</em>
+                <h2 class="title final-title">
+                    You.<br>
+                    <em>And only you.</em>
                 </h2>
 
-                <p class="large-text">
-                    Put your final words here.
+                <p class="final-message">
+                    Jas, you're someone I genuinely care
+                    about so much.
                 </p>
 
+                <p class="final-message">
+                    There are things about you that words
+                    simply can't express.
+                </p>
+
+                <p class="final-message emphasis">
+                    And at last, it's you and only you, Jas.
+                </p>
+
+                <div class="final-divider"></div>
+
                 <div class="signature">
-                    — I
+                    Leo
                 </div>
 
             </div>
@@ -746,23 +905,21 @@
     </main>
 
 
-
-    <!-- =====================================================
-         NEXT BUTTON
-         ===================================================== -->
+    <!-- NEXT BUTTON -->
 
     <div class="navigation">
 
-        <button id="nextButton" class="next-button">
+        <button
+            id="nextButton"
+            class="next-button"
+        >
             Begin →
         </button>
 
     </div>
 
 
-    <!-- =====================================================
-         PROGRESS
-         ===================================================== -->
+    <!-- PROGRESS -->
 
     <div class="progress-track">
         <div id="progressBar"></div>
@@ -772,4 +929,5 @@
     <script src="script.js"></script>
 
 </body>
+
 </html>
