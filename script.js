@@ -1,849 +1,772 @@
+```javascript
 /* ==========================================================
-   JAS WEBSITE
-   ----------------------------------------------------------
-   Page navigation:
-   - Button ONLY
-   - No back button
-   - Scrolling only scrolls content inside a page
-   - Page itself never changes from scrolling
+   JUDY × LEO
+   CINEMATIC INTERACTION ENGINE
+========================================================== */
 
-   Music:
-   - song1.mp3
-   - song2.mp3
-   - song3.mp3
-   - song4.mp3
 
-   No template literals are used.
-   ========================================================== */
+/* ==========================================================
+   GLOBAL STATE
+========================================================== */
+
+const TOTAL_PAGES = 10;
+
+let currentPage = 1;
+
+let isChangingPage = false;
 
 
 /* ==========================================================
    ELEMENTS
-   ========================================================== */
+========================================================== */
 
-var pages =
-    document.querySelectorAll(".page");
+const screens =
+    document.querySelectorAll(".screen");
 
-var nextButton =
-    document.getElementById("nextButton");
+const nextButtons =
+    document.querySelectorAll("[data-next]");
 
-var currentNumber =
-    document.getElementById("currentNumber");
+const progressValue =
+    document.getElementById("progressValue");
 
-var totalNumber =
-    document.getElementById("totalNumber");
+const currentPageDisplay =
+    document.getElementById("currentPage");
 
-var progressBar =
-    document.getElementById("progressBar");
+const particlesContainer =
+    document.getElementById("particles");
 
-var musicPlayer =
-    document.getElementById("musicPlayer");
+const confettiContainer =
+    document.getElementById("confetti");
 
-var musicButton =
-    document.getElementById("musicButton");
+const cursorGlow =
+    document.querySelector(".cursor-glow");
 
-var musicIcon =
-    document.getElementById("musicIcon");
+const yesButton =
+    document.getElementById("yesButton");
 
-var musicPanel =
-    document.getElementById("musicPanel");
-
-var songName =
-    document.getElementById("songName");
-
-var playPause =
-    document.getElementById("playPause");
-
-var previousSong =
-    document.getElementById("previousSong");
-
-var nextSong =
-    document.getElementById("nextSong");
-
-var volumeSlider =
-    document.getElementById("volumeSlider");
-
-var cursorGlow =
-    document.getElementById("cursorGlow");
-
-var stars =
-    document.getElementById("stars");
-
-var canvas =
-    document.getElementById("particleCanvas");
-
-var ctx =
-    canvas.getContext("2d");
+const obviouslyButton =
+    document.getElementById("obviouslyButton");
 
 
 /* ==========================================================
-   PAGE VARIABLES
-   ========================================================== */
+   PAGE NAVIGATION
+========================================================== */
 
-var currentPage = 0;
+function goToPage(pageNumber) {
 
-var totalPages = pages.length;
-
-var isChangingPage = false;
-
-
-/* ==========================================================
-   MUSIC
-   ========================================================== */
-
-var songs = [
-    "songs/song1.mp3",
-    "songs/song2.mp3",
-    "songs/song3.mp3",
-    "songs/song4.mp3"
-];
-
-
-var songNames = [
-    "Song 1",
-    "Song 2",
-    "Song 3",
-    "Song 4"
-];
-
-
-var currentSong = 0;
-
-var musicStarted = false;
-
-
-/* ==========================================================
-   BUTTON LABELS
-   ========================================================== */
-
-var buttonLabels = [
-    "Begin →",
-    "Continue →",
-    "The little things →",
-    "Reasons →",
-    "Keep going →",
-    "A little more →",
-    "Almost there →",
-    "The honest part →",
-    "Finish →"
-];
-
-
-/* ==========================================================
-   PAGE COUNTER
-   ========================================================== */
-
-function updatePageInfo() {
-
-    var current =
-        String(currentPage + 1);
-
-    if (current.length === 1) {
-        current = "0" + current;
+    if (isChangingPage) {
+        return;
     }
 
-
-    var total =
-        String(totalPages);
-
-    if (total.length === 1) {
-        total = "0" + total;
+    if (pageNumber < 1) {
+        pageNumber = 1;
     }
 
-
-    currentNumber.textContent =
-        current;
-
-    totalNumber.textContent =
-        total;
-
-
-    var progress =
-        ((currentPage + 1) /
-        totalPages) * 100;
-
-
-    progressBar.style.width =
-        progress + "%";
-
-
-    nextButton.textContent =
-        buttonLabels[currentPage]
-        || "Continue →";
-
-}
-
-
-/* ==========================================================
-   MUSIC LOAD
-   ========================================================== */
-
-function loadSong(index, autoPlay) {
-
-    if (index < 0) {
-        index = songs.length - 1;
+    if (pageNumber > TOTAL_PAGES) {
+        pageNumber = TOTAL_PAGES;
     }
 
-
-    if (index >= songs.length) {
-        index = 0;
+    if (pageNumber === currentPage) {
+        return;
     }
 
-
-    currentSong = index;
-
-
-    musicPlayer.src =
-        songs[currentSong];
+    isChangingPage = true;
 
 
-    musicPlayer.volume =
-        parseFloat(
-            volumeSlider.value
+    /*
+        Remove active class
+        from every screen.
+    */
+
+    screens.forEach(screen => {
+        screen.classList.remove("active");
+    });
+
+
+    /*
+        Find requested page.
+    */
+
+    const target =
+        document.querySelector(
+            `.screen[data-page="${pageNumber}"]`
         );
 
 
-    songName.textContent =
-        songNames[currentSong];
+    if (!target) {
 
+        isChangingPage = false;
 
-    if (autoPlay) {
-
-        var playPromise =
-            musicPlayer.play();
-
-
-        if (
-            playPromise !== undefined
-        ) {
-
-            playPromise.catch(
-                function() {
-                    musicStarted = false;
-                    updateMusicButton();
-                }
-            );
-
-        }
-
+        return;
     }
 
 
-    updateMusicButton();
+    /*
+        Activate requested page.
+    */
 
-}
+    target.classList.add("active");
 
 
-/* ==========================================================
-   START MUSIC
-   ========================================================== */
+    currentPage =
+        pageNumber;
 
-function startMusic() {
 
-    if (!musicStarted) {
+    /*
+        Update interface.
+    */
 
-        musicStarted = true;
+    updateProgress();
 
-        var playPromise =
-            musicPlayer.play();
 
+    /*
+        Return scroll position
+        to the top of the page.
+    */
 
-        if (
-            playPromise !== undefined
-        ) {
+    window.scrollTo({
+        top: 0,
+        behavior: "instant"
+    });
 
-            playPromise.catch(
-                function() {
 
-                    musicStarted =
-                        false;
+    /*
+        Generate a few new
+        particles on each page.
+    */
 
-                }
-            );
+    createPageParticles();
 
-        }
 
-    }
+    /*
+        Unlock navigation.
+    */
 
-}
+    setTimeout(() => {
 
+        isChangingPage = false;
 
-/* ==========================================================
-   MUSIC BUTTON ICON
-   ========================================================== */
-
-function updateMusicButton() {
-
-    if (musicPlayer.paused) {
-
-        musicIcon.textContent =
-            "▶";
-
-        playPause.textContent =
-            "▶";
-
-    } else {
-
-        musicIcon.textContent =
-            "♫";
-
-        playPause.textContent =
-            "Ⅱ";
-
-    }
-
-}
-
-
-/* ==========================================================
-   MUSIC PANEL
-   ========================================================== */
-
-musicButton.addEventListener(
-    "click",
-    function() {
-
-        musicPanel.classList.toggle(
-            "show"
-        );
-
-    }
-);
-
-
-/* ==========================================================
-   PLAY / PAUSE
-   ========================================================== */
-
-playPause.addEventListener(
-    "click",
-    function() {
-
-        if (musicPlayer.paused) {
-
-            musicPlayer.play()
-                .then(
-                    function() {
-
-                        musicStarted =
-                            true;
-
-                        updateMusicButton();
-
-                    }
-                )
-                .catch(
-                    function() {}
-                );
-
-        } else {
-
-            musicPlayer.pause();
-
-            updateMusicButton();
-
-        }
-
-    }
-);
-
-
-/* ==========================================================
-   PREVIOUS SONG
-   ========================================================== */
-
-previousSong.addEventListener(
-    "click",
-    function() {
-
-        var wasPlaying =
-            !musicPlayer.paused;
-
-        currentSong--;
-
-        if (currentSong < 0) {
-            currentSong =
-                songs.length - 1;
-        }
-
-
-        loadSong(
-            currentSong,
-            wasPlaying
-        );
-
-    }
-);
-
-
-/* ==========================================================
-   NEXT SONG
-   ========================================================== */
-
-nextSong.addEventListener(
-    "click",
-    function() {
-
-        var wasPlaying =
-            !musicPlayer.paused;
-
-        currentSong++;
-
-        if (
-            currentSong >=
-            songs.length
-        ) {
-            currentSong = 0;
-        }
-
-
-        loadSong(
-            currentSong,
-            wasPlaying
-        );
-
-    }
-);
-
-
-/* ==========================================================
-   VOLUME
-   ========================================================== */
-
-volumeSlider.addEventListener(
-    "input",
-    function() {
-
-        musicPlayer.volume =
-            parseFloat(
-                this.value
-            );
-
-    }
-);
-
-
-/* ==========================================================
-   AUTOMATIC SONG CHANGE BY SECTION
-   ==========================================================
-
-   Page 1-3  -> Song 1
-   Page 4-5  -> Song 2
-   Page 6-7  -> Song 3
-   Page 8-9  -> Song 4
-   ========================================================== */
-
-function updateSongForPage() {
-
-    var desiredSong = 0;
-
-
-    if (currentPage >= 3) {
-        desiredSong = 1;
-    }
-
-
-    if (currentPage >= 5) {
-        desiredSong = 2;
-    }
-
-
-    if (currentPage >= 7) {
-        desiredSong = 3;
-    }
-
-
-    if (
-        desiredSong !== currentSong
-    ) {
-
-        var wasPlaying =
-            !musicPlayer.paused;
-
-        loadSong(
-            desiredSong,
-            wasPlaying
-        );
-
-    }
+    }, 850);
 
 }
 
 
 /* ==========================================================
    NEXT PAGE
-   ========================================================== */
+========================================================== */
 
-function goNext() {
+function nextPage() {
 
-    if (isChangingPage) {
-        return;
-    }
+    if (currentPage < TOTAL_PAGES) {
 
-
-    if (
-        currentPage >=
-        totalPages - 1
-    ) {
-
-        nextButton.textContent =
-            "♡";
-
-        return;
+        goToPage(
+            currentPage + 1
+        );
 
     }
-
-
-    isChangingPage = true;
-
-
-    /*
-        User clicked the button,
-        so browser allows audio playback.
-    */
-
-    if (!musicStarted) {
-
-        musicStarted = true;
-
-        var firstPlay =
-            musicPlayer.play();
-
-
-        if (
-            firstPlay !== undefined
-        ) {
-
-            firstPlay.catch(
-                function() {}
-            );
-
-        }
-
-    }
-
-
-    /*
-        Remove old page.
-    */
-
-    pages[currentPage]
-        .classList
-        .remove("active");
-
-
-    /*
-        Move forward.
-    */
-
-    currentPage++;
-
-
-    /*
-        Make sure the new page starts
-        at the top if it was previously
-        visited.
-    */
-
-    pages[currentPage].scrollTop =
-        0;
-
-
-    setTimeout(
-        function() {
-
-            pages[currentPage]
-                .classList
-                .add("active");
-
-
-            updatePageInfo();
-
-            updateSongForPage();
-
-        },
-        120
-    );
-
-
-    /*
-        Wait for transition before
-        allowing another click.
-    */
-
-    setTimeout(
-        function() {
-
-            isChangingPage =
-                false;
-
-        },
-        900
-    );
 
 }
 
 
 /* ==========================================================
-   NEXT BUTTON
-   ========================================================== */
+   NEXT BUTTON EVENTS
+========================================================== */
 
-nextButton.addEventListener(
-    "click",
-    function() {
+nextButtons.forEach(button => {
 
-        goNext();
+    button.addEventListener(
+        "click",
+        nextPage
+    );
 
-    }
-);
+});
+
+
+/* ==========================================================
+   PROGRESS BAR
+========================================================== */
+
+function updateProgress() {
+
+    const percentage =
+        (currentPage / TOTAL_PAGES) * 100;
+
+
+    progressValue.style.width =
+        `${percentage}%`;
+
+
+    currentPageDisplay.textContent =
+        String(currentPage).padStart(2, "0");
+
+}
 
 
 /* ==========================================================
    FLIP CARDS
-   ========================================================== */
+========================================================== */
 
-var cards =
-    document.querySelectorAll(
-        ".reason-card"
-    );
+const memoryCards =
+    document.querySelectorAll(".memory-card");
 
 
-for (
-    var i = 0;
-    i < cards.length;
-    i++
-) {
+memoryCards.forEach(card => {
 
-    cards[i].addEventListener(
+    card.addEventListener(
         "click",
-        function() {
+        () => {
 
-            this.classList.toggle(
+            card.classList.toggle(
                 "flipped"
             );
 
         }
     );
 
-}
+});
 
 
 /* ==========================================================
-   CURSOR GLOW
-   ========================================================== */
+   MOUSE FOLLOWING GLOW
+========================================================== */
 
-var mouseX =
-    window.innerWidth / 2;
+document.addEventListener(
+    "mousemove",
+    event => {
 
-var mouseY =
-    window.innerHeight / 2;
-
-var glowX =
-    mouseX;
-
-var glowY =
-    mouseY;
-
-
-window.addEventListener(
-    "pointermove",
-    function(event) {
-
-        mouseX =
+        const x =
             event.clientX;
 
-        mouseY =
+        const y =
             event.clientY;
+
+
+        cursorGlow.style.left =
+            `${x}px`;
+
+        cursorGlow.style.top =
+            `${y}px`;
 
     }
 );
 
 
-function animateCursor() {
-
-    glowX +=
-        (mouseX - glowX) * 0.12;
-
-    glowY +=
-        (mouseY - glowY) * 0.12;
-
-
-    cursorGlow.style.left =
-        glowX + "px";
-
-    cursorGlow.style.top =
-        glowY + "px";
-
-
-    requestAnimationFrame(
-        animateCursor
-    );
-
-}
-
-
-animateCursor();
-
-
 /* ==========================================================
-   CREATE STARS
-   ========================================================== */
+   HIDE CURSOR GLOW ON MOBILE
+========================================================== */
 
-var starCount =
-    window.innerWidth < 600
-        ? 65
-        : 125;
-
-
-for (
-    var s = 0;
-    s < starCount;
-    s++
+if (
+    window.matchMedia(
+        "(max-width: 700px)"
+    ).matches
 ) {
 
-    var star =
-        document.createElement(
-            "span"
-        );
-
-
-    star.className =
-        "star";
-
-
-    star.style.left =
-        Math.random() * 100 + "%";
-
-
-    star.style.top =
-        Math.random() * 100 + "%";
-
-
-    star.style.animationDuration =
-        (
-            5 +
-            Math.random() * 16
-        ) + "s";
-
-
-    star.style.animationDelay =
-        (
-            -Math.random() * 16
-        ) + "s";
-
-
-    stars.appendChild(star);
+    cursorGlow.style.display =
+        "none";
 
 }
 
 
 /* ==========================================================
-   PARTICLE CANVAS
-   ========================================================== */
+   FLOATING PARTICLES
+========================================================== */
 
-var canvasWidth =
-    window.innerWidth;
+function createParticle() {
 
-var canvasHeight =
-    window.innerHeight;
-
-
-function resizeCanvas() {
-
-    canvasWidth =
-        window.innerWidth;
-
-    canvasHeight =
-        window.innerHeight;
+    const particle =
+        document.createElement("div");
 
 
-    var ratio =
-        Math.min(
-            window.devicePixelRatio || 1,
-            2
-        );
+    particle.className =
+        "particle";
 
 
-    canvas.width =
-        canvasWidth * ratio;
-
-    canvas.height =
-        canvasHeight * ratio;
+    const size =
+        Math.random() * 3 + 1;
 
 
-    canvas.style.width =
-        canvasWidth + "px";
-
-    canvas.style.height =
-        canvasHeight + "px";
+    const left =
+        Math.random() * 100;
 
 
-    ctx.setTransform(
-        ratio,
-        0,
-        0,
-        ratio,
-        0,
-        0
+    const duration =
+        Math.random() * 8 + 7;
+
+
+    const delay =
+        Math.random() * 4;
+
+
+    particle.style.width =
+        `${size}px`;
+
+    particle.style.height =
+        `${size}px`;
+
+    particle.style.left =
+        `${left}%`;
+
+    particle.style.animationDuration =
+        `${duration}s`;
+
+    particle.style.animationDelay =
+        `${delay}s`;
+
+
+    particlesContainer.appendChild(
+        particle
+    );
+
+
+    setTimeout(
+        () => {
+
+            particle.remove();
+
+        },
+        (duration + delay) * 1000
     );
 
 }
 
 
-resizeCanvas();
+/* ==========================================================
+   INITIAL PARTICLES
+========================================================== */
+
+function createInitialParticles() {
+
+    for (
+        let i = 0;
+        i < 35;
+        i++
+    ) {
+
+        createParticle();
+
+    }
+
+}
 
 
-window.addEventListener(
-    "resize",
-    resizeCanvas
+/* ==========================================================
+   PAGE PARTICLES
+========================================================== */
+
+function createPageParticles() {
+
+    for (
+        let i = 0;
+        i < 8;
+        i++
+    ) {
+
+        setTimeout(
+            createParticle,
+            i * 100
+        );
+
+    }
+
+}
+
+
+/* ==========================================================
+   CONFETTI
+========================================================== */
+
+function createConfetti() {
+
+    const amount = 110;
+
+
+    for (
+        let i = 0;
+        i < amount;
+        i++
+    ) {
+
+        const piece =
+            document.createElement("div");
+
+
+        piece.className =
+            "confetti-piece";
+
+
+        const size =
+            Math.random() * 8 + 4;
+
+
+        const left =
+            Math.random() * 100;
+
+
+        const duration =
+            Math.random() * 1.8 + 2.2;
+
+
+        const delay =
+            Math.random() * 0.8;
+
+
+        const rotation =
+            Math.random() * 360;
+
+
+        const hue =
+            Math.floor(
+                Math.random() * 360
+            );
+
+
+        piece.style.width =
+            `${size}px`;
+
+        piece.style.height =
+            `${size * 1.5}px`;
+
+        piece.style.left =
+            `${left}%`;
+
+        piece.style.animationDuration =
+            `${duration}s`;
+
+        piece.style.animationDelay =
+            `${delay}s`;
+
+        piece.style.transform =
+            `rotate(${rotation}deg)`;
+
+        piece.style.background =
+            `hsl(${hue}, 55%, 75%)`;
+
+
+        confettiContainer.appendChild(
+            piece
+        );
+
+
+        setTimeout(
+            () => {
+
+                piece.remove();
+
+            },
+            (duration + delay) * 1000
+        );
+
+    }
+
+}
+
+
+/* ==========================================================
+   ANSWER BUTTONS
+========================================================== */
+
+function handleAnswer() {
+
+    /*
+        Small celebration first.
+    */
+
+    createConfetti();
+
+
+    /*
+        Then move forward.
+    */
+
+    setTimeout(
+        () => {
+
+            goToPage(9);
+
+        },
+        650
+    );
+
+}
+
+
+yesButton.addEventListener(
+    "click",
+    handleAnswer
+);
+
+
+obviouslyButton.addEventListener(
+    "click",
+    handleAnswer
 );
 
 
 /* ==========================================================
-   PARTICLES
-   ========================================================== */
+   KEYBOARD NAVIGATION
+========================================================== */
 
-var particles = [];
+document.addEventListener(
+    "keydown",
+    event => {
 
-var particleCount =
-    window.innerWidth < 600
-        ? 40
-        : 85;
+        /*
+            Right arrow and Enter
+            move forward only.
+        */
+
+        if (
+            event.key === "ArrowRight" ||
+            event.key === "Enter"
+        ) {
+
+            /*
+                Don't trigger Enter
+                while clicking a button.
+            */
+
+            if (
+                event.key === "Enter" &&
+                document.activeElement &&
+                document.activeElement.tagName === "BUTTON"
+            ) {
+
+                return;
+
+            }
 
 
-for (
-    var p = 0;
-    p < particleCount;
-    p++
+            nextPage();
+
+        }
+
+    }
+);
+
+
+/* ==========================================================
+   TOUCH SWIPE
+========================================================== */
+
+let touchStartX = 0;
+
+let touchStartY = 0;
+
+
+document.addEventListener(
+    "touchstart",
+    event => {
+
+        touchStartX =
+            event.changedTouches[0].screenX;
+
+        touchStartY =
+            event.changedTouches[0].screenY;
+
+    },
+    {
+        passive: true
+    }
+);
+
+
+document.addEventListener(
+    "touchend",
+    event => {
+
+        const touchEndX =
+            event.changedTouches[0].screenX;
+
+        const touchEndY =
+            event.changedTouches[0].screenY;
+
+
+        const horizontalDistance =
+            touchStartX - touchEndX;
+
+        const verticalDistance =
+            Math.abs(
+                touchStartY - touchEndY
+            );
+
+
+        /*
+            Only count horizontal
+            swipes.
+        */
+
+        if (
+            horizontalDistance > 80 &&
+            verticalDistance < 120
+        ) {
+
+            nextPage();
+
+        }
+
+    },
+    {
+        passive: true
+    }
+);
+
+
+/* ==========================================================
+   BUTTON MAGNETIC EFFECT
+========================================================== */
+
+const magneticButtons =
+    document.querySelectorAll(
+        ".main-button, .answer-button"
+    );
+
+
+magneticButtons.forEach(button => {
+
+    button.addEventListener(
+        "mousemove",
+        event => {
+
+            const rect =
+                button.getBoundingClientRect();
+
+
+            const x =
+                event.clientX -
+                rect.left -
+                rect.width / 2;
+
+
+            const y =
+                event.clientY -
+                rect.top -
+                rect.height / 2;
+
+
+            button.style.transform =
+                `translate(${x * 0.08}px, ${y * 0.08}px)`;
+
+        }
+    );
+
+
+    button.addEventListener(
+        "mouseleave",
+        () => {
+
+            button.style.transform =
+                "";
+
+        }
+    );
+
+});
+
+
+/* ==========================================================
+   CARD TILT EFFECT
+========================================================== */
+
+memoryCards.forEach(card => {
+
+    card.addEventListener(
+        "mousemove",
+        event => {
+
+            if (
+                card.classList.contains(
+                    "flipped"
+                )
+            ) {
+
+                return;
+
+            }
+
+
+            const rect =
+                card.getBoundingClientRect();
+
+
+            const x =
+                event.clientX -
+                rect.left;
+
+
+            const y =
+                event.clientY -
+                rect.top;
+
+
+            const centerX =
+                rect.width / 2;
+
+
+            const centerY =
+                rect.height / 2;
+
+
+            const rotateX =
+                ((y - centerY) / centerY) * -3;
+
+
+            const rotateY =
+                ((x - centerX) / centerX) * 3;
+
+
+            card.querySelector(
+                ".memory-card-inner"
+            ).style.transform =
+                `rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
+
+        }
+    );
+
+
+    card.addEventListener(
+        "mouseleave",
+        () => {
+
+            const inner =
+                card.querySelector(
+                    ".memory-card-inner"
+                );
+
+
+            if (
+                card.classList.contains(
+                    "flipped"
+                )
+            ) {
+
+                inner.style.transform =
+                    "rotateY(180deg)";
+
+            } else {
+
+                inner.style.transform =
+                    "";
+
+            }
+
+        }
+    );
+
+});
+
+
+/* ==========================================================
+   DISABLE TILT ON TOUCH DEVICES
+========================================================== */
+
+if (
+    "ontouchstart" in window
 ) {
 
-    particles.push({
+    memoryCards.forEach(card => {
 
-        x:
-            Math.random() *
-            canvasWidth,
-
-        y:
-            Math.random() *
-            canvasHeight,
-
-        vx:
-            (Math.random() - 0.5)
-            * 0.18,
-
-        vy:
-            (Math.random() - 0.5)
-            * 0.18,
-
-        size:
-            Math.random() *
-            1.4 +
-            0.3,
-
-        opacity:
-            Math.random() *
-            0.32 +
-            0.04
+        card.style.transform =
+            "none";
 
     });
 
@@ -851,145 +774,34 @@ for (
 
 
 /* ==========================================================
-   PARTICLE ANIMATION
-   ========================================================== */
+   SCROLL BEHAVIOUR
+========================================================== */
 
-function animateParticles() {
+/*
+    IMPORTANT:
 
-    ctx.clearRect(
-        0,
-        0,
-        canvasWidth,
-        canvasHeight
-    );
+    The website remains naturally scrollable.
+    Scrolling does NOT change pages.
 
+    Pages only advance through:
+    - buttons
+    - Enter
+    - right arrow
+    - left swipe
 
-    for (
-        var i = 0;
-        i < particles.length;
-        i++
-    ) {
-
-        var particle =
-            particles[i];
+    This prevents accidental navigation
+    while still allowing long sections to
+    be viewed comfortably.
+*/
 
 
-        particle.x +=
-            particle.vx;
-
-        particle.y +=
-            particle.vy;
-
-
-        if (
-            particle.x < 0
-        ) {
-
-            particle.x =
-                canvasWidth;
-
-        }
-
-
-        if (
-            particle.x >
-            canvasWidth
-        ) {
-
-            particle.x = 0;
-
-        }
-
-
-        if (
-            particle.y < 0
-        ) {
-
-            particle.y =
-                canvasHeight;
-
-        }
-
-
-        if (
-            particle.y >
-            canvasHeight
-        ) {
-
-            particle.y = 0;
-
-        }
-
-
-        ctx.beginPath();
-
-
-        ctx.arc(
-            particle.x,
-            particle.y,
-            particle.size,
-            0,
-            Math.PI * 2
-        );
-
-
-        ctx.fillStyle =
-            "rgba(255,255,255," +
-            particle.opacity +
-            ")";
-
-
-        ctx.fill();
-
-    }
-
-
-    requestAnimationFrame(
-        animateParticles
-    );
-
-}
-
-
-animateParticles();
-
-
-/* ==========================================================
-   INITIAL MUSIC
-   ========================================================== */
-
-musicPlayer.volume =
-    0.14;
-
-loadSong(
-    0,
-    false
-);
-
-
-/* ==========================================================
-   INITIAL PAGE
-   ========================================================== */
-
-updatePageInfo();
-
-
-/* ==========================================================
-   EXTRA SAFETY
-   ----------------------------------------------------------
-   Prevent mouse wheel from changing pages.
-   It can still scroll inside the current page.
-   ========================================================== */
-
-window.addEventListener(
+document.addEventListener(
     "wheel",
-    function() {
+    () => {
 
         /*
             Intentionally empty.
-
-            Page navigation is controlled
-            ONLY by the Next button.
+            Native scrolling remains enabled.
         */
 
     },
@@ -1000,24 +812,87 @@ window.addEventListener(
 
 
 /* ==========================================================
-   KEYBOARD
-   ----------------------------------------------------------
-   ArrowRight can also advance.
-   No previous/back navigation is provided.
-   ========================================================== */
+   INITIALIZATION
+========================================================== */
 
-document.addEventListener(
-    "keydown",
-    function(event) {
+function initializeWebsite() {
+
+    currentPage = 1;
+
+    screens.forEach(
+        screen => {
+            screen.classList.remove(
+                "active"
+            );
+        }
+    );
+
+
+    const firstScreen =
+        document.querySelector(
+            '[data-page="1"]'
+        );
+
+
+    if (firstScreen) {
+
+        firstScreen.classList.add(
+            "active"
+        );
+
+    }
+
+
+    updateProgress();
+
+    createInitialParticles();
+
+}
+
+
+/* ==========================================================
+   RESIZE HANDLER
+========================================================== */
+
+window.addEventListener(
+    "resize",
+    () => {
 
         if (
-            event.key === "ArrowRight" ||
-            event.key === "Enter"
+            window.innerWidth <= 700
         ) {
 
-            goNext();
+            cursorGlow.style.display =
+                "none";
+
+        } else {
+
+            cursorGlow.style.display =
+                "block";
 
         }
 
     }
 );
+
+
+/* ==========================================================
+   START
+========================================================== */
+
+if (
+    document.readyState ===
+    "loading"
+) {
+
+    document.addEventListener(
+        "DOMContentLoaded",
+        initializeWebsite
+    );
+
+} else {
+
+    initializeWebsite();
+
+}
+```
